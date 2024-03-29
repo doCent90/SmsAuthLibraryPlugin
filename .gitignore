@@ -1,3 +1,14 @@
+/Library/
+/Temp/
+/obj/
+/Logs/
+/UserSettings/
+/Builds/
+/*.sln
+/*.csproj
+/.vscode/
+/.vs/
+
 UserSettings
 Temp
 Logs
