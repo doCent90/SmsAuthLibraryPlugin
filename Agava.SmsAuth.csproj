@@ -62,10 +62,18 @@
   <ItemGroup>
     <Compile Include="Packages\com.agava.smsauth\Runtime\DTO\LoginData.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\DTO\StatusCode.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\RedirectWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Program\YandexFunction.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\DTO\Response.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\NotifyWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\DTO\Request.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Program\SmsAuthApi.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WinkSignInHandlerUI.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\InputWindowPresenter.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\IWinkAccessManager.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\WinkAccessManager.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\LockedObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Packages\com.agava.smsauth\Runtime\Agava.SmsAuth.asmdef" />
@@ -957,6 +965,10 @@
     </Reference>
     <Reference Include="System.Xml.Serialization">
       <HintPath>F:\Unitys\Unity\2022.3.20f1\Editor\Data\NetStandard\compat\2.1.0\shims\netfx\System.Xml.Serialization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>Library\ScriptAssemblies\Unity.TextMeshPro.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.UI">
