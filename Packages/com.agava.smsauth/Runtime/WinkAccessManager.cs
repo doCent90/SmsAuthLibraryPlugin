@@ -1,91 +1,140 @@
-﻿using SmsAuthLibrary.Program;
-using System;
-using System.Collections;
+﻿using System;
 using UnityEngine;
+using SmsAuthLibrary.DTO;
+using SmsAuthLibrary.Program;
+//using System.IdentityModel.Tokens.Jwt;
 
 namespace Agava.Wink
 {
     [DefaultExecutionOrder(100)]
     public class WinkAccessManager : MonoBehaviour, IWinkAccessManager
     {
+        private const string UniqueId = nameof(UniqueId);
+        private const string PhoneNumber = nameof(PhoneNumber);
+
         [SerializeField] private string _functionId;
 
-        private uint _checkCode = 0;
+        private LoginData _data;
+        private Action<bool> _winkSubscriptionAccessRequest;
+        private string _accessToken;
+        private string _uniqueId;
 
-        public bool HasAccess { get; private set; } = false;
+        public string AccesToken { get; } = nameof(AccesToken);
         public static IWinkAccessManager Instance {  get; private set; }
-        public static readonly string UnlockKey = nameof(UnlockKey);
+        public bool HasAccess { get; private set; } = false;
 
+        public event Action OnRefreshFail;
         public event Action OnSuccessfully;
 
         private void Start()
         {
-            if(SmsAuthApi.Initialized == false)
+            DontDestroyOnLoad(this);
+            Instance ??= this;
+
+            if (SmsAuthApi.Initialized == false)
                 SmsAuthApi.Initialize(_functionId);
 
-            DontDestroyOnLoad(this);
-
-            if (PlayerPrefs.HasKey(UnlockKey) == false)
-                HasAccess = false;
+            if (PlayerPrefs.HasKey(UniqueId) == false)
+                _uniqueId = Guid.NewGuid().ToString();
             else
-                HasAccess = true;
+                _uniqueId = PlayerPrefs.GetString(UniqueId);
 
-            Instance ??= this;
-        }
-
-        internal async void SignIn(string phoneNumber, Action checkCodeRequested, Action<bool> winkSubscriptionAccessRequest)
-        {
-            Debug.Log("Sign in: " + phoneNumber);
-
-            //var requets = await HttpClientSmtp.Get($"https://bsms.tele2.ru/api/" +
-                //$"?operation={SMTPRequestType.send}" +
-                //$"&login={login}" + //login=(логин рассылки/подключения)
-                //$"&password={password}" + //password=(пароль рассылки/подлючения)
-                //$"&msisdn={phoneNumber}" + //msisdn=(номер абонента – 11 цифр)
-                //$"&shortcode={shortcode}" + //shortcode=(разрешѐнное имя отправителя – не более 11 символов в кодировке ASCII, за исключением символов: \x00-\x1F, «[»,«\»,«]»,«^», «`», «{»,«|», «}», «~») shortcode=(разрешѐнное имя отправителя – не более 11 символов в кодировке ASCII, за исключением символов: \x00-\x1F, «[»,«\»,«]»,«^», «`», «{»,«|», «}», «~»)
-                //$"&text={code}"); //generated verify code
-
-            StartCoroutine(WaitEntering());
-            IEnumerator WaitEntering()
+            if (PlayerPrefs.HasKey(AccesToken))
             {
-                //TODO: Make Web Request to ADB. Send phone number.
-                //request code { }
-
-                //TODO: Reiceve message check code in to UI.
-                checkCodeRequested?.Invoke();
-                yield return new WaitWhile(() => _checkCode <= 0);
-
-                //TODO: Send check code to DB and compare.
-                Debug.Log("Check code send: " + _checkCode);
-
-                //TODO: Reiceve call back compare result true/false.
-                bool isCheckCodeCorrect = _checkCode > 0; // true for test
-
-                if (isCheckCodeCorrect)
-                {
-                    //TODO: Make Web Request to Wink. Send phone number. Reiceve call back access true/false.
-                    winkSubscriptionAccessRequest?.Invoke(true);
-                    OnSubscriptionExist();
-                }
-                else
-                {
-                    winkSubscriptionAccessRequest?.Invoke(false);
-                }
+                QuickAccess(new() 
+                { 
+                    phone = PlayerPrefs.GetString(PhoneNumber), 
+                    access_token = PlayerPrefs.GetString(AccesToken)
+                });
             }
         }
 
-        internal void SetCheckCode(uint code) => _checkCode = code;
+        public async void Regist(string phoneNumber, Action<bool> otpCodeRequest, Action<bool> winkSubscriptionAccessRequest)
+        {
+            Debug.Log("Try sign in: " + phoneNumber);
+            PlayerPrefs.SetString(PhoneNumber, phoneNumber);
+
+            _winkSubscriptionAccessRequest = winkSubscriptionAccessRequest;
+            _data = new()
+            {
+                phone = phoneNumber,
+                otp_code = 0,
+                device_id = _uniqueId,
+            };
+
+            Response response = await SmsAuthApi.Regist(phoneNumber);
+
+            if (response.statusCode != (uint)YdbStatusCode.Success)
+            {
+                otpCodeRequest?.Invoke(false);
+                Debug.LogError("Error : " + response.statusCode);
+            }
+            else
+            {
+                otpCodeRequest?.Invoke(true);
+            }
+        }
+
+        public void SendOtpCode(uint enteredOtpCode)
+        {
+            _data.otp_code = enteredOtpCode;
+            Login(_data);
+        }
 
         internal void TestEnableSubsription() => OnSubscriptionExist();
 
+        private async void Login(LoginData data)
+        {
+            var response = await SmsAuthApi.Login(data);
+
+            if (response.statusCode == (uint)StatusCode.ValidationError)
+            {
+                Debug.LogError("ValidationError : " + response.statusCode);
+                _winkSubscriptionAccessRequest?.Invoke(false);
+            }
+            else
+            {
+                var token = response.body;
+                //var handler = new JwtSecurityTokenHandler();
+                //JwtSecurityToken jwtSecurityToken = handler.ReadJwtToken(token);
+
+                //_accessToken = jwtSecurityToken.EncodedHeader;
+                Debug.Log("Otp code match. Token: " + _accessToken);
+
+                if (PlayerPrefs.HasKey(AccesToken) == false)
+                    PlayerPrefs.SetString(AccesToken, _accessToken);
+
+                RequestWinkDataBase();
+            }
+        }
+
+        private async void QuickAccess(SampleAuthData data)
+        {
+            var response = await SmsAuthApi.SampleAuth(data);
+
+            if(response.statusCode == (uint)StatusCode.ValidationError)
+            {
+                Debug.LogError("ValidationError : " + response.statusCode);
+                OnRefreshFail?.Invoke();
+            }
+            else
+            {
+                Debug.Log("Login successfully");
+                _accessToken = response.body;
+                HasAccess = true;
+            }
+        }
+
+        private void RequestWinkDataBase() => OnSubscriptionExist(); //TODO: Make Wink request
+
         private void OnSubscriptionExist()
         {
+            //TODO: Make on wink access
+            _winkSubscriptionAccessRequest?.Invoke(true);
             HasAccess = true;
 
-            if (PlayerPrefs.HasKey(UnlockKey) == false)
-                PlayerPrefs.SetString(UnlockKey, "Unlocked");
-
             OnSuccessfully?.Invoke();
+            Debug.Log("Access succesfully");
         }
     }
 }

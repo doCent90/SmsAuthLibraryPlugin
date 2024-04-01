@@ -29,7 +29,11 @@ namespace Agava.Wink
         [SerializeField] private int _numberCount = 10;
         [SerializeField] private int _codeCount = 3;
 
-        private void OnDestroy() => _signInButton.onClick.RemoveAllListeners();
+        private void OnDestroy()
+        {
+            _signInButton.onClick.RemoveAllListeners();
+            _winkAccessManager.OnRefreshFail -= OpenSignWindow;
+        }
 
         private void Start()
         {
@@ -39,10 +43,10 @@ namespace Agava.Wink
 #else
             _testSignInButton.gameObject.SetActive(false);
 #endif
-            _openSignInButton.onClick.AddListener(() => _signInWindow.Enable());
+            _openSignInButton.onClick.AddListener(OpenSignWindow);
             _windows.ForEach(window => window.Disable());
 
-            if (PlayerPrefs.HasKey(WinkAccessManager.UnlockKey) == false)
+            if (PlayerPrefs.HasKey(_winkAccessManager.AccesToken) == false)
             {
                 _openSignInButton.gameObject.SetActive(true);
             }
@@ -53,6 +57,8 @@ namespace Agava.Wink
 #endif
                 _openSignInButton.gameObject.SetActive(false);
             }
+
+            _winkAccessManager.OnRefreshFail += OpenSignWindow;
         }
 
 #if UNITY_EDITOR || TEST
@@ -63,6 +69,8 @@ namespace Agava.Wink
         }
 #endif
 
+        private void OpenSignWindow() => _signInWindow.Enable();
+
         private void OnSignInClicked()
         {
             var number = GetNumber();
@@ -72,15 +80,23 @@ namespace Agava.Wink
 
             _proccesOnWindow.Enable();
 
-            _winkAccessManager.SignIn(phoneNumber: number, 
-            checkCodeRequested: () => 
+            _winkAccessManager.Regist(phoneNumber: number,
+            otpCodeRequest: (hasOtpCode) => 
             {
-                _proccesOnWindow.Disable();
-                _enterCodeWindow.Enable(onInputDone: (code) =>
+                if (hasOtpCode)
                 {
-                    _proccesOnWindow.Enable();
-                    _winkAccessManager.SetCheckCode(code);
-                });
+                    _proccesOnWindow.Disable();
+                    _enterCodeWindow.Enable(onInputDone: (code) =>
+                    {
+                        _proccesOnWindow.Enable();
+                        _winkAccessManager.SendOtpCode(code);
+                    });
+                }
+                else
+                {
+                    _proccesOnWindow.Disable();
+                    _failWindow.Enable();
+                }
             }, 
             winkSubscriptionAccessRequest: (hasAccess) => 
             {
