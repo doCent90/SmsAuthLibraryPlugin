@@ -2,7 +2,10 @@
 using UnityEngine;
 using SmsAuthLibrary.DTO;
 using SmsAuthLibrary.Program;
-//using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace Agava.Wink
 {
@@ -94,12 +97,32 @@ namespace Agava.Wink
             }
             else
             {
-                var token = response.body;
-                //var handler = new JwtSecurityTokenHandler();
-                //JwtSecurityToken jwtSecurityToken = handler.ReadJwtToken(token);
+                string token = response.body;
+                var tokens  = JsonConvert.DeserializeObject<Tokens>(token);
 
-                //_accessToken = jwtSecurityToken.EncodedHeader;
-                Debug.Log("Otp code match. Token: " + _accessToken);
+                Debug.Log("Token access: " + tokens.access);
+                Debug.Log("Token refresh: " + tokens.refresh);
+
+                var handler = new JwtSecurityTokenHandler();
+                JwtSecurityToken accessToken;
+                JwtSecurityToken refreshToken;
+
+                if(handler.CanReadToken(tokens.access) == false)
+                    Debug.LogError("Can`t Read Token");
+
+                accessToken = handler.ReadJwtToken(tokens.access);
+                refreshToken = handler.ReadJwtToken(tokens.refresh);
+
+                var expiryTimeAccess = Convert.ToInt64(accessToken.Claims.First(claim => claim.Type == "exp").Value);
+                var expiryTimeRefresh = Convert.ToInt64(refreshToken.Claims.First(claim => claim.Type == "exp").Value);
+
+                DateTime expiryDateTimeAccess = DateTimeOffset.FromUnixTimeSeconds(expiryTimeAccess).LocalDateTime;
+                DateTime expiryDateTimeRefresh = DateTimeOffset.FromUnixTimeSeconds(expiryTimeRefresh).LocalDateTime;
+
+                Debug.Log("Token lifetime acces: " + expiryDateTimeAccess);                
+                Debug.Log("Token lifetime refresh: " + expiryDateTimeRefresh);              
+
+                Debug.Log("Otp code match");
 
                 if (PlayerPrefs.HasKey(AccesToken) == false)
                     PlayerPrefs.SetString(AccesToken, _accessToken);
@@ -136,5 +159,11 @@ namespace Agava.Wink
             OnSuccessfully?.Invoke();
             Debug.Log("Access succesfully");
         }
+    }
+
+    public class Tokens
+    {
+        public string access;
+        public string refresh;
     }
 }

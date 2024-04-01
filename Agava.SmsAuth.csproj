@@ -77,7 +77,21 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\LockedObject.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\System.Text.Encodings.Web.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\System.Memory.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\System.ValueTuple.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\Microsoft.IdentityModel.Logging.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\Microsoft.Bcl.AsyncInterfaces.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\System.Runtime.CompilerServices.Unsafe.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\System.Threading.Tasks.Extensions.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\System.Text.Json.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\System.Numerics.Vectors.dll" />
     <None Include="Packages\com.agava.smsauth\Runtime\Agava.SmsAuth.asmdef" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\Microsoft.IdentityModel.Abstractions.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\System.IdentityModel.Tokens.Jwt.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\System.Buffers.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\Microsoft.IdentityModel.JsonWebTokens.dll" />
+    <None Include="Packages\com.agava.smsauth\Runtime\Dlls\Microsoft.IdentityModel.Tokens.dll" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
@@ -466,6 +480,42 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.TextureAssets">
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.1\Editor\VisualScripting.Core\EditorAssetResources\Unity.VisualScripting.TextureAssets.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens">
+      <HintPath>Packages\com.agava.smsauth\Runtime\Dlls\Microsoft.IdentityModel.Tokens.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Abstractions">
+      <HintPath>Packages\com.agava.smsauth\Runtime\Dlls\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.IdentityModel.Tokens.Jwt">
+      <HintPath>Packages\com.agava.smsauth\Runtime\Dlls\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.JsonWebTokens">
+      <HintPath>Packages\com.agava.smsauth\Runtime\Dlls\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging">
+      <HintPath>Packages\com.agava.smsauth\Runtime\Dlls\Microsoft.IdentityModel.Logging.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Bcl.AsyncInterfaces">
+      <HintPath>Packages\com.agava.smsauth\Runtime\Dlls\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe">
+      <HintPath>Packages\com.agava.smsauth\Runtime\Dlls\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Text.Encodings.Web">
+      <HintPath>Packages\com.agava.smsauth\Runtime\Dlls\System.Text.Encodings.Web.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Text.Json">
+      <HintPath>Packages\com.agava.smsauth\Runtime\Dlls\System.Text.Json.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Unity.Android.Types">
