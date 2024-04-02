@@ -7,7 +7,6 @@ using System.Text;
 using System.Linq;
 using Newtonsoft.Json;
 using Utility;
-using Unity.Plastic.Antlr3.Runtime;
 
 namespace Agava.Wink
 {
@@ -24,7 +23,6 @@ namespace Agava.Wink
         private Action<bool> _winkSubscriptionAccessRequest;
         private string _uniqueId;
 
-        public string AccesToken { get; } = nameof(AccesToken);
         public static IWinkAccessManager Instance {  get; private set; }
         public bool HasAccess { get; private set; } = false;
 
@@ -121,14 +119,17 @@ namespace Agava.Wink
             var expiryTimeAccess = Convert.ToInt64(accessToken.Claims.First(claim => claim.Type == "exp").Value);
             var expiryTimeRefresh = Convert.ToInt64(refreshToken.Claims.First(claim => claim.Type == "exp").Value);
 
-            DateTime expiryDateTimeAccess = DateTimeOffset.FromUnixTimeSeconds(expiryTimeAccess).LocalDateTime;
-            DateTime expiryDateTimeRefresh = DateTimeOffset.FromUnixTimeSeconds(expiryTimeRefresh).LocalDateTime;
+            DateTime expiryDateTimeAccess = DateTimeOffset.FromUnixTimeSeconds(expiryTimeAccess).UtcDateTime;
+            DateTime expiryDateTimeRefresh = DateTimeOffset.FromUnixTimeSeconds(expiryTimeRefresh).UtcDateTime;
 
+            Debug.Log("Life Time Access: " + expiryDateTimeAccess);
+            Debug.Log("Life Time Refresh: " + expiryDateTimeRefresh);
             string currentToken = string.Empty;
 
             if (expiryDateTimeAccess > DateTime.UtcNow)
             {
                 currentToken = tokens.access;
+                Debug.Log("Data Time: " + DateTime.UtcNow);
                 Debug.Log("Token access exhist");
             }
             else if (expiryDateTimeRefresh > DateTime.UtcNow)

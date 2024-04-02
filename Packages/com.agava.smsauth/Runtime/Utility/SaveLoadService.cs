@@ -9,28 +9,28 @@ namespace Utility
         {
             string data = JsonConvert.SerializeObject(obj);
             PlayerPrefs.SetString(saveName, data);
-            Debug.Log($"<color = green>Saved</color>");
+            Debug.Log($"<color=red>Saved</color>");
         }
 
         internal static T Load<T>(string saveName) where T : class
         {
             if (PlayerPrefs.HasKey(saveName) == false)
             {
-                Debug.Log($"<color = green>Load Fail</color>");
+                Debug.Log($"<color=red>Load Fail</color>");
                 return null;
             }
 
             var loadData = PlayerPrefs.GetString(saveName);
             T data = JsonConvert.DeserializeObject<T>(loadData);
 
-            Debug.Log($"<color = green>Loaded</color>");
+            Debug.Log($"<color=red>Loaded</color>");
             return data;
         }
 
         internal static void Delete(string saveName)
         {
             PlayerPrefs.DeleteKey(saveName);
-            Debug.Log($"<color = green>Delete Saves</color>");
+            Debug.Log($"<color=red>Delete Saves</color>");
         }
     }
 }

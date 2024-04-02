@@ -33,31 +33,22 @@ namespace Agava.Wink
         {
             _signInButton.onClick.RemoveAllListeners();
             _winkAccessManager.OnRefreshFail -= OpenSignWindow;
+            _winkAccessManager.OnSuccessfully -= HideSignInButton;
         }
 
-        private void Start()
+        private void Awake()
         {
             _signInButton.onClick.AddListener(OnSignInClicked);
 #if UNITY_EDITOR || TEST
             _testSignInButton.onClick.AddListener(OnTestSignInClicked);
+            _testSignInButton.gameObject.SetActive(false);
 #else
             _testSignInButton.gameObject.SetActive(false);
 #endif
             _openSignInButton.onClick.AddListener(OpenSignWindow);
             _windows.ForEach(window => window.Disable());
 
-            if (PlayerPrefs.HasKey(_winkAccessManager.AccesToken) == false)
-            {
-                _openSignInButton.gameObject.SetActive(true);
-            }
-            else
-            {
-#if UNITY_EDITOR || TEST
-                _testSignInButton.gameObject.SetActive(false);
-#endif
-                _openSignInButton.gameObject.SetActive(false);
-            }
-
+            _winkAccessManager.OnSuccessfully += HideSignInButton;
             _winkAccessManager.OnRefreshFail += OpenSignWindow;
         }
 
@@ -118,8 +109,10 @@ namespace Agava.Wink
             _successfullyWindow.Enable();
             _signInWindow.Disable();
             _proccesOnWindow.Disable();
-            _openSignInButton.gameObject.SetActive(false);
+            HideSignInButton();
         }
+
+        private void HideSignInButton() => _openSignInButton.gameObject.SetActive(false);
 
         private string GetNumber()
         {
