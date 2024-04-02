@@ -2,9 +2,7 @@
 using UnityEngine;
 using SmsAuthLibrary.DTO;
 using SmsAuthLibrary.Program;
-using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using System.Linq;
 using Newtonsoft.Json;
 using Utility;
 
@@ -15,7 +13,6 @@ namespace Agava.Wink
     {
         private const string UniqueId = nameof(UniqueId);
         private const string PhoneNumber = nameof(PhoneNumber);
-        private const string Tokens = nameof(Tokens);
 
         [SerializeField] private string _functionId;
 
@@ -23,17 +20,21 @@ namespace Agava.Wink
         private Action<bool> _winkSubscriptionAccessRequest;
         private string _uniqueId;
 
-        public static IWinkAccessManager Instance {  get; private set; }
+        public static string Tokens { get; } = nameof(Tokens);
         public bool HasAccess { get; private set; } = false;
+        public static IWinkAccessManager Instance {  get; private set; }
 
         public event Action OnRefreshFail;
         public event Action OnSuccessfully;
 
+        private void Awake()
+        {
+            Instance ??= this;            
+            DontDestroyOnLoad(this);
+        }
+
         private void Start()
         {
-            DontDestroyOnLoad(this);
-            Instance ??= this;
-
             if (SmsAuthApi.Initialized == false)
                 SmsAuthApi.Initialize(_functionId);
 
@@ -48,7 +49,6 @@ namespace Agava.Wink
 
         public async void Regist(string phoneNumber, Action<bool> otpCodeRequest, Action<bool> winkSubscriptionAccessRequest)
         {
-            Debug.Log("Try sign in: " + phoneNumber);
             PlayerPrefs.SetString(PhoneNumber, phoneNumber);
 
             _winkSubscriptionAccessRequest = winkSubscriptionAccessRequest;
@@ -61,7 +61,7 @@ namespace Agava.Wink
 
             Response response = await SmsAuthApi.Regist(phoneNumber);
 
-            if (response.statusCode != (uint)YdbStatusCode.Success)
+            if (response.statusCode != (uint)YbdStatusCode.Success)
             {
                 otpCodeRequest?.Invoke(false);
                 Debug.LogError("Error : " + response.statusCode);
@@ -91,72 +91,55 @@ namespace Agava.Wink
             }
             else
             {
-                string token = response.body;
+                string token;
+
+                if (response.isBase64Encoded)
+                {
+                    byte[] bytes = Convert.FromBase64String(response.body);
+                    token = Encoding.UTF8.GetString(bytes);
+                }
+                else
+                {
+                    token = response.body;
+                }
+
                 Tokens tokens = JsonConvert.DeserializeObject<Tokens>(token);
-                SaveLoadService.Save(tokens, Tokens);
+                SaveLoadLocalDataService.Save(tokens, Tokens);
                 RequestWinkDataBase();
             }
         }
 
         private async void QuickAccess()
         {
-            Debug.Log("Try quick access");
-            var tokens = SaveLoadService.Load<Tokens>(Tokens);
+            var tokens = SaveLoadLocalDataService.Load<Tokens>(Tokens);
 
             if(tokens == null)
             {
-                Debug.Log("Tokens not exhist");
+                Debug.LogError("Tokens not exhist");
                 OnRefreshFail?.Invoke();
                 return;
             }
 
-            var handler = new JwtSecurityTokenHandler();
-            JwtSecurityToken accessToken = handler.ReadJwtToken(tokens.access);
-            JwtSecurityToken refreshToken = handler.ReadJwtToken(tokens.refresh);
-
-            var expiryTimeAccess = Convert.ToInt64(accessToken.Claims.First(claim => claim.Type == "exp").Value);
-            var expiryTimeRefresh = Convert.ToInt64(refreshToken.Claims.First(claim => claim.Type == "exp").Value);
-
-            DateTime expiryDateTimeAccess = DateTimeOffset.FromUnixTimeSeconds(expiryTimeAccess).UtcDateTime;
-            DateTime expiryDateTimeRefresh = DateTimeOffset.FromUnixTimeSeconds(expiryTimeRefresh).UtcDateTime;
-
-            Debug.Log("Life Time Access: " + expiryDateTimeAccess);
-            Debug.Log("Life Time Refresh: " + expiryDateTimeRefresh);
             string currentToken = string.Empty;
 
-            if (expiryDateTimeAccess > DateTime.UtcNow)
+            if (TokenLifeHelper.IsTokenAlive(tokens.access))
             {
                 currentToken = tokens.access;
-                Debug.Log("Data Time: " + DateTime.UtcNow);
-                Debug.Log("Token access exhist");
             }
-            else if (expiryDateTimeRefresh > DateTime.UtcNow)
+            else if (TokenLifeHelper.IsTokenAlive(tokens.refresh))
             {
-                Debug.Log("Try refresh access token");
-                var refreshResponse = await SmsAuthApi.Refresh(tokens.refresh);
+                currentToken = await TokenLifeHelper.GetRefreshedToken(tokens.refresh);
 
-                if (refreshResponse.statusCode != (uint)StatusCode.ValidationError)
+                if(string.IsNullOrEmpty(currentToken))
                 {
-                    byte[] bytes = Convert.FromBase64String(refreshResponse.body);
-                    string json = Encoding.UTF8.GetString(bytes);
-                    var tokensBack = JsonConvert.DeserializeObject<Tokens>(json);
-
-                    currentToken = tokensBack.access;
-                    SaveLoadService.Save(tokensBack, Tokens);
-                    Debug.Log("Refresh access token successfuly");
-                }
-                else
-                {
-                    Debug.LogError($"Refresh Token Validation Error :{refreshResponse.statusCode}-{refreshResponse.body}");
                     OnRefreshFail?.Invoke();
                     return;
                 }
             }
             else
             {
-                Debug.Log("Quick access denied. Tokens lifetime has expired. Try regist again");
                 OnRefreshFail?.Invoke();
-                SaveLoadService.Delete(Tokens);
+                SaveLoadLocalDataService.Delete(Tokens);
                 return;
             }
 
@@ -164,7 +147,6 @@ namespace Agava.Wink
 
             if(response.statusCode != (uint)StatusCode.ValidationError)
             {
-                Debug.Log("Quick access successfully");
                 OnSubscriptionExist();
             }
             else

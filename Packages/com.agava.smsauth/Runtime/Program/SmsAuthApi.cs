@@ -91,6 +91,34 @@ namespace SmsAuthLibrary.Program
             return await _function.Post(request);
         }
 
+        public async static Task<Response> SetSave(string accessToken, string body)
+        {
+            EnsureInitialize();
+
+            var request = new Request()
+            {
+                method = "SET_CLOUD_SAVES",
+                body = body,
+                access_token = accessToken,
+            };
+
+            return await _function.Post(request);
+        }
+
+        public async static Task<Response> GetSave(string accessToken)
+        {
+            EnsureInitialize();
+
+            var request = new Request()
+            {
+                method = "GET_CLOUD_SAVES",
+                body = "",
+                access_token = accessToken,
+            };
+
+            return await _function.Post(request);
+        }
+
         private static void EnsureInitialize()
         {
             if (Initialized == false)

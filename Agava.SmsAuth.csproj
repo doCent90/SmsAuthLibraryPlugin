@@ -60,7 +60,7 @@
     <Analyzer Include="F:\Unitys\Unity\2022.3.20f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Packages\com.agava.smsauth\Runtime\Utility\SaveLoadService.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\Utility\SaveLoadCloudDataService.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\DTO\SampleAuthData.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\DTO\LoginData.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\DTO\StatusCode.cs" />
@@ -72,8 +72,11 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\DTO\Request.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Program\SmsAuthApi.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\DTO\TokenLifeHelper.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WinkSignInHandlerUI.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\Utility\SaveLoadLocalDataService.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\InputWindowPresenter.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\DTO\YbdStatusCode.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\IWinkAccessManager.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\WinkAccessManager.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\LockedObject.cs" />
