@@ -1,13 +1,13 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System;
-using System.Linq;
-using UnityEngine;
-using SmsAuthLibrary.Program;
-using Agava.Wink;
-using Utility;
+﻿using System;
 using System.Text;
-using Newtonsoft.Json;
+using System.Linq;
 using System.Threading.Tasks;
+using System.IdentityModel.Tokens.Jwt;
+using UnityEngine;
+using Newtonsoft.Json;
+using Agava.Wink;
+using SmsAuthLibrary.Program;
+using SmsAuthLibrary.Utility;
 
 namespace SmsAuthLibrary.DTO
 {
@@ -45,5 +45,29 @@ namespace SmsAuthLibrary.DTO
                 return string.Empty;
             }
         }
+
+        public static async Task<bool> IsTokensAlive(Tokens tokens)
+        {
+            if (IsTokenAlive(tokens.access))
+            {
+                return true;
+            }
+            else if (IsTokenAlive(tokens.refresh))
+            {
+                var currentToken = await GetRefreshedToken(tokens.refresh);
+
+                if (string.IsNullOrEmpty(currentToken))
+                    return false;
+                else
+                    return true;
+            }
+            else
+            {
+                SaveLoadLocalDataService.Delete(WinkAccessManager.Tokens);
+                return false;
+            }
+        }
+
+        public static Tokens GetTokens() => SaveLoadLocalDataService.Load<Tokens>(WinkAccessManager.Tokens);
     }
 }

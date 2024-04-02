@@ -1,21 +1,20 @@
-﻿using Agava.Wink;
-using Newtonsoft.Json;
-using SmsAuthLibrary.DTO;
-using SmsAuthLibrary.Program;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Newtonsoft.Json;
+using SmsAuthLibrary.DTO;
+using SmsAuthLibrary.Program;
 
-namespace Utility
+namespace SmsAuthLibrary.Utility
 {
     public static class SaveLoadCloudDataService
     {
         public static async void SaveData<T>(T data) where T : class
         {
-            Tokens tokens = GetTokens();
+            Tokens tokens = TokenLifeHelper.GetTokens();
 
-            if (await IsTokenAlive(tokens) == false)
+            if (await TokenLifeHelper.IsTokensAlive(tokens) == false)
             {
                 Debug.LogError("Tokens has expired");
                 return;
@@ -30,9 +29,9 @@ namespace Utility
 
         public static async Task<T> LoadData<T>() where T : class
         {
-            Tokens tokens = GetTokens();
+            Tokens tokens = TokenLifeHelper.GetTokens();
 
-            if (await IsTokenAlive(tokens) == false)
+            if (await TokenLifeHelper.IsTokensAlive(tokens) == false)
             {
                 Debug.LogError("Tokens has expired");
                 return null;
@@ -42,7 +41,7 @@ namespace Utility
 
             if (response.statusCode != (uint)YbdStatusCode.Success)
             {
-                Debug.LogError("CloudSave -> fail to load: " +  response.statusCode + " Message: " + response.body);
+                Debug.LogError("CloudSave -> fail to load: " + response.statusCode + " Message: " + response.body);
                 return null;
             }
             else
@@ -62,29 +61,5 @@ namespace Utility
                 return data;
             }
         }
-
-        private static async Task<bool> IsTokenAlive(Tokens tokens)
-        {
-            if (TokenLifeHelper.IsTokenAlive(tokens.access))
-            {
-                return true;
-            }
-            else if (TokenLifeHelper.IsTokenAlive(tokens.refresh))
-            {
-                var currentToken = await TokenLifeHelper.GetRefreshedToken(tokens.refresh);
-
-                if (string.IsNullOrEmpty(currentToken))
-                    return false;
-                else
-                    return true;
-            }
-            else
-            {
-                SaveLoadLocalDataService.Delete(WinkAccessManager.Tokens);
-                return false;
-            }
-        }
-
-        private static Tokens GetTokens() => SaveLoadLocalDataService.Load<Tokens>(WinkAccessManager.Tokens);
     }
 }

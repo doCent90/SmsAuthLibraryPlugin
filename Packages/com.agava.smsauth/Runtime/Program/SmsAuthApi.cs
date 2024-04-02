@@ -29,7 +29,6 @@ namespace SmsAuthLibrary.Program
             {
                 method = "LOGIN",
                 body = JsonConvert.SerializeObject(loginData),
-                access_token = "",
             };
 
             return await _function.Post(request);
@@ -43,7 +42,6 @@ namespace SmsAuthLibrary.Program
             {
                 method = "REGISTRATION",
                 body = phoneNumber,
-                access_token = "",
             };
 
             return await _function.Post(request);
@@ -57,21 +55,20 @@ namespace SmsAuthLibrary.Program
             {
                 method = "REFRESH",
                 body = refreshToken,
-                access_token = "",
             };
 
             return await _function.Post(request);
         }
 
-        public async static Task<Response> Unlink(SampleAuthData data)
+        public async static Task<Response> Unlink(string accessToken, string deviceId)
         {
             EnsureInitialize();
 
             var request = new Request()
             {
                 method = "UNLINK",
-                body = JsonConvert.SerializeObject(data),
-                access_token = data.access_token,
+                body = deviceId,
+                access_token = accessToken,
             };
 
             return await _function.Post(request);
@@ -84,7 +81,6 @@ namespace SmsAuthLibrary.Program
             var request = new Request()
             {
                 method = "SAMPLE_AUTH",
-                body = "",
                 access_token = accessToken,
             };
 
@@ -112,7 +108,19 @@ namespace SmsAuthLibrary.Program
             var request = new Request()
             {
                 method = "GET_CLOUD_SAVES",
-                body = "",
+                access_token = accessToken,
+            };
+
+            return await _function.Post(request);
+        }
+
+        public async static Task<Response> GetDevices(string accessToken)
+        {
+            EnsureInitialize();
+
+            var request = new Request()
+            {
+                method = "GET_DEVICES",
                 access_token = accessToken,
             };
 

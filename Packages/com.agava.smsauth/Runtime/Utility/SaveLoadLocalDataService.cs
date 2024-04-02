@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Utility
+namespace SmsAuthLibrary.Utility
 {
     internal static class SaveLoadLocalDataService
     {

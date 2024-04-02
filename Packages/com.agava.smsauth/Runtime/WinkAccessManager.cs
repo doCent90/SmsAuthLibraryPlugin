@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Text;
 using UnityEngine;
+using Newtonsoft.Json;
 using SmsAuthLibrary.DTO;
 using SmsAuthLibrary.Program;
-using System.Text;
-using Newtonsoft.Json;
-using Utility;
+using SmsAuthLibrary.Utility;
+using System.Collections.Generic;
 
 namespace Agava.Wink
 {
@@ -15,6 +16,7 @@ namespace Agava.Wink
         private const string PhoneNumber = nameof(PhoneNumber);
 
         [SerializeField] private string _functionId;
+        [SerializeField] private string _additiveId;
 
         private LoginData _data;
         private Action<bool> _winkSubscriptionAccessRequest;
@@ -24,8 +26,9 @@ namespace Agava.Wink
         public bool HasAccess { get; private set; } = false;
         public static IWinkAccessManager Instance {  get; private set; }
 
-        public event Action OnRefreshFail;
-        public event Action OnSuccessfully;
+        public event Action<IReadOnlyList<string>> LimitReached;
+        public event Action ResetLogin;
+        public event Action Successfully;
 
         private void Awake()
         {
@@ -39,7 +42,7 @@ namespace Agava.Wink
                 SmsAuthApi.Initialize(_functionId);
 
             if (PlayerPrefs.HasKey(UniqueId) == false)
-                _uniqueId = Guid.NewGuid().ToString();
+                _uniqueId = SystemInfo.deviceName + _additiveId;
             else
                 _uniqueId = PlayerPrefs.GetString(UniqueId);
 
@@ -64,12 +67,25 @@ namespace Agava.Wink
             if (response.statusCode != (uint)YbdStatusCode.Success)
             {
                 otpCodeRequest?.Invoke(false);
-                Debug.LogError("Error : " + response.statusCode);
+                Debug.LogError("Regist Error : " + response.statusCode);
             }
             else
             {
                 otpCodeRequest?.Invoke(true);
             }
+        }
+
+        public async void Unlink(string deviceId)
+        {
+            Debug.Log(deviceId);
+
+            var tokens = SaveLoadLocalDataService.Load<Tokens>(Tokens);
+            var resopnse = await SmsAuthApi.Unlink(tokens.access, deviceId);
+
+            if(resopnse.statusCode != (uint)YbdStatusCode.Success)
+                Debug.LogError("Unlink fail: " + resopnse.statusCode);
+            else
+                ResetLogin?.Invoke();
         }
 
         public void SendOtpCode(uint enteredOtpCode)
@@ -105,6 +121,13 @@ namespace Agava.Wink
 
                 Tokens tokens = JsonConvert.DeserializeObject<Tokens>(token);
                 SaveLoadLocalDataService.Save(tokens, Tokens);
+
+                if (string.IsNullOrEmpty(tokens.refresh))
+                {
+                    OnLimitDevicesReached();
+                    return;
+                }
+
                 RequestWinkDataBase();
             }
         }
@@ -116,7 +139,7 @@ namespace Agava.Wink
             if(tokens == null)
             {
                 Debug.LogError("Tokens not exhist");
-                OnRefreshFail?.Invoke();
+                ResetLogin?.Invoke();
                 return;
             }
 
@@ -132,13 +155,13 @@ namespace Agava.Wink
 
                 if(string.IsNullOrEmpty(currentToken))
                 {
-                    OnRefreshFail?.Invoke();
+                    ResetLogin?.Invoke();
                     return;
                 }
             }
             else
             {
-                OnRefreshFail?.Invoke();
+                ResetLogin?.Invoke();
                 SaveLoadLocalDataService.Delete(Tokens);
                 return;
             }
@@ -152,7 +175,23 @@ namespace Agava.Wink
             else
             {
                 Debug.LogError($"Quick access Validation Error: {response.body}-code: {response.statusCode}");
-                OnRefreshFail?.Invoke();
+                ResetLogin?.Invoke();
+            }
+        }
+
+        private async void OnLimitDevicesReached()
+        {
+            Tokens tokens = TokenLifeHelper.GetTokens();
+            var response = await SmsAuthApi.GetDevices(tokens.access);
+
+            if (response.statusCode != (uint)YbdStatusCode.Success)
+            {
+                Debug.Log("Error");
+            }
+            else
+            {
+                IReadOnlyList<string> devices = JsonConvert.DeserializeObject<List<string>>(response.body);
+                LimitReached?.Invoke(devices);
             }
         }
 
@@ -165,7 +204,7 @@ namespace Agava.Wink
         private void OnSubscriptionExist()
         {
             HasAccess = true;
-            OnSuccessfully?.Invoke();
+            Successfully?.Invoke();
             Debug.Log("Access succesfully");
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace Agava.Wink
+﻿namespace SmsAuthLibrary.DTO
 {
     public class Tokens
     {
