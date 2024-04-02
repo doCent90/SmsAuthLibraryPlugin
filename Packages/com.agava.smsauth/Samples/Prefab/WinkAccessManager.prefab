@@ -3862,8 +3862,8 @@ MonoBehaviour:
   _signInButton: {fileID: 9033655646573530896}
   _openSignInButton: {fileID: 5420578500973262884}
   _testSignInButton: {fileID: 5449901619555697808}
-  _numberCount: 10
-  _codeCount: 3
+  _numberCount: 30
+  _codeCount: 4
 --- !u!1 &5693148036928480687
 GameObject:
   m_ObjectHideFlags: 0

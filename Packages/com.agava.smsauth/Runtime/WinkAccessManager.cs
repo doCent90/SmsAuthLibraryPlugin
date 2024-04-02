@@ -94,8 +94,6 @@ namespace Agava.Wink
                 string token = response.body;
                 Tokens tokens = JsonConvert.DeserializeObject<Tokens>(token);
                 SaveLoadService.Save(tokens, Tokens);
-
-                Debug.Log("Otp code match");
                 RequestWinkDataBase();
             }
         }

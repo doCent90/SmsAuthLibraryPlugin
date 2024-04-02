@@ -26,8 +26,10 @@ namespace Agava.Wink
         [SerializeField] private Button _openSignInButton;
         [SerializeField] private Button _testSignInButton;
         [Header("Phone Number Check Settings")]
-        [SerializeField] private int _numberCount = 10;
-        [SerializeField] private int _codeCount = 3;
+        [SerializeField] private int _maxNumberCount = 30;
+        [SerializeField] private int _minNumberCount = 5;
+        [SerializeField] private int _codeCount = 4;
+        [SerializeField] private bool _additivePlusChar = false;
 
         private void OnDestroy()
         {
@@ -41,7 +43,7 @@ namespace Agava.Wink
             _signInButton.onClick.AddListener(OnSignInClicked);
 #if UNITY_EDITOR || TEST
             _testSignInButton.onClick.AddListener(OnTestSignInClicked);
-            _testSignInButton.gameObject.SetActive(false);
+            _testSignInButton.gameObject.SetActive(true);
 #else
             _testSignInButton.gameObject.SetActive(false);
 #endif
@@ -124,14 +126,15 @@ namespace Agava.Wink
 
             if (isCorrectNumber == false || isCorrectCode == false
                 || string.IsNullOrEmpty(_numbersInputField.text)
-                || (countNumber < _numberCount || countNumber > _numberCount)
+                || (countNumber < _minNumberCount || countNumber > _maxNumberCount)
                 || (countCode > _codeCount || countCode <= 0 || resultCode == 0))
             {
                 _wrongNumberWindow.Enable();
                 return null;
             }
 
-            string number = $"+{resultCode}{resultNumber}";
+            string plus = _additivePlusChar == true ? "+" : "";
+            string number = $"{plus}{resultCode}{resultNumber}";
             return number;
         }
     }
