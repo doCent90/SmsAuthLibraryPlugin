@@ -49,15 +49,15 @@ namespace SmsAuthLibrary.Program
             return await _function.Post(request);
         }
 
-        public async static Task<Response> Refresh(SampleAuthData data)
+        public async static Task<Response> Refresh(string refreshToken)
         {
             EnsureInitialize();
 
             var request = new Request()
             {
                 method = "REFRESH",
-                body = JsonConvert.SerializeObject(data),
-                access_token = data.access_token,
+                body = refreshToken,
+                access_token = "",
             };
 
             return await _function.Post(request);
@@ -77,15 +77,15 @@ namespace SmsAuthLibrary.Program
             return await _function.Post(request);
         }
 
-        public async static Task<Response> SampleAuth(SampleAuthData data)
+        public async static Task<Response> SampleAuth(string accessToken)
         {
             EnsureInitialize();
 
             var request = new Request()
             {
                 method = "SAMPLE_AUTH",
-                body = JsonConvert.SerializeObject(data),
-                access_token = data.access_token,
+                body = "",
+                access_token = accessToken,
             };
 
             return await _function.Post(request);

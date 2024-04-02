@@ -6,6 +6,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Linq;
 using Newtonsoft.Json;
+using Utility;
+using Unity.Plastic.Antlr3.Runtime;
 
 namespace Agava.Wink
 {
@@ -14,12 +16,12 @@ namespace Agava.Wink
     {
         private const string UniqueId = nameof(UniqueId);
         private const string PhoneNumber = nameof(PhoneNumber);
+        private const string Tokens = nameof(Tokens);
 
         [SerializeField] private string _functionId;
 
         private LoginData _data;
         private Action<bool> _winkSubscriptionAccessRequest;
-        private string _accessToken;
         private string _uniqueId;
 
         public string AccesToken { get; } = nameof(AccesToken);
@@ -42,14 +44,8 @@ namespace Agava.Wink
             else
                 _uniqueId = PlayerPrefs.GetString(UniqueId);
 
-            if (PlayerPrefs.HasKey(AccesToken))
-            {
-                QuickAccess(new() 
-                { 
-                    phone = PlayerPrefs.GetString(PhoneNumber), 
-                    access_token = PlayerPrefs.GetString(AccesToken)
-                });
-            }
+            if (PlayerPrefs.HasKey(Tokens))
+                QuickAccess();
         }
 
         public async void Regist(string phoneNumber, Action<bool> otpCodeRequest, Action<bool> winkSubscriptionAccessRequest)
@@ -98,72 +94,98 @@ namespace Agava.Wink
             else
             {
                 string token = response.body;
-                var tokens  = JsonConvert.DeserializeObject<Tokens>(token);
-
-                Debug.Log("Token access: " + tokens.access);
-                Debug.Log("Token refresh: " + tokens.refresh);
-
-                var handler = new JwtSecurityTokenHandler();
-                JwtSecurityToken accessToken;
-                JwtSecurityToken refreshToken;
-
-                if(handler.CanReadToken(tokens.access) == false)
-                    Debug.LogError("Can`t Read Token");
-
-                accessToken = handler.ReadJwtToken(tokens.access);
-                refreshToken = handler.ReadJwtToken(tokens.refresh);
-
-                var expiryTimeAccess = Convert.ToInt64(accessToken.Claims.First(claim => claim.Type == "exp").Value);
-                var expiryTimeRefresh = Convert.ToInt64(refreshToken.Claims.First(claim => claim.Type == "exp").Value);
-
-                DateTime expiryDateTimeAccess = DateTimeOffset.FromUnixTimeSeconds(expiryTimeAccess).LocalDateTime;
-                DateTime expiryDateTimeRefresh = DateTimeOffset.FromUnixTimeSeconds(expiryTimeRefresh).LocalDateTime;
-
-                Debug.Log("Token lifetime acces: " + expiryDateTimeAccess);                
-                Debug.Log("Token lifetime refresh: " + expiryDateTimeRefresh);              
+                Tokens tokens = JsonConvert.DeserializeObject<Tokens>(token);
+                SaveLoadService.Save(tokens, Tokens);
 
                 Debug.Log("Otp code match");
-
-                if (PlayerPrefs.HasKey(AccesToken) == false)
-                    PlayerPrefs.SetString(AccesToken, _accessToken);
-
                 RequestWinkDataBase();
             }
         }
 
-        private async void QuickAccess(SampleAuthData data)
+        private async void QuickAccess()
         {
-            var response = await SmsAuthApi.SampleAuth(data);
+            Debug.Log("Try quick access");
+            var tokens = SaveLoadService.Load<Tokens>(Tokens);
 
-            if(response.statusCode == (uint)StatusCode.ValidationError)
+            if(tokens == null)
             {
-                Debug.LogError("ValidationError : " + response.statusCode);
+                Debug.Log("Tokens not exhist");
                 OnRefreshFail?.Invoke();
+                return;
+            }
+
+            var handler = new JwtSecurityTokenHandler();
+            JwtSecurityToken accessToken = handler.ReadJwtToken(tokens.access);
+            JwtSecurityToken refreshToken = handler.ReadJwtToken(tokens.refresh);
+
+            var expiryTimeAccess = Convert.ToInt64(accessToken.Claims.First(claim => claim.Type == "exp").Value);
+            var expiryTimeRefresh = Convert.ToInt64(refreshToken.Claims.First(claim => claim.Type == "exp").Value);
+
+            DateTime expiryDateTimeAccess = DateTimeOffset.FromUnixTimeSeconds(expiryTimeAccess).LocalDateTime;
+            DateTime expiryDateTimeRefresh = DateTimeOffset.FromUnixTimeSeconds(expiryTimeRefresh).LocalDateTime;
+
+            string currentToken = string.Empty;
+
+            if (expiryDateTimeAccess > DateTime.UtcNow)
+            {
+                currentToken = tokens.access;
+                Debug.Log("Token access exhist");
+            }
+            else if (expiryDateTimeRefresh > DateTime.UtcNow)
+            {
+                Debug.Log("Try refresh access token");
+                var refreshResponse = await SmsAuthApi.Refresh(tokens.refresh);
+
+                if (refreshResponse.statusCode != (uint)StatusCode.ValidationError)
+                {
+                    byte[] bytes = Convert.FromBase64String(refreshResponse.body);
+                    string json = Encoding.UTF8.GetString(bytes);
+                    var tokensBack = JsonConvert.DeserializeObject<Tokens>(json);
+
+                    currentToken = tokensBack.access;
+                    SaveLoadService.Save(tokensBack, Tokens);
+                    Debug.Log("Refresh access token successfuly");
+                }
+                else
+                {
+                    Debug.LogError($"Refresh Token Validation Error :{refreshResponse.statusCode}-{refreshResponse.body}");
+                    OnRefreshFail?.Invoke();
+                    return;
+                }
             }
             else
             {
-                Debug.Log("Login successfully");
-                _accessToken = response.body;
-                HasAccess = true;
+                Debug.Log("Quick access denied. Tokens lifetime has expired. Try regist again");
+                OnRefreshFail?.Invoke();
+                SaveLoadService.Delete(Tokens);
+                return;
+            }
+
+            var response = await SmsAuthApi.SampleAuth(currentToken);
+
+            if(response.statusCode != (uint)StatusCode.ValidationError)
+            {
+                Debug.Log("Quick access successfully");
+                OnSubscriptionExist();
+            }
+            else
+            {
+                Debug.LogError($"Quick access Validation Error: {response.body}-code: {response.statusCode}");
+                OnRefreshFail?.Invoke();
             }
         }
 
-        private void RequestWinkDataBase() => OnSubscriptionExist(); //TODO: Make Wink request
+        private void RequestWinkDataBase() //TODO: Make Wink request
+        {
+            _winkSubscriptionAccessRequest?.Invoke(true);
+            OnSubscriptionExist(); 
+        }
 
         private void OnSubscriptionExist()
         {
-            //TODO: Make on wink access
-            _winkSubscriptionAccessRequest?.Invoke(true);
             HasAccess = true;
-
             OnSuccessfully?.Invoke();
             Debug.Log("Access succesfully");
         }
-    }
-
-    public class Tokens
-    {
-        public string access;
-        public string refresh;
     }
 }
