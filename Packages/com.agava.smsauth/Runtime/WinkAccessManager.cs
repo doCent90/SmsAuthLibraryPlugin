@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Text;
+using System.Collections.Generic;
 using UnityEngine;
 using Newtonsoft.Json;
-using SmsAuthLibrary.DTO;
-using SmsAuthLibrary.Program;
-using SmsAuthLibrary.Utility;
-using System.Collections.Generic;
+using SmsAuthAPI.DTO;
+using SmsAuthAPI.Utility;
+using SmsAuthAPI.Program;
 
 namespace Agava.Wink
 {
@@ -22,7 +22,6 @@ namespace Agava.Wink
         private Action<bool> _winkSubscriptionAccessRequest;
         private string _uniqueId;
 
-        public static string Tokens { get; } = nameof(Tokens);
         public bool HasAccess { get; private set; } = false;
         public static IWinkAccessManager Instance {  get; private set; }
 
@@ -46,7 +45,7 @@ namespace Agava.Wink
             else
                 _uniqueId = PlayerPrefs.GetString(UniqueId);
 
-            if (PlayerPrefs.HasKey(Tokens))
+            if (PlayerPrefs.HasKey(TokenLifeHelper.Tokens))
                 QuickAccess();
         }
 
@@ -79,7 +78,7 @@ namespace Agava.Wink
         {
             Debug.Log(deviceId);
 
-            var tokens = SaveLoadLocalDataService.Load<Tokens>(Tokens);
+            var tokens = SaveLoadLocalDataService.Load<Tokens>(TokenLifeHelper.Tokens);
             var resopnse = await SmsAuthApi.Unlink(tokens.access, deviceId);
 
             if(resopnse.statusCode != (uint)YbdStatusCode.Success)
@@ -120,7 +119,7 @@ namespace Agava.Wink
                 }
 
                 Tokens tokens = JsonConvert.DeserializeObject<Tokens>(token);
-                SaveLoadLocalDataService.Save(tokens, Tokens);
+                SaveLoadLocalDataService.Save(tokens, TokenLifeHelper.Tokens);
 
                 if (string.IsNullOrEmpty(tokens.refresh))
                 {
@@ -134,7 +133,7 @@ namespace Agava.Wink
 
         private async void QuickAccess()
         {
-            var tokens = SaveLoadLocalDataService.Load<Tokens>(Tokens);
+            var tokens = SaveLoadLocalDataService.Load<Tokens>(TokenLifeHelper.Tokens);
 
             if(tokens == null)
             {
@@ -162,7 +161,7 @@ namespace Agava.Wink
             else
             {
                 ResetLogin?.Invoke();
-                SaveLoadLocalDataService.Delete(Tokens);
+                SaveLoadLocalDataService.Delete(TokenLifeHelper.Tokens);
                 return;
             }
 

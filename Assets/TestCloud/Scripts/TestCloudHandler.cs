@@ -1,8 +1,8 @@
 using Agava.Wink;
 using Newtonsoft.Json;
-using SmsAuthLibrary.DTO;
-using SmsAuthLibrary.Program;
-using SmsAuthLibrary.Utility;
+using SmsAuthAPI.DTO;
+using SmsAuthAPI.Program;
+using SmsAuthAPI.Utility;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;

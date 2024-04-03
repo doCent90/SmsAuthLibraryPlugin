@@ -3,7 +3,6 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System;
 
 namespace Agava.Wink
 {
