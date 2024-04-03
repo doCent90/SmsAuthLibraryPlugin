@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SmsAuthAPI.DTO;
-using UnityEngine;
 
 namespace SmsAuthAPI.Program
 {
@@ -12,11 +11,13 @@ namespace SmsAuthAPI.Program
 
         public static void Initialize(string functionId)
         {
+            if(string.IsNullOrEmpty(functionId))
+                throw new InvalidOperationException(nameof(SmsAuthApi) + " fuction id not entered");
+
             if (Initialized)
                 throw new InvalidOperationException(nameof(SmsAuthApi) + " has already been initialized");
 
-            _function = new YandexFunction(functionId ?? throw new ArgumentNullException(nameof(functionId)));
-            Debug.Log("Initialized Ydb");
+            _function = new YandexFunction(functionId);
         }
 
         public static bool Initialized => _function != null;

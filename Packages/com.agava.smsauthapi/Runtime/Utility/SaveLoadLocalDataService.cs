@@ -8,18 +8,18 @@ namespace SmsAuthAPI.Utility
         public static void Save<T>(T obj, string saveName) where T : class
         {
             string data = JsonConvert.SerializeObject(obj);
-            PlayerPrefs.SetString(saveName, data);
+            UnityEngine.PlayerPrefs.SetString(saveName, data);
         }
 
         public static T Load<T>(string saveName) where T : class
         {
-            if (PlayerPrefs.HasKey(saveName) == false)
+            if (UnityEngine.PlayerPrefs.HasKey(saveName) == false)
             {
                 Debug.LogError("Saves not exhist");
                 return null;
             }
 
-            var loadData = PlayerPrefs.GetString(saveName);
+            var loadData = UnityEngine.PlayerPrefs.GetString(saveName);
             T data = JsonConvert.DeserializeObject<T>(loadData);
 
             return data;
@@ -27,7 +27,7 @@ namespace SmsAuthAPI.Utility
 
         public static void Delete(string saveName)
         {
-            PlayerPrefs.DeleteKey(saveName);
+            UnityEngine.PlayerPrefs.DeleteKey(saveName);
         }
     }
 }

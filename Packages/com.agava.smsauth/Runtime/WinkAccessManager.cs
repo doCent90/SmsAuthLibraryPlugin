@@ -24,7 +24,7 @@ namespace Agava.Wink
 
         public SaveLoadService SaveLoadService { get; private set; }
         public bool HasAccess { get; private set; } = false;
-        public static IWinkAccessManager Instance {  get; private set; }
+        public static WinkAccessManager Instance {  get; private set; }
 
         public event Action<IReadOnlyList<string>> LimitReached;
         public event Action ResetLogin;
@@ -33,7 +33,10 @@ namespace Agava.Wink
         private void Awake()
         {
             SaveLoadService = new();
-            Instance ??= this;            
+
+            if (Instance == null)
+                Instance = this;
+
             DontDestroyOnLoad(this);
         }
 

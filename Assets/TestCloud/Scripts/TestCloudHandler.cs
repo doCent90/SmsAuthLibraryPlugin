@@ -12,15 +12,18 @@ public class TestCloudHandler : MonoBehaviour
 {
     [SerializeField] private Button _save;
     [SerializeField] private Button _load;
+    [SerializeField] private Button _savePresf;
+    [SerializeField] private Button _loadPrefs;
     [SerializeField] private TMP_InputField _input;
     [SerializeField] private Button _checkDevices;
 
     private void Start()
     {
         _save.onClick.AddListener(OnSaveClicked);
+        _savePresf.onClick.AddListener(OnSavePrefsClicked);
         _load.onClick.AddListener(OnLoadClicked);
+        _loadPrefs.onClick.AddListener(OnLoadPrefsClicked);
         _checkDevices.onClick.AddListener(ShowDevices);
-
     }
 
     private void OnSaveClicked()
@@ -36,6 +39,33 @@ public class TestCloudHandler : MonoBehaviour
         };
 
         SaveLoadCloudDataService.SaveData(data);
+    }
+
+    private void OnSavePrefsClicked()
+    {
+        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
+
+        if (WinkAccessManager.Instance.HasAccess == false)
+            throw new System.Exception("Wink not authorizated!");
+
+        SmsAuthAPI.Utility.PlayerPrefs.SetString("key", _input.text);
+        SmsAuthAPI.Utility.PlayerPrefs.Save();
+    }
+
+    private async void OnLoadPrefsClicked()
+    {
+        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
+
+        if (WinkAccessManager.Instance.HasAccess == false)
+            throw new System.Exception("Wink not authorizated!");
+
+        await SmsAuthAPI.Utility.PlayerPrefs.Load();
+        var data = SmsAuthAPI.Utility.PlayerPrefs.GetString("key");
+
+        if (string.IsNullOrEmpty(data))
+            Debug.LogError("Load fail");
+        else
+            Debug.Log("Loaded: " + data);
     }
 
     private async void OnLoadClicked()

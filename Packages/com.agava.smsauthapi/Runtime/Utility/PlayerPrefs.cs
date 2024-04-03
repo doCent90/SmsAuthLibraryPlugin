@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using UnityEngine;
+using System.Threading.Tasks;
 
 namespace SmsAuthAPI.Utility
 {
@@ -26,18 +28,19 @@ namespace SmsAuthAPI.Utility
             jsonStringBuilder.Append('}');
 
             string jsonData = jsonStringBuilder.ToString();
-
+            Debug.Log(jsonData);
             SaveLoadCloudDataService.SaveData(jsonData);
         }
 
-        public static async void Load()
+        public static async Task Load()
         {
             var result = await SaveLoadCloudDataService.LoadData();
+            Debug.Log(result);
 
             if (string.IsNullOrEmpty(result))
-                OnLoadSuccessCallback(result);
-            else
                 OnLoadErrorCallback(result);
+            else
+                OnLoadSuccessCallback(result);
         }
 
         enum IterationState
