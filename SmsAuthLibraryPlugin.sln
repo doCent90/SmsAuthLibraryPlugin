@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agava.SmsAuthAPI", "Agava.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agava.SmsAuth", "Agava.SmsAuth.csproj", "{E3DC1CDA-70D5-F267-0B10-FB621F43FC83}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Agava.SmsAuth.Samples", "Agava.SmsAuth.Samples.csproj", "{E4EB063C-EC4D-F3F1-AE05-44C755AF6672}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{81A2E56E-A187-4A98-9E4D-E7E71494A618}"
 EndProject
 Global
@@ -21,6 +23,10 @@ Global
 		{E3DC1CDA-70D5-F267-0B10-FB621F43FC83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E3DC1CDA-70D5-F267-0B10-FB621F43FC83}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E3DC1CDA-70D5-F267-0B10-FB621F43FC83}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4EB063C-EC4D-F3F1-AE05-44C755AF6672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4EB063C-EC4D-F3F1-AE05-44C755AF6672}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4EB063C-EC4D-F3F1-AE05-44C755AF6672}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4EB063C-EC4D-F3F1-AE05-44C755AF6672}.Release|Any CPU.Build.0 = Release|Any CPU
 		{81A2E56E-A187-4A98-9E4D-E7E71494A618}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{81A2E56E-A187-4A98-9E4D-E7E71494A618}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81A2E56E-A187-4A98-9E4D-E7E71494A618}.Release|Any CPU.ActiveCfg = Release|Any CPU

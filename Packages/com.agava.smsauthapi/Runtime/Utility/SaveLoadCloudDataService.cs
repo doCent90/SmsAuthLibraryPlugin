@@ -10,6 +10,22 @@ namespace SmsAuthAPI.Utility
 {
     public static class SaveLoadCloudDataService
     {
+        public static async void SaveData(string data)
+        {
+            Tokens tokens = TokenLifeHelper.GetTokens();
+
+            if (await TokenLifeHelper.IsTokensAlive(tokens) == false)
+            {
+                Debug.LogError("Tokens has expired");
+                return;
+            }
+
+            var response = await SmsAuthApi.SetSave(tokens.access, data);
+
+            if (response.statusCode != (uint)YbdStatusCode.Success)
+                Debug.LogError("CloudSave -> fail to save: " + response.statusCode + " Message: " + response.body);
+        }
+
         public static async void SaveData<T>(T data) where T : class
         {
             Tokens tokens = TokenLifeHelper.GetTokens();
@@ -25,6 +41,40 @@ namespace SmsAuthAPI.Utility
 
             if (response.statusCode != (uint)YbdStatusCode.Success)
                 Debug.LogError("CloudSave -> fail to save: " + response.statusCode + " Message: " + response.body);
+        }
+
+        public static async Task<string> LoadData()
+        {
+            Tokens tokens = TokenLifeHelper.GetTokens();
+
+            if (await TokenLifeHelper.IsTokensAlive(tokens) == false)
+            {
+                Debug.LogError("Tokens has expired");
+                return null;
+            }
+
+            var response = await SmsAuthApi.GetSave(tokens.access);
+
+            if (response.statusCode != (uint)YbdStatusCode.Success)
+            {
+                Debug.LogError("CloudSave -> fail to load: " + response.statusCode + " Message: " + response.body);
+                return null;
+            }
+            else
+            {
+                string json;
+                if (response.isBase64Encoded)
+                {
+                    byte[] bytes = Convert.FromBase64String(response.body);
+                    json = Encoding.UTF8.GetString(bytes);
+                }
+                else
+                {
+                    json = response.body;
+                }
+
+                return json;
+            }
         }
 
         public static async Task<T> LoadData<T>() where T : class
