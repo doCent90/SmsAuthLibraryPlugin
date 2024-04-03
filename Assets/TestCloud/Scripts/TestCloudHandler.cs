@@ -40,6 +40,8 @@ public class TestCloudHandler : MonoBehaviour
 
     private async void OnLoadClicked()
     {
+        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
+
         if (WinkAccessManager.Instance.HasAccess == false)
             throw new System.Exception("Wink not authorizated!");
 
@@ -53,6 +55,8 @@ public class TestCloudHandler : MonoBehaviour
 
     private async void ShowDevices()
     {
+        Debug.Log("Wink access: " + WinkAccessManager.Instance.HasAccess);
+
         if (WinkAccessManager.Instance.HasAccess == false)
             throw new System.Exception("Wink not authorizated!");
 
