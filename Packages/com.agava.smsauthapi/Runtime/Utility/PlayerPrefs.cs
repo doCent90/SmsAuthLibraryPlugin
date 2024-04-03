@@ -8,6 +8,7 @@ namespace SmsAuthAPI.Utility
 {
     public static class PlayerPrefs
     {
+        private static bool s_loaded = false;
         private static Action<string> s_onLoadErrorCallback;
         private static readonly Dictionary<string, string> s_prefs = new Dictionary<string, string>();
 
@@ -34,6 +35,8 @@ namespace SmsAuthAPI.Utility
 
         public static async Task Load()
         {
+            if(s_loaded) return;
+
             var result = await SaveLoadCloudDataService.LoadData();
             Debug.Log(result);
 
@@ -51,7 +54,11 @@ namespace SmsAuthAPI.Utility
             Value
         }
 
-        private static void OnLoadSuccessCallback(string jsonData) => ParseAndApplyData(jsonData);
+        private static void OnLoadSuccessCallback(string jsonData)
+        {
+            s_loaded = true;
+            ParseAndApplyData(jsonData);
+        }
 
         public static void ParseAndApplyData(string jsonData)
         {
