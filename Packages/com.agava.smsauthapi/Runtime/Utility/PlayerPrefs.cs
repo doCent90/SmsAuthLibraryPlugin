@@ -38,7 +38,6 @@ namespace SmsAuthAPI.Utility
             if(s_loaded) return;
 
             var result = await SaveLoadCloudDataService.LoadData();
-            Debug.Log(result);
 
             if (string.IsNullOrEmpty(result))
                 OnLoadErrorCallback(result);
@@ -58,6 +57,7 @@ namespace SmsAuthAPI.Utility
         {
             s_loaded = true;
             ParseAndApplyData(jsonData);
+            Debug.Log("Cloud saves loaded");
         }
 
         public static void ParseAndApplyData(string jsonData)

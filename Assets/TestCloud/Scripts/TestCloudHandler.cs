@@ -14,6 +14,7 @@ public class TestCloudHandler : MonoBehaviour
     [SerializeField] private Button _load;
     [SerializeField] private Button _savePresf;
     [SerializeField] private Button _loadPrefs;
+    [SerializeField] private Button _deletePrefs;
     [SerializeField] private TMP_InputField _input;
     [SerializeField] private Button _checkDevices;
 
@@ -24,6 +25,7 @@ public class TestCloudHandler : MonoBehaviour
         _load.onClick.AddListener(OnLoadClicked);
         _loadPrefs.onClick.AddListener(OnLoadPrefsClicked);
         _checkDevices.onClick.AddListener(ShowDevices);
+        _deletePrefs.onClick.AddListener(OnDeleteAllClicked);
     }
 
     private void OnSaveClicked()
@@ -66,6 +68,17 @@ public class TestCloudHandler : MonoBehaviour
             Debug.LogError("Load fail");
         else
             Debug.Log("Loaded: " + data);
+    }
+
+    private async void OnDeleteAllClicked()
+    {
+        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
+
+        if (WinkAccessManager.Instance.HasAccess == false)
+            throw new System.Exception("Wink not authorizated!");
+
+        await SmsAuthAPI.Utility.PlayerPrefs.Load();
+        SmsAuthAPI.Utility.PlayerPrefs.DeleteAll();
     }
 
     private async void OnLoadClicked()

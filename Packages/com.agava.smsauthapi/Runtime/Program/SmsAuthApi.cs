@@ -128,6 +128,18 @@ namespace SmsAuthAPI.Program
             return await _function.Post(request);
         }
 
+        public async static Task<Response> GetDemoTimer()
+        {
+            EnsureInitialize();
+
+            var request = new Request()
+            {
+                method = "GET_DEMO_TIMER",
+            };
+
+            return await _function.Post(request);
+        }
+
         private static void EnsureInitialize()
         {
             if (Initialized == false)

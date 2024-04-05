@@ -63,7 +63,9 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\SaveLoadService.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\RedirectWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\NotifyWindowPresenter.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\DemoTimer.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowPresenter.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\Services\ICoroutine.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WinkSignInHandlerUI.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\InputWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\IWinkAccessManager.cs" />
