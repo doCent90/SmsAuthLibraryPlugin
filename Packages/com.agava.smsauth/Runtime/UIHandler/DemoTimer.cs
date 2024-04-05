@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using static Codice.CM.Common.CmCallContext;
 
 namespace Agava.Wink
 {

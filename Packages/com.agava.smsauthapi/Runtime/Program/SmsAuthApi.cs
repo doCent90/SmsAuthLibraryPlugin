@@ -128,13 +128,14 @@ namespace SmsAuthAPI.Program
             return await _function.Post(request);
         }
 
-        public async static Task<Response> GetDemoTimer()
+        public async static Task<Response> GetRemoteConfig(string remoteName)
         {
             EnsureInitialize();
 
             var request = new Request()
             {
-                method = "GET_DEMO_TIMER",
+                method = "GET_REMOTE_CONFIG",
+                body = remoteName,
             };
 
             return await _function.Post(request);
