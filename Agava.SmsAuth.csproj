@@ -60,7 +60,9 @@
     <Analyzer Include="F:\Unitys\Unity\2022.3.20f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\IWinkSignInHandlerUI.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\SaveLoadService.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\Services\WinkAcceessHelper.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\RedirectWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\NotifyWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\DemoTimer.cs" />
