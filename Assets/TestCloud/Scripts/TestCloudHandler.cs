@@ -40,7 +40,7 @@ public class TestCloudHandler : MonoBehaviour
             Text = _input.text,
         };
 
-        SaveLoadCloudDataService.SaveData(data);
+        //SaveLoadCloudDataService.SaveData(data);
     }
 
     private void OnSavePrefsClicked()
@@ -88,12 +88,12 @@ public class TestCloudHandler : MonoBehaviour
         if (WinkAccessManager.Instance.HasAccess == false)
             throw new System.Exception("Wink not authorizated!");
 
-        var data = await SaveLoadCloudDataService.LoadData<TestData>();
+        //var data = await SaveLoadCloudDataService.LoadData<TestData>();
 
-        if (data != null)
-        {
-            Debug.Log("Loaded: " + data.Text);
-        }
+        //if (data != null)
+        //{
+        //    Debug.Log("Loaded: " + data.Text);
+        //}
     }
 
     private async void ShowDevices()

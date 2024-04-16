@@ -61,7 +61,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\IWinkSignInHandlerUI.cs" />
-    <Compile Include="Packages\com.agava.smsauth\Runtime\Services\SaveLoadService.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\WinkAcceessHelper.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\RedirectWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\NotifyWindowPresenter.cs" />
@@ -1019,10 +1018,6 @@
     <ProjectReference Include="Agava.SmsAuthAPI.csproj">
       <Project>{C5F99DCC-576F-CC6D-CE6A-4152964C3F0E}</Project>
       <Name>Agava.SmsAuthAPI</Name>
-    </ProjectReference>
-    <ProjectReference Include="Agava.SmsAuth.Samples.csproj">
-      <Project>{E4EB063C-EC4D-F3F1-AE05-44C755AF6672}</Project>
-      <Name>Agava.SmsAuth.Samples</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

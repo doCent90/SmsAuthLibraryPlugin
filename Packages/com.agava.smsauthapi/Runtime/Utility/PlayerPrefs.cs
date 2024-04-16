@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SmsAuthAPI.Utility
 {
+    /// <summary>
+    ///     Save service for cloud storage.
+    /// </summary>
     public static class PlayerPrefs
     {
         private static bool s_loaded = false;

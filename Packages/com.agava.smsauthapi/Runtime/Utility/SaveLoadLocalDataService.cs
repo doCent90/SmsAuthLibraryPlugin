@@ -3,6 +3,9 @@ using UnityEngine;
 
 namespace SmsAuthAPI.Utility
 {
+    /// <summary>
+    ///     Save data to local storage on device.
+    /// </summary>
     public static class SaveLoadLocalDataService
     {
         public static void Save<T>(T obj, string saveName) where T : class
