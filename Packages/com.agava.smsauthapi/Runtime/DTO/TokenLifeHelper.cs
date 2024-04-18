@@ -33,9 +33,18 @@ namespace SmsAuthAPI.DTO
 
             if (refreshResponse.statusCode != (uint)StatusCode.ValidationError)
             {
-                byte[] bytes = Convert.FromBase64String(refreshResponse.body);
-                string json = Encoding.UTF8.GetString(bytes);
-                var tokensBack = JsonConvert.DeserializeObject<Tokens>(json);
+                Tokens tokensBack;
+
+                if (refreshResponse.isBase64Encoded)
+                {
+                    byte[] bytes = Convert.FromBase64String(refreshResponse.body);
+                    string json = Encoding.UTF8.GetString(bytes);
+                    tokensBack = JsonConvert.DeserializeObject<Tokens>(json);
+                }
+                else
+                {
+                    tokensBack = JsonConvert.DeserializeObject<Tokens>(refreshResponse.body);
+                }
 
                 SaveLoadLocalDataService.Save(tokensBack, Tokens);
                 return tokensBack.access;
