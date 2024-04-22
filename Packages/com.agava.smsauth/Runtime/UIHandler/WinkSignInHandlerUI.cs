@@ -36,8 +36,10 @@ namespace Agava.Wink
         [Header("UI Buttons")]
         [SerializeField] private Button _signInButton;
         [SerializeField] private Button _openSignInButton;
-        [SerializeField] private Button _testSignInButton;
         [SerializeField] private Button _unlinkButtonTemplate;
+        [Header("UI Test Buttons")]
+        [SerializeField] private Button _testSignInButton;
+        [SerializeField] private Button _testDeleteButton;
         [Header("Phone Number Check Settings")]
         [SerializeField] private int _maxNumberCount = 30;
         [SerializeField] private int _minNumberCount = 5;
@@ -66,8 +68,11 @@ namespace Agava.Wink
             _signInButton.onClick.AddListener(OnSignInClicked);
 #if UNITY_EDITOR || TEST
             _testSignInButton.onClick.AddListener(OnTestSignInClicked);
+            _testDeleteButton.onClick.AddListener(OnTestDeleteClicked);
             _testSignInButton.gameObject.SetActive(true);
+            _testDeleteButton.gameObject.SetActive(true);
 #else
+            _testDeleteButton.gameObject.SetActive(false);
             _testSignInButton.gameObject.SetActive(false);
 #endif
             _openSignInButton.onClick.AddListener(OpenSignWindow);
@@ -131,6 +136,15 @@ namespace Agava.Wink
         {
             _winkAccessManager.TestEnableSubsription();
             _testSignInButton.gameObject.SetActive(false);
+        }
+
+        private async void OnTestDeleteClicked()
+        {
+            if (WinkAccessManager.Instance.HasAccess == false)
+                throw new System.Exception("Wink not authorizated!");
+
+            await SmsAuthAPI.Utility.PlayerPrefs.Load();
+            SmsAuthAPI.Utility.PlayerPrefs.DeleteAll();
         }
 #endif
 

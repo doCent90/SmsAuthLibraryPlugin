@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using SmsAuthAPI.Program;
 
 namespace Agava.Wink
@@ -14,16 +13,13 @@ namespace Agava.Wink
         [SerializeField] private MonoBehaviour _winkSignInHandlerUIComponent;
         [SerializeField] private WindowPresenter _failWindow;
         [SerializeField] private StartLogoPresenter _startLogoPresenter;
-        [SerializeField] private string _startSceneName;
+        [SerializeField] private SceneLoader _sceneLoader;
 
         private Coroutine _signInProcess;
         private IWinkSignInHandlerUI _winkSignInHandlerUI;
 
         private void Awake()
         {
-            if (string.IsNullOrEmpty(_startSceneName))
-                throw new NullReferenceException("Start Name Scene is Empty on Boot!");
-
             if (_winkSignInHandlerUIComponent == null)
                 throw new NullReferenceException("Wink SignIn HandlerUI Component is Empty On Boot!");
 
@@ -45,7 +41,7 @@ namespace Agava.Wink
             _signInProcess = StartCoroutine(OnStarted());
             yield return _signInProcess;
 
-            SceneManager.LoadScene(_startSceneName);
+            _sceneLoader.LoadScene();
             gameObject.SetActive(false);
         }
 

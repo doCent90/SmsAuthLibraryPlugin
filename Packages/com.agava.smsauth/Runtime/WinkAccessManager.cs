@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
-using Newtonsoft.Json;
 using SmsAuthAPI.DTO;
-using SmsAuthAPI.Utility;
 using SmsAuthAPI.Program;
-using System.Collections;
 
 namespace Agava.Wink
 {
@@ -14,11 +10,12 @@ namespace Agava.Wink
     public class WinkAccessManager : MonoBehaviour, IWinkAccessManager
     {
         private const string UniqueId = nameof(UniqueId);
-        private const string PhoneNumber = nameof(PhoneNumber);
 
+        [SerializeField] private SceneLoader _sceneLoader;
         [SerializeField] private string _functionId;
         [SerializeField] private string _additiveId;
 
+        private RequestHandler _requestHandler;
         private LoginData _data;
         private Action<bool> _winkSubscriptionAccessRequest;
         private string _uniqueId;
@@ -35,6 +32,7 @@ namespace Agava.Wink
             if (Instance == null)
                 Instance = this;
 
+            _requestHandler = new();
             DontDestroyOnLoad(this);
         }
 
@@ -52,42 +50,11 @@ namespace Agava.Wink
                 QuickAccess();
         }
 
-        public async void Regist(string phoneNumber, Action<bool> otpCodeRequest, Action<bool> winkSubscriptionAccessRequest)
+        internal void TestEnableSubsription()
         {
-            UnityEngine.PlayerPrefs.SetString(PhoneNumber, phoneNumber);
-
-            _winkSubscriptionAccessRequest = winkSubscriptionAccessRequest;
-            _data = new()
-            {
-                phone = phoneNumber,
-                otp_code = 0,
-                device_id = _uniqueId,
-            };
-
-            Response response = await SmsAuthApi.Regist(phoneNumber);
-
-            if (response.statusCode != (uint)YbdStatusCode.Success)
-            {
-                otpCodeRequest?.Invoke(false);
-                Debug.LogError("Regist Error : " + response.statusCode);
-            }
-            else
-            {
-                otpCodeRequest?.Invoke(true);
-            }
-        }
-
-        public async void Unlink(string deviceId)
-        {
-            Debug.Log(deviceId);
-
-            var tokens = SaveLoadLocalDataService.Load<Tokens>(TokenLifeHelper.Tokens);
-            var resopnse = await SmsAuthApi.Unlink(tokens.access, deviceId);
-
-            if(resopnse.statusCode != (uint)YbdStatusCode.Success)
-                Debug.LogError("Unlink fail: " + resopnse.statusCode);
-            else
-                ResetLogin?.Invoke();
+            HasAccess = true;
+            Successfully?.Invoke();
+            Debug.Log("Test Access succesfully. No cloud saves");
         }
 
         public void SendOtpCode(uint enteredOtpCode)
@@ -96,125 +63,26 @@ namespace Agava.Wink
             Login(_data);
         }
 
-        internal void TestEnableSubsription()
+        public async void Regist(string phoneNumber, Action<bool> otpCodeRequest, Action<bool> winkSubscriptionAccessRequest)
         {
-            HasAccess = true;
-            Successfully?.Invoke();
-            Debug.Log("Test Access succesfully. No cloud saves");
+            _winkSubscriptionAccessRequest = winkSubscriptionAccessRequest;
+            _data = await _requestHandler.Regist(phoneNumber, _uniqueId, otpCodeRequest);
         }
 
-        private async void Login(LoginData data)
-        {
-            var response = await SmsAuthApi.Login(data);
+        private void Login(LoginData data) 
+            => _requestHandler.Login(data, LimitReached, _winkSubscriptionAccessRequest, OnSubscriptionExist);
 
-            if (response.statusCode == (uint)StatusCode.ValidationError)
-            {
-                Debug.LogError("ValidationError : " + response.statusCode);
-                _winkSubscriptionAccessRequest?.Invoke(false);
-            }
-            else
-            {
-                string token;
+        public void Unlink(string deviceId) => _requestHandler.Unlink(deviceId, ResetLogin);
 
-                if (response.isBase64Encoded)
-                {
-                    byte[] bytes = Convert.FromBase64String(response.body);
-                    token = Encoding.UTF8.GetString(bytes);
-                }
-                else
-                {
-                    token = response.body;
-                }
-
-                Tokens tokens = JsonConvert.DeserializeObject<Tokens>(token);
-                SaveLoadLocalDataService.Save(tokens, TokenLifeHelper.Tokens);
-
-                if (string.IsNullOrEmpty(tokens.refresh))
-                {
-                    OnLimitDevicesReached();
-                    return;
-                }
-
-                RequestWinkDataBase();
-            }
-        }
-
-        private async void QuickAccess()
-        {
-            var tokens = SaveLoadLocalDataService.Load<Tokens>(TokenLifeHelper.Tokens);
-
-            if(tokens == null)
-            {
-                Debug.LogError("Tokens not exhist");
-                ResetLogin?.Invoke();
-                return;
-            }
-
-            string currentToken = string.Empty;
-
-            if (TokenLifeHelper.IsTokenAlive(tokens.access))
-            {
-                currentToken = tokens.access;
-            }
-            else if (TokenLifeHelper.IsTokenAlive(tokens.refresh))
-            {
-                currentToken = await TokenLifeHelper.GetRefreshedToken(tokens.refresh);
-
-                if(string.IsNullOrEmpty(currentToken))
-                {
-                    ResetLogin?.Invoke();
-                    return;
-                }
-            }
-            else
-            {
-                ResetLogin?.Invoke();
-                SaveLoadLocalDataService.Delete(TokenLifeHelper.Tokens);
-                return;
-            }
-
-            var response = await SmsAuthApi.SampleAuth(currentToken);
-
-            if(response.statusCode != (uint)StatusCode.ValidationError)
-            {
-                OnSubscriptionExist();
-            }
-            else
-            {
-                Debug.LogError($"Quick access Validation Error: {response.body}-code: {response.statusCode}");
-                ResetLogin?.Invoke();
-            }
-        }
-
-        private async void OnLimitDevicesReached()
-        {
-            Tokens tokens = TokenLifeHelper.GetTokens();
-            var response = await SmsAuthApi.GetDevices(tokens.access);
-
-            if (response.statusCode != (uint)YbdStatusCode.Success)
-            {
-                Debug.Log("Error");
-            }
-            else
-            {
-                IReadOnlyList<string> devices = JsonConvert.DeserializeObject<List<string>>(response.body);
-                LimitReached?.Invoke(devices);
-            }
-        }
-
-        private void RequestWinkDataBase() //TODO: Make Wink request
-        {
-            _winkSubscriptionAccessRequest?.Invoke(true);
-            OnSubscriptionExist(); 
-        }
+        private void QuickAccess() => _requestHandler.QuickAccess(OnSubscriptionExist, ResetLogin);
 
         private async void OnSubscriptionExist()
         {
             await SmsAuthAPI.Utility.PlayerPrefs.Load();
             HasAccess = true;
             Successfully?.Invoke();
+            _sceneLoader.LoadScene();
             Debug.Log("Access succesfully");
-            gameObject.SetActive(false);
         }
     }
 }

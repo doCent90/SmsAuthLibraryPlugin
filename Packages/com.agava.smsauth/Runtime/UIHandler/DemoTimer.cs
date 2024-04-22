@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SmsAuthAPI.Program;
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -52,7 +53,9 @@ namespace Agava.Wink
             {
                 var tick = new WaitForSecondsRealtime(1);
                 var waitBeforeStart = new WaitForSecondsRealtime(Delay);
+                var waitInitialize = new WaitWhile(() => SmsAuthApi.Initialized == false);
 
+                yield return waitInitialize;
                 yield return waitBeforeStart;
 
                 if (WinkAccessManager.Instance.HasAccess)
