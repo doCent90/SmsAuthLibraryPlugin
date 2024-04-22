@@ -14,7 +14,7 @@ namespace SmsAuthAPI.Utility
         private static Action<string> s_onLoadErrorCallback;
         private static readonly Dictionary<string, string> s_prefs = new Dictionary<string, string>();
 
-        public static bool s_loaded = false;
+        public static bool s_Loaded = false;
 
         public static void Save()
         {
@@ -39,7 +39,7 @@ namespace SmsAuthAPI.Utility
 
         public static async Task Load()
         {
-            if(s_loaded) return;
+            if(s_Loaded) return;
 
             var result = await SaveLoadCloudDataService.LoadData();
 
@@ -59,7 +59,7 @@ namespace SmsAuthAPI.Utility
 
         private static void OnLoadSuccessCallback(string jsonData)
         {
-            s_loaded = true;
+            s_Loaded = true;
             ParseAndApplyData(jsonData);
             Debug.Log("Cloud saves loaded");
         }

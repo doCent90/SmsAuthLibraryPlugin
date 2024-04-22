@@ -584,6 +584,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c2fb63ece536042ae3dd1a57c00be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Type>k__BackingField: 2
   _canvasGroup: {fileID: 7820780382588419946}
   _closeButton: {fileID: 2085123996313907402}
 --- !u!225 &7820780382588419946
@@ -1065,7 +1066,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'TestSignIn
+  m_text: 'Test-Delete Cloud
 
 '
   m_isRightToLeft: 0
@@ -1094,12 +1095,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 24
+  m_fontSize: 19.8
   m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 0
-  m_fontSizeMax: 0
+  m_fontSizeMax: 52.97
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -1450,6 +1451,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c2fb63ece536042ae3dd1a57c00be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Type>k__BackingField: 5
   _canvasGroup: {fileID: 4688126113900442366}
   _closeButton: {fileID: 7744114116494177969}
 --- !u!225 &4688126113900442366
@@ -1827,6 +1829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c2fb63ece536042ae3dd1a57c00be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Type>k__BackingField: 1
   _canvasGroup: {fileID: 6740380198925483502}
   _closeButton: {fileID: 8539173559312267754}
 --- !u!225 &6740380198925483502
@@ -2068,6 +2071,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c2fb63ece536042ae3dd1a57c00be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Type>k__BackingField: 6
   _canvasGroup: {fileID: 53377993578295119}
   _closeButton: {fileID: 5547288310771672546}
 --- !u!225 &53377993578295119
@@ -2819,6 +2823,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c2fb63ece536042ae3dd1a57c00be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Type>k__BackingField: 3
   _canvasGroup: {fileID: 525098793135463440}
   _closeButton: {fileID: 7329938054746103358}
 --- !u!225 &525098793135463440
@@ -3521,6 +3526,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa69d1ebf97ec644bff47a78e4ad72a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Type>k__BackingField: 9
   _canvasGroup: {fileID: 435724585596725151}
   _yesButton: {fileID: 3171996375909706860}
   _closeButton: {fileID: 7265178557444070328}
@@ -3723,7 +3729,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'TestSignIn
+  m_text: 'Test-SignIn
 
 '
   m_isRightToLeft: 0
@@ -4197,7 +4203,7 @@ GameObject:
   - component: {fileID: 8441988893637134663}
   - component: {fileID: 3722590748452739527}
   m_Layer: 5
-  m_Name: EnterCheckCode_Panel
+  m_Name: EnterOtpCode_Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4275,6 +4281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41768368340af4340815b595492fe174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Type>k__BackingField: 10
   _failWindow: {fileID: 4157864668006057402}
   _canvasGroup: {fileID: 3722590748452739527}
   _sendButton: {fileID: 2017825552794917147}
@@ -4382,6 +4389,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c2fb63ece536042ae3dd1a57c00be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Type>k__BackingField: 7
   _canvasGroup: {fileID: 8164150890516243446}
   _closeButton: {fileID: 7479079435974851135}
 --- !u!225 &8164150890516243446
@@ -4821,7 +4829,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 346, y: -57.53174}
+  m_AnchoredPosition: {x: 530, y: -57.53174}
   m_SizeDelta: {x: 160, y: 49.0634}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2171932646838208386
@@ -5320,32 +5328,35 @@ MonoBehaviour:
   _winkAccessManager: {fileID: 3558283120338427668}
   _demoTimer:
     _defaultTimerSeconds: 1800
-  _signInWindow: {fileID: 1367689781058899639}
-  _failWindow: {fileID: 4157864668006057402}
-  _wrongNumberWindow: {fileID: 7139242894815358875}
-  _proccesOnWindow: {fileID: 3982581273095667616}
-  _successfullyWindow: {fileID: 1846528832305154164}
-  _unlinkWindow: {fileID: 3116598919023502739}
-  _demoTimerExpiredWindow: {fileID: 4415140520025758017}
-  _noEnternetWindow: {fileID: 485251108337916005}
-  _redirectToWebsiteWindow: {fileID: 5911997093923911778}
-  _enterCodeWindow: {fileID: 8441988893637134663}
-  _windows:
-  - {fileID: 1367689781058899639}
-  - {fileID: 4157864668006057402}
-  - {fileID: 1846528832305154164}
-  - {fileID: 5911997093923911778}
-  - {fileID: 7139242894815358875}
-  - {fileID: 3982581273095667616}
-  - {fileID: 8441988893637134663}
-  - {fileID: 3116598919023502739}
-  - {fileID: 485251108337916005}
+  _notifyWindowHandler:
+    _signInWindow: {fileID: 1367689781058899639}
+    _failWindow: {fileID: 4157864668006057402}
+    _wrongNumberWindow: {fileID: 7139242894815358875}
+    _proccesOnWindow: {fileID: 3982581273095667616}
+    _successfullyWindow: {fileID: 1846528832305154164}
+    _unlinkWindow: {fileID: 3116598919023502739}
+    _demoTimerExpiredWindow: {fileID: 4415140520025758017}
+    _noEnternetWindow: {fileID: 485251108337916005}
+    _redirectToWebsiteWindow: {fileID: 5911997093923911778}
+    _enterCodeWindow: {fileID: 8441988893637134663}
+    _windows:
+    - {fileID: 4415140520025758017}
+    - {fileID: 1367689781058899639}
+    - {fileID: 4157864668006057402}
+    - {fileID: 485251108337916005}
+    - {fileID: 1846528832305154164}
+    - {fileID: 3116598919023502739}
+    - {fileID: 5911997093923911778}
+    - {fileID: 7139242894815358875}
+    - {fileID: 3982581273095667616}
+    - {fileID: 8441988893637134663}
   _codeInputField: {fileID: 3073370921876536151}
   _numbersInputField: {fileID: 5528796106569041503}
   _signInButton: {fileID: 9033655646573530896}
   _openSignInButton: {fileID: 5420578500973262884}
-  _testSignInButton: {fileID: 5449901619555697808}
   _unlinkButtonTemplate: {fileID: 101107616052049853, guid: 511c203ace4a85f4e9a439fa24b06566, type: 3}
+  _testSignInButton: {fileID: 5449901619555697808}
+  _testDeleteButton: {fileID: 1552599321485284479}
   _maxNumberCount: 30
   _minNumberCount: 5
   _codeCount: 4
@@ -5859,6 +5870,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c2fb63ece536042ae3dd1a57c00be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Type>k__BackingField: 8
   _canvasGroup: {fileID: 7814251699837043731}
   _closeButton: {fileID: 4223857331992259390}
 --- !u!225 &7814251699837043731
@@ -7487,6 +7499,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c2fb63ece536042ae3dd1a57c00be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Type>k__BackingField: 4
   _canvasGroup: {fileID: 2812839051826119197}
   _closeButton: {fileID: 3066632055436044269}
 --- !u!225 &2812839051826119197

@@ -11,7 +11,6 @@ namespace Agava.Wink
         private const float TimeOutTime = 60f;
 
         [SerializeField] private MonoBehaviour _winkSignInHandlerUIComponent;
-        [SerializeField] private WindowPresenter _failWindow;
         [SerializeField] private StartLogoPresenter _startLogoPresenter;
         [SerializeField] private SceneLoader _sceneLoader;
 
@@ -83,7 +82,7 @@ namespace Agava.Wink
             cancelation = StartCoroutine(TimeOutWaiting());
 
             SmsAuthAPI.Utility.PlayerPrefs.Load();
-            yield return new WaitWhile(() => SmsAuthAPI.Utility.PlayerPrefs.s_loaded == false);
+            yield return new WaitWhile(() => SmsAuthAPI.Utility.PlayerPrefs.s_Loaded == false);
 
             if (cancelation != null)
                 StopCoroutine(cancelation);
@@ -94,7 +93,7 @@ namespace Agava.Wink
             yield return new WaitForSecondsRealtime(TimeOutTime);
             StopCoroutine(_signInProcess);
             _winkSignInHandlerUI.CloseAllWindows();
-            _winkSignInHandlerUI.OpenWindow(_failWindow);
+            _winkSignInHandlerUI.OpenWindow(WindowType.Fail);
         }
     }
 }

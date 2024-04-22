@@ -67,6 +67,7 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\RedirectWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\NotifyWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\DemoTimer.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowType.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\ICoroutine.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WinkSignInHandlerUI.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\WinkAccessManager.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\RequestHandler.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\LockedObject.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\NotifyWindowHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Packages\com.agava.smsauth\Runtime\Agava.SmsAuth.asmdef" />

@@ -10,8 +10,8 @@ namespace Agava.Wink
         event Action SignInWindowClosed;
 
         void OpenSignWindow();
-        void OpenWindow(WindowPresenter window);
-        void CloseWindow(WindowPresenter window);
+        void OpenWindow(WindowType type);
+        void CloseWindow(WindowType type);
         void CloseAllWindows();
     }
 }

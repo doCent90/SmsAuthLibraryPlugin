@@ -13,7 +13,7 @@ namespace Agava.Wink
 
         private void Update()
         {
-            if (SmsAuthAPI.Utility.PlayerPrefs.s_loaded == false)
+            if (SmsAuthAPI.Utility.PlayerPrefs.s_Loaded == false)
                 _loading.transform.localEulerAngles += new Vector3(0, 0, 2f);
         }
 
