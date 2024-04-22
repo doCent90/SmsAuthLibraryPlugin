@@ -10,28 +10,34 @@ namespace Agava.Wink
         private const string FirstShownSignIn = nameof(FirstShownSignIn);
         private const float TimeOutTime = 60f;
 
+        [SerializeField] private MonoBehaviour _winkAccessManagerComponent;
         [SerializeField] private MonoBehaviour _winkSignInHandlerUIComponent;
         [SerializeField] private StartLogoPresenter _startLogoPresenter;
         [SerializeField] private SceneLoader _sceneLoader;
+        [SerializeField] private float _logoDuration = 3f;
 
         private Coroutine _signInProcess;
+        private IWinkAccessManager _winkSignInHandler;
         private IWinkSignInHandlerUI _winkSignInHandlerUI;
 
         private void Awake()
         {
-            if (_winkSignInHandlerUIComponent == null)
-                throw new NullReferenceException("Wink SignIn HandlerUI Component is Empty On Boot!");
+            if (_winkSignInHandlerUIComponent == null || _winkAccessManagerComponent == null)
+                throw new NullReferenceException("Some Wink Component is Missing On Boot!");
+
+            _winkSignInHandler = (IWinkAccessManager)_winkAccessManagerComponent;
+            _winkSignInHandlerUI = (IWinkSignInHandlerUI)_winkSignInHandlerUIComponent;
+
+            _winkSignInHandler.Successfully += OnSuccessfully;
 
             DontDestroyOnLoad(this);
         }
 
         private IEnumerator Start()
         {
-            _winkSignInHandlerUI = (IWinkSignInHandlerUI)_winkSignInHandlerUIComponent;
-
             _startLogoPresenter.ShowLogo();
 
-            yield return new WaitForSecondsRealtime(3);
+            yield return new WaitForSecondsRealtime(_logoDuration);
             yield return _startLogoPresenter.HidingLogo();
 
             yield return new WaitWhile(() => Application.internetReachability == NetworkReachability.NotReachable);
@@ -40,8 +46,8 @@ namespace Agava.Wink
             _signInProcess = StartCoroutine(OnStarted());
             yield return _signInProcess;
 
-            _sceneLoader.LoadScene();
-            gameObject.SetActive(false);
+            _sceneLoader.LoadGameScene();
+            _startLogoPresenter.CloseBootView();
         }
 
         private IEnumerator OnStarted()
@@ -74,6 +80,12 @@ namespace Agava.Wink
             }
 
             _signInProcess = null;
+        }
+
+        private void OnSuccessfully()
+        {
+            StartCoroutine(CloudSavesLoading());
+            _sceneLoader.LoadGameScene();
         }
 
         private IEnumerator CloudSavesLoading()

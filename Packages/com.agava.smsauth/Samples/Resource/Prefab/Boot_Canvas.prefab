@@ -393,6 +393,7 @@ GameObject:
   - component: {fileID: 7053827315493464268}
   - component: {fileID: 4653795427995862268}
   - component: {fileID: 115698839703872439}
+  - component: {fileID: 4849872907614531783}
   m_Layer: 5
   m_Name: Boot_Canvas
   m_TagString: Untagged
@@ -480,10 +481,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84c1f853478c3984a9e8177feb7af745, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _winkAccessManagerComponent: {fileID: 0}
   _winkSignInHandlerUIComponent: {fileID: 0}
-  _failWindow: {fileID: 0}
   _startLogoPresenter: {fileID: 115698839703872439}
-  _startSceneName: 
+  _sceneLoader: {fileID: 0}
+  _logoDuration: 3
 --- !u!114 &115698839703872439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -497,6 +499,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _logoGroup: {fileID: 7702160634805857277}
+  _bootGroup: {fileID: 4849872907614531783}
   _enLogo: {fileID: 5347123710913937166}
   _ruLogo: {fileID: 5950134469734200129}
   _loading: {fileID: 6073833241247710249}
+--- !u!225 &4849872907614531783
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8946962578614644737}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

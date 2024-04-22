@@ -11,7 +11,6 @@ namespace Agava.Wink
     {
         private const string UniqueId = nameof(UniqueId);
 
-        [SerializeField] private SceneLoader _sceneLoader;
         [SerializeField] private string _functionId;
         [SerializeField] private string _additiveId;
 
@@ -76,12 +75,10 @@ namespace Agava.Wink
 
         private void QuickAccess() => _requestHandler.QuickAccess(OnSubscriptionExist, ResetLogin);
 
-        private async void OnSubscriptionExist()
+        private void OnSubscriptionExist()
         {
-            await SmsAuthAPI.Utility.PlayerPrefs.Load();
             HasAccess = true;
             Successfully?.Invoke();
-            _sceneLoader.LoadScene();
             Debug.Log("Access succesfully");
         }
     }

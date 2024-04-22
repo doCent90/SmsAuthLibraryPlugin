@@ -13,7 +13,7 @@ namespace Agava.Wink
                 throw new NullReferenceException("Start Name Scene is Empty on Boot!");
         }
 
-        internal void LoadScene() => UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(_startSceneName);
+        internal void LoadGameScene() => UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(_startSceneName);
         internal void LoadScene(string sceneName) => UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
         internal void LoadScene(int sceneBuildIndex) => UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneBuildIndex);
     }

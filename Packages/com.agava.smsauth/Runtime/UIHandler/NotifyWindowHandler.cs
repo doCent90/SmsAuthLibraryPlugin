@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using System;
 using System.Linq;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Agava.Wink
 {
@@ -25,11 +25,9 @@ namespace Agava.Wink
         public bool IsAnyWindowEnabled => _windows.Any(window => window.HasOpened);
 
         internal void OpenSignWindow() => _signInWindow.Enable();
-        internal void OpenWindow(WindowPresenter window) => window.Enable();
-        internal void CloseWindow(WindowPresenter window) => window.Disable();
         internal void OpenWindow(WindowType type) => GetWindowByType(type).Enable();
-        internal void OpenInputWindow(Action<uint> onInputDone) => _enterCodeWindow.Enable(onInputDone);
         internal void CloseWindow(WindowType type) => GetWindowByType(type).Disable();
+        internal void OpenInputWindow(Action<uint> onInputDone) => _enterCodeWindow.Enable(onInputDone);
         internal void CloseAllWindows() => _windows.ForEach(window => window.Disable());
 
         internal void OnLimitReached()

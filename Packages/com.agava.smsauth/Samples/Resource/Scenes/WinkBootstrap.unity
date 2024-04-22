@@ -329,6 +329,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41c2fb63ece536042ae3dd1a57c00be0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &131191536 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3558283120338427668, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
+  m_PrefabInstance: {fileID: 130528693}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70ec58d84ed9e66418df474fc863b924, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &289619831
 GameObject:
   m_ObjectHideFlags: 0
@@ -456,6 +467,10 @@ PrefabInstance:
       propertyPath: _noEnternetWindow
       value: 
       objectReference: {fileID: 130528696}
+    - target: {fileID: 4653795427995862268, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
+      propertyPath: _winkAccessManagerComponent
+      value: 
+      objectReference: {fileID: 131191536}
     - target: {fileID: 4653795427995862268, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
       propertyPath: _winkSignInHandlerUIComponent
       value: 

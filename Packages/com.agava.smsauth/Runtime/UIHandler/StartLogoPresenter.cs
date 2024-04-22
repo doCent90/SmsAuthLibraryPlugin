@@ -7,9 +7,16 @@ namespace Agava.Wink
     internal class StartLogoPresenter : MonoBehaviour
     {
         [SerializeField] private CanvasGroup _logoGroup;
+        [SerializeField] private CanvasGroup _bootGroup;
         [SerializeField] private Image _enLogo;
         [SerializeField] private Image _ruLogo;
         [SerializeField] private Image _loading;
+
+        private void Start()
+        {
+            _enLogo.gameObject.SetActive(false);
+            _ruLogo.gameObject.SetActive(false);
+        }
 
         private void Update()
         {
@@ -20,15 +27,9 @@ namespace Agava.Wink
         internal void ShowLogo()
         {
             if (Application.systemLanguage == SystemLanguage.Russian)
-            {
-                _enLogo.gameObject.SetActive(false);
                 _ruLogo.gameObject.SetActive(true);
-            }
             else
-            {
                 _enLogo.gameObject.SetActive(true);
-                _ruLogo.gameObject.SetActive(false);
-            }
         }
 
         internal IEnumerator HidingLogo()
@@ -41,6 +42,11 @@ namespace Agava.Wink
 
             _enLogo.gameObject.SetActive(false);
             _ruLogo.gameObject.SetActive(false);
+        }
+
+        internal void CloseBootView()
+        {
+            _bootGroup.alpha = 0;
         }
     }
 }

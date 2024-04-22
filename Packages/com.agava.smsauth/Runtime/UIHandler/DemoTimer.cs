@@ -1,7 +1,7 @@
-﻿using SmsAuthAPI.Program;
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
+using SmsAuthAPI.Program;
 
 namespace Agava.Wink
 {
