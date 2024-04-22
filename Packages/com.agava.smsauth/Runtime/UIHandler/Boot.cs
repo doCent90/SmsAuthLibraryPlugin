@@ -14,7 +14,6 @@ namespace Agava.Wink
         [SerializeField] private MonoBehaviour _winkSignInHandlerUIComponent;
         [SerializeField] private StartLogoPresenter _startLogoPresenter;
         [SerializeField] private SceneLoader _sceneLoader;
-        [SerializeField] private float _logoDuration = 3f;
 
         private Coroutine _signInProcess;
         private IWinkAccessManager _winkSignInHandler;
@@ -37,7 +36,7 @@ namespace Agava.Wink
         {
             _startLogoPresenter.ShowLogo();
 
-            yield return new WaitForSecondsRealtime(_logoDuration);
+            yield return new WaitForSecondsRealtime(_startLogoPresenter.LogoDuration);
             yield return _startLogoPresenter.HidingLogo();
 
             yield return new WaitWhile(() => Application.internetReachability == NetworkReachability.NotReachable);

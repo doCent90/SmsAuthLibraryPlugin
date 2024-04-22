@@ -6,6 +6,8 @@ namespace Agava.Wink
 {
     internal class StartLogoPresenter : MonoBehaviour
     {
+        [field: SerializeField] public float LogoDuration { get; private set; } = 3f;
+
         [SerializeField] private CanvasGroup _logoGroup;
         [SerializeField] private CanvasGroup _bootGroup;
         [SerializeField] private Image _enLogo;
