@@ -6,7 +6,8 @@ namespace Agava.Wink
     {
         bool IsAnyWindowEnabled { get; }
 
-        event Action WindowsClosed;
+        event Action AllWindowsClosed;
+        event Action SignInWindowClosed;
 
         void OpenSignWindow();
         void OpenWindow(WindowPresenter window);

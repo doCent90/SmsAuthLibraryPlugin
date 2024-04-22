@@ -1,0 +1,46 @@
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace Agava.Wink
+{
+    internal class StartLogoPresenter : MonoBehaviour
+    {
+        [SerializeField] private CanvasGroup _logoGroup;
+        [SerializeField] private Image _enLogo;
+        [SerializeField] private Image _ruLogo;
+        [SerializeField] private Image _loading;
+
+        private void Update()
+        {
+            if (SmsAuthAPI.Utility.PlayerPrefs.s_loaded == false)
+                _loading.transform.localEulerAngles += new Vector3(0, 0, 2f);
+        }
+
+        internal void ShowLogo()
+        {
+            if (Application.systemLanguage == SystemLanguage.Russian)
+            {
+                _enLogo.gameObject.SetActive(false);
+                _ruLogo.gameObject.SetActive(true);
+            }
+            else
+            {
+                _enLogo.gameObject.SetActive(true);
+                _ruLogo.gameObject.SetActive(false);
+            }
+        }
+
+        internal IEnumerator HidingLogo()
+        {
+            while (_logoGroup.alpha > 0.1)
+            {
+                _logoGroup.alpha -= 0.1f;
+                yield return new WaitForFixedUpdate();
+            }
+
+            _enLogo.gameObject.SetActive(false);
+            _ruLogo.gameObject.SetActive(false);
+        }
+    }
+}

@@ -7,6 +7,7 @@ using System;
 using SmsAuthAPI.DTO;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Collections;
 
 namespace Agava.Wink
 {
@@ -14,6 +15,7 @@ namespace Agava.Wink
     internal class WinkSignInHandlerUI : MonoBehaviour, IWinkSignInHandlerUI, ICoroutine
     {
         private const int MinutesFactor = 60;
+
         [SerializeField] private WinkAccessManager _winkAccessManager;
         [SerializeField] private DemoTimer _demoTimer;
         [Header("UI Windows")]
@@ -24,6 +26,7 @@ namespace Agava.Wink
         [SerializeField] private NotifyWindowPresenter _successfullyWindow;
         [SerializeField] private NotifyWindowPresenter _unlinkWindow;
         [SerializeField] private NotifyWindowPresenter _demoTimerExpiredWindow;
+        [SerializeField] private NotifyWindowPresenter _noEnternetWindow;
         [SerializeField] private RedirectWindowPresenter _redirectToWebsiteWindow;
         [SerializeField] private InputWindowPresenter _enterCodeWindow;
         [SerializeField] private List<WindowPresenter> _windows;
@@ -46,7 +49,8 @@ namespace Agava.Wink
         private readonly List<Button> _devicesIdButtons = new();
 
         public bool IsAnyWindowEnabled => _windows.Any(window => window.HasOpened);
-        public event Action WindowsClosed;
+        public event Action AllWindowsClosed;
+        public event Action SignInWindowClosed;
 
         private void OnDestroy()
         {
@@ -57,7 +61,7 @@ namespace Agava.Wink
             _demoTimer.Dispose();
         }
 
-        private async void Awake()
+        private IEnumerator Start()
         {
             _signInButton.onClick.AddListener(OnSignInClicked);
 #if UNITY_EDITOR || TEST
@@ -74,21 +78,30 @@ namespace Agava.Wink
             _winkAccessManager.Successfully += OnSuccessfully;
             _demoTimer.TimerExpired += OnTimerExpired;
 
-            await SetRemoteConfig();
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                OpenWindow(_noEnternetWindow);
+                yield return new WaitWhile(() => Application.internetReachability == NetworkReachability.NotReachable);
+            }
+            else
+            {
+                CloseWindow(_noEnternetWindow);
+            }
+
+            SetRemoteConfig();
         }
 
         public void OpenSignWindow() => _signInWindow.Enable();
-
         public void OpenWindow(WindowPresenter window) => window.Enable();
         public void CloseWindow(WindowPresenter window) => window.Disable();
 
         public void CloseAllWindows()
         {
             _windows.ForEach(window => window.Disable());
-            WindowsClosed?.Invoke();
+            AllWindowsClosed?.Invoke();
         }
 
-        private async Task SetRemoteConfig()
+        private async void SetRemoteConfig()
         {
             await Task.Yield();
 
@@ -172,6 +185,7 @@ namespace Agava.Wink
             _successfullyWindow.Enable();
             _signInWindow.Disable();
             _proccesOnWindow.Disable();
+            SignInWindowClosed?.Invoke();
             OnSuccessfully();
         }
 

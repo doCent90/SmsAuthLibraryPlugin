@@ -11,9 +11,10 @@ namespace SmsAuthAPI.Utility
     /// </summary>
     public static class PlayerPrefs
     {
-        private static bool s_loaded = false;
         private static Action<string> s_onLoadErrorCallback;
         private static readonly Dictionary<string, string> s_prefs = new Dictionary<string, string>();
+
+        public static bool s_loaded = false;
 
         public static void Save()
         {

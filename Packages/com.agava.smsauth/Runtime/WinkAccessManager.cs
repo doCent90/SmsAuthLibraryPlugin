@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using SmsAuthAPI.DTO;
 using SmsAuthAPI.Utility;
 using SmsAuthAPI.Program;
+using System.Collections;
 
 namespace Agava.Wink
 {
@@ -213,6 +214,7 @@ namespace Agava.Wink
             HasAccess = true;
             Successfully?.Invoke();
             Debug.Log("Access succesfully");
+            gameObject.SetActive(false);
         }
     }
 }
