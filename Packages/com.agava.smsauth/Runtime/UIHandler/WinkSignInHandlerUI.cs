@@ -1,21 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using SmsAuthAPI.Program;
-using TMPro;
-using System;
 using SmsAuthAPI.DTO;
-using System.Threading.Tasks;
-using System.Collections;
+using TMPro;
 
 namespace Agava.Wink
 {
-    [DefaultExecutionOrder(-12)]
-    internal class WinkSignInHandlerUI : MonoBehaviour, IWinkSignInHandlerUI, ICoroutine
+    /// <summary>
+    ///     Handler UI. Input data and view auth process.
+    /// </summary>
+    public class WinkSignInHandlerUI : MonoBehaviour, IWinkSignInHandlerUI, ICoroutine
     {
         private const int MinutesFactor = 60;
+        private const string RemoteName = "max-demo-minutes";
 
-        [SerializeField] private WinkAccessManager _winkAccessManager;
         [SerializeField] private DemoTimer _demoTimer;
         [SerializeField] private NotifyWindowHandler _notifyWindowHandler;
         [Header("UI Input")]
@@ -36,24 +38,32 @@ namespace Agava.Wink
         [Header("Factory components")]
         [SerializeField] private Transform _containerButtons;
 
+        private WinkAccessManager _winkAccessManager;
         private readonly List<Button> _devicesIdButtons = new();
+
+        public static WinkSignInHandlerUI Instance { get; private set; }
 
         public bool IsAnyWindowEnabled => _notifyWindowHandler.IsAnyWindowEnabled;
         public event Action AllWindowsClosed;
         public event Action SignInWindowClosed;
 
-        private void OnDestroy()
+        public void Dispose()
         {
             _signInButton.onClick.RemoveAllListeners();
+
+            if (_winkAccessManager == null) return;
+
             _winkAccessManager.ResetLogin -= OpenSignWindow;
             _winkAccessManager.LimitReached -= OnLimitReached;
             _winkAccessManager.Successfully -= OnSuccessfully;
             _demoTimer.Dispose();
         }
 
-        private IEnumerator Start()
+        public IEnumerator Construct(WinkAccessManager winkAccessManager)
         {
-            _signInButton.onClick.AddListener(OnSignInClicked);
+            if (Instance == null)
+                Instance = this;
+
 #if UNITY_EDITOR || TEST
             _testSignInButton.onClick.AddListener(OnTestSignInClicked);
             _testDeleteButton.onClick.AddListener(OnTestDeleteClicked);
@@ -63,6 +73,8 @@ namespace Agava.Wink
             _testDeleteButton.gameObject.SetActive(false);
             _testSignInButton.gameObject.SetActive(false);
 #endif
+            _winkAccessManager = winkAccessManager;
+            _signInButton.onClick.AddListener(OnSignInClicked);
             _openSignInButton.onClick.AddListener(OpenSignWindow);
             CloseAllWindows();
 
@@ -84,7 +96,7 @@ namespace Agava.Wink
             SetRemoteConfig();
         }
 
-        public void OpenSignWindow() => _notifyWindowHandler.OpenSignWindow();
+        public void OpenSignWindow() => _notifyWindowHandler.OpenSignInWindow(() => SignInWindowClosed?.Invoke());
         public void OpenWindow(WindowType type) => _notifyWindowHandler.OpenWindow(type);
         public void CloseWindow(WindowType type) => _notifyWindowHandler.CloseWindow(type);
 
@@ -98,7 +110,7 @@ namespace Agava.Wink
         {
             await Task.Yield();
 
-            var response = await SmsAuthApi.GetRemoteConfig("max-demo-minutes");
+            var response = await SmsAuthApi.GetRemoteConfig(RemoteName);
 
             if (response.statusCode == (uint)YbdStatusCode.Success)
             {
@@ -188,7 +200,6 @@ namespace Agava.Wink
             _notifyWindowHandler.OpenWindow(WindowType.Successfully);
             _notifyWindowHandler.CloseWindow(WindowType.SignIn);
             _notifyWindowHandler.CloseWindow(WindowType.ProccessOn);
-            SignInWindowClosed?.Invoke();
             OnSuccessfully();
         }
 
@@ -218,7 +229,7 @@ namespace Agava.Wink
             _devicesIdButtons.Clear();
             _winkAccessManager.Unlink(device);
             _notifyWindowHandler.CloseWindow(WindowType.Unlink);
-            _notifyWindowHandler.OpenSignWindow();
+            _notifyWindowHandler.OpenSignInWindow();
         }
 
         private void OnSuccessfully()

@@ -2,7 +2,6 @@ using Agava.Wink;
 using Newtonsoft.Json;
 using SmsAuthAPI.DTO;
 using SmsAuthAPI.Program;
-using SmsAuthAPI.Utility;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -10,8 +9,6 @@ using UnityEngine.UI;
 
 public class TestCloudHandler : MonoBehaviour
 {
-    [SerializeField] private Button _save;
-    [SerializeField] private Button _load;
     [SerializeField] private Button _savePresf;
     [SerializeField] private Button _loadPrefs;
     [SerializeField] private Button _deletePrefs;
@@ -20,27 +17,18 @@ public class TestCloudHandler : MonoBehaviour
 
     private void Start()
     {
-        _save.onClick.AddListener(OnSaveClicked);
         _savePresf.onClick.AddListener(OnSavePrefsClicked);
-        _load.onClick.AddListener(OnLoadClicked);
         _loadPrefs.onClick.AddListener(OnLoadPrefsClicked);
         _checkDevices.onClick.AddListener(ShowDevices);
         _deletePrefs.onClick.AddListener(OnDeleteAllClicked);
+
+        WinkSignInHandlerUI.Instance.SignInWindowClosed += OnClosed;
+        Debug.Log("Start game scene");
     }
 
-    private void OnSaveClicked()
+    private void OnClosed()
     {
-        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
-
-        if (WinkAccessManager.Instance.HasAccess == false)
-            throw new System.Exception("Wink not authorizated!");
-
-        TestData data = new()
-        {
-            Text = _input.text,
-        };
-
-        //SaveLoadCloudDataService.SaveData(data);
+        Debug.Log("On Closed");
     }
 
     private void OnSavePrefsClicked()
@@ -54,14 +42,13 @@ public class TestCloudHandler : MonoBehaviour
         SmsAuthAPI.Utility.PlayerPrefs.Save();
     }
 
-    private async void OnLoadPrefsClicked()
+    private void OnLoadPrefsClicked()
     {
         Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
 
         if (WinkAccessManager.Instance.HasAccess == false)
             throw new System.Exception("Wink not authorizated!");
 
-        await SmsAuthAPI.Utility.PlayerPrefs.Load();
         var data = SmsAuthAPI.Utility.PlayerPrefs.GetString("key");
 
         if (string.IsNullOrEmpty(data))
@@ -79,21 +66,6 @@ public class TestCloudHandler : MonoBehaviour
 
         await SmsAuthAPI.Utility.PlayerPrefs.Load();
         SmsAuthAPI.Utility.PlayerPrefs.DeleteAll();
-    }
-
-    private async void OnLoadClicked()
-    {
-        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
-
-        if (WinkAccessManager.Instance.HasAccess == false)
-            throw new System.Exception("Wink not authorizated!");
-
-        //var data = await SaveLoadCloudDataService.LoadData<TestData>();
-
-        //if (data != null)
-        //{
-        //    Debug.Log("Loaded: " + data.Text);
-        //}
     }
 
     private async void ShowDevices()

@@ -45,7 +45,7 @@ namespace SmsAuthAPI.Utility
 
             if (response.statusCode != (uint)YbdStatusCode.Success)
             {
-                Debug.LogWarning("CloudSave -> fail to load: " + response.statusCode + " Message: " + response.body);
+                Debug.LogError("CloudSave -> fail to load: " + response.statusCode + " Message: " + response.body);
                 return null;
             }
             else
@@ -61,6 +61,7 @@ namespace SmsAuthAPI.Utility
                     json = response.body;
                 }
 
+                Debug.Log("Cloud Saves Loaded {API}");
                 return json;
             }
         }

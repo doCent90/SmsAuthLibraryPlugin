@@ -71,6 +71,7 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\ICoroutine.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WinkSignInHandlerUI.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\SignInWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\InputWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\IWinkAccessManager.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\Boot.cs" />

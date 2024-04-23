@@ -4,6 +4,9 @@ using UnityEngine.UI;
 
 namespace Agava.Wink
 {
+    /// <summary>
+    ///     Show logo on start app.
+    /// </summary>
     internal class StartLogoPresenter : MonoBehaviour
     {
         [field: SerializeField] public float LogoDuration { get; private set; } = 3f;
@@ -14,18 +17,21 @@ namespace Agava.Wink
         [SerializeField] private Image _ruLogo;
         [SerializeField] private Image _loading;
 
-        private void Start()
-        {
-            _enLogo.gameObject.SetActive(false);
-            _ruLogo.gameObject.SetActive(false);
-        }
-
         private void Update()
         {
             if (SmsAuthAPI.Utility.PlayerPrefs.s_Loaded == false)
                 _loading.transform.localEulerAngles += new Vector3(0, 0, 2f);
         }
 
+        internal void Construct()
+        {
+            _enLogo.gameObject.SetActive(false);
+            _ruLogo.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        ///     Show localized logo.
+        /// </summary>
         internal void ShowLogo()
         {
             if (Application.systemLanguage == SystemLanguage.Russian)
@@ -34,6 +40,9 @@ namespace Agava.Wink
                 _enLogo.gameObject.SetActive(true);
         }
 
+        /// <summary>
+        ///     Slow shotdown logo.
+        /// </summary>
         internal IEnumerator HidingLogo()
         {
             while (_logoGroup.alpha > 0.1)
@@ -46,6 +55,9 @@ namespace Agava.Wink
             _ruLogo.gameObject.SetActive(false);
         }
 
+        /// <summary>
+        ///     Hide background and loading view.
+        /// </summary>
         internal void CloseBootView()
         {
             _bootGroup.alpha = 0;

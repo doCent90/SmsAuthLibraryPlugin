@@ -280,10 +280,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3558283120338427668, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
-      propertyPath: _functionId
-      value: d4ep5f6v7bc81qhur4ms
-      objectReference: {fileID: 0}
-    - target: {fileID: 3558283120338427668, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
       propertyPath: _sceneLoader
       value: 
       objectReference: {fileID: 608073471}
@@ -468,6 +464,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 130528696}
     - target: {fileID: 4653795427995862268, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
+      propertyPath: _winkAccessManager
+      value: 
+      objectReference: {fileID: 131191536}
+    - target: {fileID: 4653795427995862268, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
+      propertyPath: _winkSignInHandlerUI
+      value: 
+      objectReference: {fileID: 130528694}
+    - target: {fileID: 4653795427995862268, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
       propertyPath: _winkAccessManagerComponent
       value: 
       objectReference: {fileID: 131191536}
@@ -627,10 +631,6 @@ PrefabInstance:
     - target: {fileID: 4058103983319469712, guid: a0241873aded7e74a8c4cc17d012e779, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5844650155800299009, guid: a0241873aded7e74a8c4cc17d012e779, type: 3}
-      propertyPath: _startSceneName
-      value: SampleScene
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

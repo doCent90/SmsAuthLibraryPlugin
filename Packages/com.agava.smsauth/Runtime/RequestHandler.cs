@@ -10,6 +10,9 @@ using SmsAuthAPI.Program;
 
 namespace Agava.Wink
 {
+    /// <summary>
+    ///     Requests/response to/from YBD fuction.
+    /// </summary>
     internal class RequestHandler
     {
         internal async Task<LoginData> Regist(string phoneNumber, string uniqueId, Action<bool> otpCodeRequest)

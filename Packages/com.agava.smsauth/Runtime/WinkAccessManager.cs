@@ -6,7 +6,9 @@ using SmsAuthAPI.Program;
 
 namespace Agava.Wink
 {
-    [DefaultExecutionOrder(-123)]
+    /// <summary>
+    ///     Auth process logic.
+    /// </summary>
     public class WinkAccessManager : MonoBehaviour, IWinkAccessManager
     {
         private const string UniqueId = nameof(UniqueId);
@@ -20,23 +22,20 @@ namespace Agava.Wink
         private string _uniqueId;
 
         public bool HasAccess { get; private set; } = false;
-        public static WinkAccessManager Instance {  get; private set; }
+        public static WinkAccessManager Instance { get; private set; }
 
         public event Action<IReadOnlyList<string>> LimitReached;
         public event Action ResetLogin;
         public event Action Successfully;
 
-        private void Awake()
+        public void Construct()
         {
             if (Instance == null)
                 Instance = this;
 
             _requestHandler = new();
             DontDestroyOnLoad(this);
-        }
-
-        private void Start()
-        {
+      
             if (SmsAuthApi.Initialized == false)
                 SmsAuthApi.Initialize(_functionId);
 
@@ -47,13 +46,6 @@ namespace Agava.Wink
 
             if (UnityEngine.PlayerPrefs.HasKey(TokenLifeHelper.Tokens))
                 QuickAccess();
-        }
-
-        internal void TestEnableSubsription()
-        {
-            HasAccess = true;
-            Successfully?.Invoke();
-            Debug.Log("Test Access succesfully. No cloud saves");
         }
 
         public void SendOtpCode(uint enteredOtpCode)
@@ -68,10 +60,19 @@ namespace Agava.Wink
             _data = await _requestHandler.Regist(phoneNumber, _uniqueId, otpCodeRequest);
         }
 
+        public void Unlink(string deviceId) => _requestHandler.Unlink(deviceId, ResetLogin);
+
+#if UNITY_EDITOR || TEST
+        public void TestEnableSubsription()
+        {
+            HasAccess = true;
+            Successfully?.Invoke();
+            Debug.Log("Test Access succesfully. No cloud saves");
+        }
+#endif
+
         private void Login(LoginData data) 
             => _requestHandler.Login(data, LimitReached, _winkSubscriptionAccessRequest, OnSubscriptionExist);
-
-        public void Unlink(string deviceId) => _requestHandler.Unlink(deviceId, ResetLogin);
 
         private void QuickAccess() => _requestHandler.QuickAccess(OnSubscriptionExist, ResetLogin);
 

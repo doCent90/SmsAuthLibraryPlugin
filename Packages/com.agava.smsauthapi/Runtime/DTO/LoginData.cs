@@ -1,5 +1,8 @@
 ﻿namespace SmsAuthAPI.DTO
 {
+    /// <summary>
+    ///     Client data storage.
+    /// </summary>
     public class LoginData
     {
         public string phone { get; set; }

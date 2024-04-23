@@ -9,7 +9,7 @@ namespace Agava.Wink
     internal class NotifyWindowHandler
     {
         [Header("UI Windows")]
-        [SerializeField] private NotifyWindowPresenter _signInWindow;
+        [SerializeField] private SignInWindowPresenter _signInWindow;
         [SerializeField] private NotifyWindowPresenter _failWindow;
         [SerializeField] private NotifyWindowPresenter _wrongNumberWindow;
         [SerializeField] private NotifyWindowPresenter _proccesOnWindow;
@@ -24,7 +24,7 @@ namespace Agava.Wink
 
         public bool IsAnyWindowEnabled => _windows.Any(window => window.HasOpened);
 
-        internal void OpenSignWindow() => _signInWindow.Enable();
+        internal void OpenSignInWindow(Action closeCallback = null) => _signInWindow.Enable(closeCallback);
         internal void OpenWindow(WindowType type) => GetWindowByType(type).Enable();
         internal void CloseWindow(WindowType type) => GetWindowByType(type).Disable();
         internal void OpenInputWindow(Action<uint> onInputDone) => _enterCodeWindow.Enable(onInputDone);

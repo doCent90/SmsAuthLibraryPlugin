@@ -1745,7 +1745,7 @@ GameObject:
   - component: {fileID: 5495095201058386997}
   - component: {fileID: 1556099343795804027}
   - component: {fileID: 1245470670078687929}
-  - component: {fileID: 1367689781058899639}
+  - component: {fileID: 871094102535088068}
   - component: {fileID: 6740380198925483502}
   m_Layer: 5
   m_Name: SignIn_Panel
@@ -1817,7 +1817,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1367689781058899639
+--- !u!114 &871094102535088068
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1826,7 +1826,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2510098692511216799}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41c2fb63ece536042ae3dd1a57c00be0, type: 3}
+  m_Script: {fileID: 11500000, guid: a6ef37c5204a5a4459fa9228c75d4f67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   <Type>k__BackingField: 1
@@ -5324,11 +5324,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c37bc4639284b34a9b1f6e365b2be81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _winkAccessManager: {fileID: 3558283120338427668}
   _demoTimer:
     _defaultTimerSeconds: 1800
   _notifyWindowHandler:
-    _signInWindow: {fileID: 1367689781058899639}
+    _signInWindow: {fileID: 871094102535088068}
     _failWindow: {fileID: 4157864668006057402}
     _wrongNumberWindow: {fileID: 7139242894815358875}
     _proccesOnWindow: {fileID: 3982581273095667616}
@@ -5340,7 +5339,7 @@ MonoBehaviour:
     _enterCodeWindow: {fileID: 8441988893637134663}
     _windows:
     - {fileID: 4415140520025758017}
-    - {fileID: 1367689781058899639}
+    - {fileID: 871094102535088068}
     - {fileID: 4157864668006057402}
     - {fileID: 485251108337916005}
     - {fileID: 1846528832305154164}

@@ -5,43 +5,42 @@ using SmsAuthAPI.Program;
 
 namespace Agava.Wink
 {
-    public class Boot : MonoBehaviour
+    /// <summary>
+    ///     Starting auth services and cloud saves.
+    /// </summary>
+    [DefaultExecutionOrder(-123)]
+    internal class Boot : MonoBehaviour
     {
-        private const string FirstShownSignIn = nameof(FirstShownSignIn);
+        private const string FirsttimeStartApp = nameof(FirsttimeStartApp);
         private const float TimeOutTime = 60f;
 
-        [SerializeField] private MonoBehaviour _winkAccessManagerComponent;
-        [SerializeField] private MonoBehaviour _winkSignInHandlerUIComponent;
+        [SerializeField] private WinkAccessManager _winkAccessManager;
+        [SerializeField] private WinkSignInHandlerUI _winkSignInHandlerUI;
         [SerializeField] private StartLogoPresenter _startLogoPresenter;
         [SerializeField] private SceneLoader _sceneLoader;
 
         private Coroutine _signInProcess;
-        private IWinkAccessManager _winkSignInHandler;
-        private IWinkSignInHandlerUI _winkSignInHandlerUI;
 
-        private void Awake()
-        {
-            if (_winkSignInHandlerUIComponent == null || _winkAccessManagerComponent == null)
-                throw new NullReferenceException("Some Wink Component is Missing On Boot!");
-
-            _winkSignInHandler = (IWinkAccessManager)_winkAccessManagerComponent;
-            _winkSignInHandlerUI = (IWinkSignInHandlerUI)_winkSignInHandlerUIComponent;
-
-            _winkSignInHandler.Successfully += OnSuccessfully;
-
-            DontDestroyOnLoad(this);
-        }
+        private void OnDestroy() => _winkSignInHandlerUI.Dispose();
 
         private IEnumerator Start()
         {
+            DontDestroyOnLoad(this);
+
+            if (_winkSignInHandlerUI == null || _winkAccessManager == null)
+                throw new NullReferenceException("Some Auth Component is Missing On Boot!");
+
+            _startLogoPresenter.Construct();
             _startLogoPresenter.ShowLogo();
+
+            _winkAccessManager.Construct();
+            yield return _winkSignInHandlerUI.Construct(_winkAccessManager);
 
             yield return new WaitForSecondsRealtime(_startLogoPresenter.LogoDuration);
             yield return _startLogoPresenter.HidingLogo();
-
             yield return new WaitWhile(() => Application.internetReachability == NetworkReachability.NotReachable);
-            _winkSignInHandlerUI.CloseAllWindows();
 
+            _winkSignInHandlerUI.CloseAllWindows();
             _signInProcess = StartCoroutine(OnStarted());
             yield return _signInProcess;
 
@@ -51,31 +50,38 @@ namespace Agava.Wink
 
         private IEnumerator OnStarted()
         {
-            if (UnityEngine.PlayerPrefs.HasKey(FirstShownSignIn) == false)
+            yield return new WaitWhile(() => SmsAuthApi.Initialized == false);
+
+            if (UnityEngine.PlayerPrefs.HasKey(FirsttimeStartApp) == false)
             {
-                yield return new WaitWhile(() => SmsAuthApi.Initialized == false);
+                _winkSignInHandlerUI.OpenSignWindow();
+                UnityEngine.PlayerPrefs.SetString(FirsttimeStartApp, "true");
 
-                if (UnityEngine.PlayerPrefs.HasKey(SmsAuthAPI.DTO.TokenLifeHelper.Tokens) == false)
+                yield return new WaitUntil(() => (WinkAccessManager.Instance.HasAccess == true || _winkSignInHandlerUI.IsAnyWindowEnabled == false));
+
+                if (WinkAccessManager.Instance.HasAccess)
                 {
-                    _winkSignInHandlerUI.OpenSignWindow();
-                    UnityEngine.PlayerPrefs.SetString(FirstShownSignIn, "true");
-
-                    yield return new WaitUntil(() => (WinkAccessManager.Instance.HasAccess == true || _winkSignInHandlerUI.IsAnyWindowEnabled == false));
-
-                    if (WinkAccessManager.Instance.HasAccess)
-                        yield return CloudSavesLoading();
-                    else
-                        Debug.Log($"SignIn skiped");
+                    yield return CloudSavesLoading();
+                    Debug.Log($"App First Started. SignIn successfully");
                 }
                 else
                 {
-                    yield return new WaitUntil(() => WinkAccessManager.Instance.HasAccess == true);
-                    yield return CloudSavesLoading();
+                    OnSkiped();
                 }
             }
             else
             {
-                Debug.Log($"Wink Started");
+                if (UnityEngine.PlayerPrefs.HasKey(SmsAuthAPI.DTO.TokenLifeHelper.Tokens))
+                {
+                    yield return new WaitUntil(() => WinkAccessManager.Instance.HasAccess == true);
+                    yield return CloudSavesLoading();
+                }
+                else
+                {
+                    OnSkiped();
+                }
+
+                Debug.Log($"App Started. SignIn: {WinkAccessManager.Instance.HasAccess}");
             }
 
             _signInProcess = null;
@@ -83,8 +89,14 @@ namespace Agava.Wink
 
         private void OnSuccessfully()
         {
-            StartCoroutine(CloudSavesLoading());
-            _sceneLoader.LoadGameScene();
+            _winkAccessManager.Successfully -= OnSuccessfully;
+
+            StartCoroutine(Loading());
+            IEnumerator Loading()
+            {
+                yield return CloudSavesLoading();
+                _sceneLoader.LoadGameScene();
+            }
         }
 
         private IEnumerator CloudSavesLoading()
@@ -92,7 +104,7 @@ namespace Agava.Wink
             Coroutine cancelation = null;
             cancelation = StartCoroutine(TimeOutWaiting());
 
-            SmsAuthAPI.Utility.PlayerPrefs.Load();
+            var task = SmsAuthAPI.Utility.PlayerPrefs.Load();
             yield return new WaitWhile(() => SmsAuthAPI.Utility.PlayerPrefs.s_Loaded == false);
 
             if (cancelation != null)
@@ -105,6 +117,12 @@ namespace Agava.Wink
             StopCoroutine(_signInProcess);
             _winkSignInHandlerUI.CloseAllWindows();
             _winkSignInHandlerUI.OpenWindow(WindowType.Fail);
+        }
+
+        private void OnSkiped()
+        {
+            _winkAccessManager.Successfully += OnSuccessfully;
+            Debug.Log($"SignIn skiped");
         }
     }
 }
