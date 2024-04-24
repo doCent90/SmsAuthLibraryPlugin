@@ -9,7 +9,7 @@ namespace Agava.Wink
     ///     Starting auth services and cloud saves.
     /// </summary>
     [DefaultExecutionOrder(-123)]
-    internal class Boot : MonoBehaviour
+    public class Boot : MonoBehaviour, IBoot
     {
         private const string FirsttimeStartApp = nameof(FirsttimeStartApp);
         private const float TimeOutTime = 60f;
@@ -18,8 +18,13 @@ namespace Agava.Wink
         [SerializeField] private WinkSignInHandlerUI _winkSignInHandlerUI;
         [SerializeField] private StartLogoPresenter _startLogoPresenter;
         [SerializeField] private SceneLoader _sceneLoader;
+        [SerializeField] private bool _restartAfterAuth = true;
 
         private Coroutine _signInProcess;
+
+        public static Boot Instance { get; private set; }
+
+        public event Action Restarted;
 
         private void OnDestroy() => _winkSignInHandlerUI.Dispose();
 
@@ -29,6 +34,9 @@ namespace Agava.Wink
 
             if (_winkSignInHandlerUI == null || _winkAccessManager == null)
                 throw new NullReferenceException("Some Auth Component is Missing On Boot!");
+
+            if (Instance == null)
+                Instance = this;
 
             _startLogoPresenter.Construct();
             _startLogoPresenter.ShowLogo();
@@ -94,8 +102,12 @@ namespace Agava.Wink
             StartCoroutine(Loading());
             IEnumerator Loading()
             {
+                Debug.Log($"Try load cloud saves");
                 yield return CloudSavesLoading();
-                _sceneLoader.LoadGameScene();
+                Restarted?.Invoke();
+
+                if (_restartAfterAuth)
+                    _sceneLoader.LoadGameScene();
             }
         }
 
