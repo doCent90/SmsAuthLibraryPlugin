@@ -61,13 +61,6 @@ namespace SmsAuthAPI.Utility
             Value
         }
 
-        private static void OnLoadSuccessCallback(string jsonData)
-        {
-            s_Loaded = true;
-            ParseAndApplyData(jsonData);
-            Debug.Log("Cloud saves Success {PlayerPrefs}");
-        }
-
         public static void ParseAndApplyData(string jsonData)
         {
             if (string.IsNullOrEmpty(jsonData))
@@ -137,12 +130,6 @@ namespace SmsAuthAPI.Utility
 
                 characterIterator += 1;
             }
-        }
-
-        private static void OnLoadErrorCallback(string errorMessage)
-        {
-            Debug.Log($"Error: Cloud saves not loaded: {errorMessage}");
-            s_onLoadErrorCallback?.Invoke(errorMessage);
         }
 
         public static bool HasKey(string key) => s_prefs.ContainsKey(key);
@@ -215,6 +202,20 @@ namespace SmsAuthAPI.Utility
         {
             float defaultValue = 0;
             return GetFloat(key, defaultValue);
+        }
+
+        private static void OnLoadSuccessCallback(string jsonData)
+        {
+            s_Loaded = true;
+            ParseAndApplyData(jsonData);
+            Debug.Log("Cloud saves Success {PlayerPrefs}");
+        }
+
+        private static void OnLoadErrorCallback(string errorMessage)
+        {
+            s_Loaded = true;
+            Debug.Log($"Warning: Cloud saves is empty: {errorMessage}");
+            s_onLoadErrorCallback?.Invoke(errorMessage);
         }
 
         private static string MaskJsonString(string value)
