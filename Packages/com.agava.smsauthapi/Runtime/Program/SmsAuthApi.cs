@@ -7,20 +7,20 @@ namespace SmsAuthAPI.Program
 {
     public static class SmsAuthApi
     {
-        private static YandexFunction _function;
+        private static HttpWebClient _httpClient;
 
-        public static void Initialize(string functionId)
+        public static bool Initialized => _httpClient != null;
+
+        public static void Initialize(string connectId)
         {
-            if(string.IsNullOrEmpty(functionId))
+            if(string.IsNullOrEmpty(connectId))
                 throw new InvalidOperationException(nameof(SmsAuthApi) + " fuction id not entered");
 
             if (Initialized)
                 throw new InvalidOperationException(nameof(SmsAuthApi) + " has already been initialized");
 
-            _function = new YandexFunction(functionId);
+            _httpClient = new HttpWebClient(connectId);
         }
-
-        public static bool Initialized => _function != null;
 
         public async static Task<Response> Login(LoginData loginData)
         {
@@ -32,7 +32,7 @@ namespace SmsAuthAPI.Program
                 body = JsonConvert.SerializeObject(loginData),
             };
 
-            return await _function.Post(request);
+            return await _httpClient.Post(request, loginData.phone);
         }
 
         public async static Task<Response> Regist(string phoneNumber)
@@ -41,11 +41,11 @@ namespace SmsAuthAPI.Program
 
             var request = new Request()
             {
-                method = "REGISTRATION",
+                method = "registration",
                 body = phoneNumber,
             };
 
-            return await _function.Post(request);
+            return await _httpClient.Post(request, phoneNumber);
         }
 
         public async static Task<Response> Refresh(string refreshToken)
@@ -58,7 +58,7 @@ namespace SmsAuthAPI.Program
                 body = refreshToken,
             };
 
-            return await _function.Post(request);
+            return await _httpClient.Post(request);
         }
 
         public async static Task<Response> Unlink(string accessToken, string deviceId)
@@ -72,7 +72,7 @@ namespace SmsAuthAPI.Program
                 access_token = accessToken,
             };
 
-            return await _function.Post(request);
+            return await _httpClient.Post(request);
         }
 
         public async static Task<Response> SampleAuth(string accessToken)
@@ -85,7 +85,7 @@ namespace SmsAuthAPI.Program
                 access_token = accessToken,
             };
 
-            return await _function.Post(request);
+            return await _httpClient.Post(request);
         }
 
         public async static Task<Response> SetSave(string accessToken, string body)
@@ -99,7 +99,7 @@ namespace SmsAuthAPI.Program
                 access_token = accessToken,
             };
 
-            return await _function.Post(request);
+            return await _httpClient.Post(request);
         }
 
         public async static Task<Response> GetSave(string accessToken)
@@ -112,7 +112,7 @@ namespace SmsAuthAPI.Program
                 access_token = accessToken,
             };
 
-            return await _function.Post(request);
+            return await _httpClient.Post(request);
         }
 
         public async static Task<Response> GetDevices(string accessToken)
@@ -125,7 +125,7 @@ namespace SmsAuthAPI.Program
                 access_token = accessToken,
             };
 
-            return await _function.Post(request);
+            return await _httpClient.Post(request);
         }
 
         public async static Task<Response> GetRemoteConfig(string remoteName)
@@ -134,11 +134,11 @@ namespace SmsAuthAPI.Program
 
             var request = new Request()
             {
-                method = "GET_REMOTE_CONFIG",
+                method = "remoteconfig",
                 body = remoteName,
             };
 
-            return await _function.Post(request);
+            return await _httpClient.GetRemote(request, remoteName);
         }
 
         private static void EnsureInitialize()

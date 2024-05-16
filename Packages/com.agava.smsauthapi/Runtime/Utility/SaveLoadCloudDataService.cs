@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using SmsAuthAPI.Program;
 using SmsAuthAPI.DTO;
+using UnityEngine.Networking;
 
 namespace SmsAuthAPI.Utility
 {
@@ -24,7 +25,7 @@ namespace SmsAuthAPI.Utility
 
             var response = await SmsAuthApi.SetSave(tokens.access, json);
 
-            if (response.statusCode != (uint)YbdStatusCode.Success)
+            if (response.statusCode != UnityWebRequest.Result.Success)
                 Debug.LogError("CloudSave -> fail to save: " + response.statusCode + " Message: " + response.body);
         }
 
@@ -43,7 +44,7 @@ namespace SmsAuthAPI.Utility
 
             var response = await SmsAuthApi.GetSave(tokens.access);
 
-            if (response.statusCode != (uint)YbdStatusCode.Success)
+            if (response.statusCode != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("CloudSave -> fail to load: " + response.statusCode + " Message: " + response.body);
                 return null;

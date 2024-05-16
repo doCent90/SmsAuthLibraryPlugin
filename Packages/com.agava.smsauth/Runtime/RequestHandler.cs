@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using SmsAuthAPI.DTO;
 using SmsAuthAPI.Utility;
 using SmsAuthAPI.Program;
+using UnityEngine.Networking;
 
 namespace Agava.Wink
 {
@@ -26,7 +27,7 @@ namespace Agava.Wink
 
             Response response = await SmsAuthApi.Regist(phoneNumber);
 
-            if (response.statusCode != (uint)YbdStatusCode.Success)
+            if (response.statusCode != UnityWebRequest.Result.Success)
             {
                 otpCodeRequest?.Invoke(false);
                 Debug.LogError("Regist Error : " + response.statusCode);
@@ -46,7 +47,7 @@ namespace Agava.Wink
             var tokens = SaveLoadLocalDataService.Load<Tokens>(TokenLifeHelper.Tokens);
             var resopnse = await SmsAuthApi.Unlink(tokens.access, deviceId);
 
-            if (resopnse.statusCode != (uint)YbdStatusCode.Success)
+            if (resopnse.statusCode != UnityWebRequest.Result.Success)
                 Debug.LogError("Unlink fail: " + resopnse.statusCode);
             else
                 onResetLogin?.Invoke();
@@ -56,7 +57,7 @@ namespace Agava.Wink
         {
             var response = await SmsAuthApi.Login(data);
 
-            if (response.statusCode == (uint)StatusCode.ValidationError)
+            if (response.statusCode != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("ValidationError : " + response.statusCode);
                 onWinkSubscriptionAccessRequest?.Invoke(false);
@@ -124,7 +125,7 @@ namespace Agava.Wink
 
             var response = await SmsAuthApi.SampleAuth(currentToken);
 
-            if (response.statusCode != (uint)StatusCode.ValidationError)
+            if (response.statusCode == UnityWebRequest.Result.Success)
             {
                 onSuccessed?.Invoke();
             }
@@ -140,7 +141,7 @@ namespace Agava.Wink
             Tokens tokens = TokenLifeHelper.GetTokens();
             var response = await SmsAuthApi.GetDevices(tokens.access);
 
-            if (response.statusCode != (uint)YbdStatusCode.Success)
+            if (response.statusCode != UnityWebRequest.Result.Success)
             {
                 Debug.Log("Error");
             }

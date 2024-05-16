@@ -2,9 +2,11 @@ using Agava.Wink;
 using Newtonsoft.Json;
 using SmsAuthAPI.DTO;
 using SmsAuthAPI.Program;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class TestCloudHandler : MonoBehaviour
@@ -15,15 +17,16 @@ public class TestCloudHandler : MonoBehaviour
     [SerializeField] private TMP_InputField _input;
     [SerializeField] private Button _checkDevices;
 
-    private void Start()
+    private IEnumerator Start()
     {
+        yield return new WaitWhile(() => WinkSignInHandlerUI.Instance == null);
+
         _savePresf.onClick.AddListener(OnSavePrefsClicked);
         _loadPrefs.onClick.AddListener(OnLoadPrefsClicked);
         _checkDevices.onClick.AddListener(ShowDevices);
         _deletePrefs.onClick.AddListener(OnDeleteAllClicked);
 
         WinkSignInHandlerUI.Instance.SignInWindowClosed += OnClosed;
-        Debug.Log("Start game scene");
     }
 
     private void OnClosed()
@@ -78,7 +81,7 @@ public class TestCloudHandler : MonoBehaviour
         Tokens tokens = TokenLifeHelper.GetTokens();
         var response = await SmsAuthApi.GetDevices(tokens.access);
 
-        if(response.statusCode != (uint)YbdStatusCode.Success)
+        if(response.statusCode != UnityWebRequest.Result.Success)
         {
             Debug.Log("Error");
         }

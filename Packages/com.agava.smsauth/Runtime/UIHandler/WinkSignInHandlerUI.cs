@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using SmsAuthAPI.Program;
 using SmsAuthAPI.DTO;
 using TMPro;
+using UnityEngine.Networking;
 
 namespace Agava.Wink
 {
@@ -112,7 +113,7 @@ namespace Agava.Wink
 
             var response = await SmsAuthApi.GetRemoteConfig(RemoteName);
 
-            if (response.statusCode == (uint)YbdStatusCode.Success)
+            if (response.statusCode == UnityWebRequest.Result.Success)
             {
                 int seconds;
 

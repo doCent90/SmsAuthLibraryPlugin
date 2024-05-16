@@ -7,6 +7,7 @@ using UnityEngine;
 using Newtonsoft.Json;
 using SmsAuthAPI.Utility;
 using SmsAuthAPI.Program;
+using UnityEngine.Networking;
 
 namespace SmsAuthAPI.DTO
 {
@@ -31,7 +32,7 @@ namespace SmsAuthAPI.DTO
         {
             var refreshResponse = await SmsAuthApi.Refresh(token);
 
-            if (refreshResponse.statusCode != (uint)StatusCode.ValidationError)
+            if (refreshResponse.statusCode == UnityWebRequest.Result.Success)
             {
                 Tokens tokensBack;
 

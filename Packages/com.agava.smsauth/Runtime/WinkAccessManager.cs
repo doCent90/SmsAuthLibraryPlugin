@@ -13,7 +13,8 @@ namespace Agava.Wink
     {
         private const string UniqueId = nameof(UniqueId);
 
-        [SerializeField] private string _functionId;
+        [SerializeField] private string _ip;
+        [SerializeField] private string _port;
         [SerializeField] private string _additiveId;
 
         private RequestHandler _requestHandler;
@@ -37,7 +38,12 @@ namespace Agava.Wink
             DontDestroyOnLoad(this);
       
             if (SmsAuthApi.Initialized == false)
-                SmsAuthApi.Initialize(_functionId);
+            {
+                if (string.IsNullOrEmpty(_port))
+                    SmsAuthApi.Initialize(_ip);
+                else
+                    SmsAuthApi.Initialize(_ip + ":" + _port);
+            }
 
             if (UnityEngine.PlayerPrefs.HasKey(UniqueId) == false)
                 _uniqueId = SystemInfo.deviceName + Application.identifier + _additiveId;
