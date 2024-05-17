@@ -131,7 +131,7 @@ namespace Agava.Wink
             }
             else
             {
-                Debug.LogError($"Quick access Validation Error: {response.body}-code: {response.statusCode}");
+                Debug.LogError($"Quick access Validation Error: {response.reasonPhrase}: {response.statusCode}");
                 onResetLogin?.Invoke();
             }
         }

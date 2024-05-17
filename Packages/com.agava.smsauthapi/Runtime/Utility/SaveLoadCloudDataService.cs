@@ -46,7 +46,7 @@ namespace SmsAuthAPI.Utility
 
             if (response.statusCode != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("CloudSave -> fail to load: " + response.statusCode + " Message: " + response.body);
+                Debug.LogError("CloudSave -> fail to load: " + response.statusCode + " Message: " + response.reasonPhrase);
                 return null;
             }
             else

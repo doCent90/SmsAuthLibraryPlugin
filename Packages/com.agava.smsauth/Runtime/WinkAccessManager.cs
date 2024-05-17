@@ -36,19 +36,19 @@ namespace Agava.Wink
 
             _requestHandler = new();
             DontDestroyOnLoad(this);
-      
-            if (SmsAuthApi.Initialized == false)
-            {
-                if (string.IsNullOrEmpty(_port))
-                    SmsAuthApi.Initialize(_ip);
-                else
-                    SmsAuthApi.Initialize(_ip + ":" + _port);
-            }
 
             if (UnityEngine.PlayerPrefs.HasKey(UniqueId) == false)
                 _uniqueId = SystemInfo.deviceName + Application.identifier + _additiveId;
             else
                 _uniqueId = UnityEngine.PlayerPrefs.GetString(UniqueId);
+      
+            if (SmsAuthApi.Initialized == false)
+            {
+                if (string.IsNullOrEmpty(_port))
+                    SmsAuthApi.Initialize(_ip, _uniqueId);
+                else
+                    SmsAuthApi.Initialize(_ip + ":" + _port, _uniqueId);
+            }
 
             if (UnityEngine.PlayerPrefs.HasKey(TokenLifeHelper.Tokens))
                 QuickAccess();

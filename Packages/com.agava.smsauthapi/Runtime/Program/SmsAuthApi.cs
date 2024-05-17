@@ -8,17 +8,22 @@ namespace SmsAuthAPI.Program
     public static class SmsAuthApi
     {
         private static HttpWebClient _httpClient;
+        private static string _uniqueId;
 
         public static bool Initialized => _httpClient != null;
 
-        public static void Initialize(string connectId)
+        public static void Initialize(string connectId, string uniqueId)
         {
             if(string.IsNullOrEmpty(connectId))
-                throw new InvalidOperationException(nameof(SmsAuthApi) + " fuction id not entered");
+                throw new InvalidOperationException(nameof(SmsAuthApi) + " Ip not entered");
+
+            if(string.IsNullOrEmpty(uniqueId))
+                throw new InvalidOperationException(nameof(SmsAuthApi) + " uniqueId not entered");
 
             if (Initialized)
                 throw new InvalidOperationException(nameof(SmsAuthApi) + " has already been initialized");
 
+            _uniqueId = uniqueId;
             _httpClient = new HttpWebClient(connectId);
         }
 
@@ -28,24 +33,17 @@ namespace SmsAuthAPI.Program
 
             var request = new Request()
             {
-                method = "LOGIN",
+                method = "Login",
                 body = JsonConvert.SerializeObject(loginData),
             };
 
-            return await _httpClient.Post(request, loginData.phone);
+            return await _httpClient.Login(request);
         }
 
         public async static Task<Response> Regist(string phoneNumber)
         {
             EnsureInitialize();
-
-            var request = new Request()
-            {
-                method = "registration",
-                body = phoneNumber,
-            };
-
-            return await _httpClient.Post(request, phoneNumber);
+            return await _httpClient.Regist("Registration", phoneNumber);
         }
 
         public async static Task<Response> Refresh(string refreshToken)
@@ -54,65 +52,11 @@ namespace SmsAuthAPI.Program
 
             var request = new Request()
             {
-                method = "REFRESH",
+                method = "Refresh",
                 body = refreshToken,
             };
 
-            return await _httpClient.Post(request);
-        }
-
-        public async static Task<Response> Unlink(string accessToken, string deviceId)
-        {
-            EnsureInitialize();
-
-            var request = new Request()
-            {
-                method = "UNLINK",
-                body = deviceId,
-                access_token = accessToken,
-            };
-
-            return await _httpClient.Post(request);
-        }
-
-        public async static Task<Response> SampleAuth(string accessToken)
-        {
-            EnsureInitialize();
-
-            var request = new Request()
-            {
-                method = "SAMPLE_AUTH",
-                access_token = accessToken,
-            };
-
-            return await _httpClient.Post(request);
-        }
-
-        public async static Task<Response> SetSave(string accessToken, string body)
-        {
-            EnsureInitialize();
-
-            var request = new Request()
-            {
-                method = "SET_CLOUD_SAVES",
-                body = body,
-                access_token = accessToken,
-            };
-
-            return await _httpClient.Post(request);
-        }
-
-        public async static Task<Response> GetSave(string accessToken)
-        {
-            EnsureInitialize();
-
-            var request = new Request()
-            {
-                method = "GET_CLOUD_SAVES",
-                access_token = accessToken,
-            };
-
-            return await _httpClient.Post(request);
+            return await _httpClient.Refresh(request);
         }
 
         public async static Task<Response> GetDevices(string accessToken)
@@ -121,24 +65,72 @@ namespace SmsAuthAPI.Program
 
             var request = new Request()
             {
-                method = "GET_DEVICES",
+                method = "Login",
+                body = _uniqueId,
                 access_token = accessToken,
             };
 
-            return await _httpClient.Post(request);
+            return await _httpClient.GetDevices(request);
         }
 
-        public async static Task<Response> GetRemoteConfig(string remoteName)
+        public async static Task<Response> Unlink(string accessToken, string deviceId)
         {
             EnsureInitialize();
 
             var request = new Request()
             {
-                method = "remoteconfig",
-                body = remoteName,
+                method = "Unlink",
+                body = deviceId,
+                access_token = accessToken,
             };
 
-            return await _httpClient.GetRemote(request, remoteName);
+            return await _httpClient.Unlink(request);
+        }
+
+        public async static Task<Response> SampleAuth(string accessToken)
+        {
+            EnsureInitialize();
+            await Task.Yield();
+            var isTokenAlive = TokenLifeHelper.IsTokenAlive(accessToken);
+
+            UnityEngine.Networking.UnityWebRequest.Result result;
+            result = isTokenAlive == true ? UnityEngine.Networking.UnityWebRequest.Result.Success : UnityEngine.Networking.UnityWebRequest.Result.ConnectionError;
+
+            return new Response(result, "Access Token expired", null, false);
+        }
+
+        public async static Task<Response> GetRemoteConfig(string remoteName)
+        {
+            EnsureInitialize();
+            return await _httpClient.GetRemote("Remoteconfig", remoteName);
+        }
+
+        public async static Task<Response> SetSave(string accessToken, string body)
+        {
+            EnsureInitialize();
+
+            var request = new Request()
+            {
+                method = "CloudSave",
+                body = body,
+                access_token = accessToken,
+            };
+
+            return await _httpClient.SetCloudData(request, key: _uniqueId);
+        }
+
+        public async static Task<Response> GetSave(string accessToken)
+        {
+            EnsureInitialize();
+
+            var request = new Request()
+            {
+                method = "CloudSave",
+                body = _uniqueId,
+                access_token = accessToken,
+            };
+
+            return await _httpClient.GetCloudData(request);
         }
 
         private static void EnsureInitialize()

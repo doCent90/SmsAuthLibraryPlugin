@@ -280,6 +280,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3558283120338427668, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
+      propertyPath: _ip
+      value: 192.168.174.128
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558283120338427668, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
+      propertyPath: _additiveId
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558283120338427668, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
       propertyPath: _sceneLoader
       value: 
       objectReference: {fileID: 608073471}
@@ -447,6 +455,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 115698839703872439, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
+      propertyPath: _enable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4653795427995862268, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
       propertyPath: _failWindow
       value: 
@@ -627,6 +639,10 @@ PrefabInstance:
     - target: {fileID: 4058103983319469712, guid: a0241873aded7e74a8c4cc17d012e779, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5844650155800299009, guid: a0241873aded7e74a8c4cc17d012e779, type: 3}
+      propertyPath: _startSceneName
+      value: SampleScene
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
