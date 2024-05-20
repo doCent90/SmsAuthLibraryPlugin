@@ -130,7 +130,7 @@ namespace Agava.Wink
             }
             else
             {
-                throw new System.Exception("Fail to recieve remote config: " + response.statusCode);
+                Debug.LogError("Fail to recieve remote config: " + response.statusCode);
             }
         }
 
@@ -144,7 +144,10 @@ namespace Agava.Wink
         private async void OnTestDeleteClicked()
         {
             if (WinkAccessManager.Instance.HasAccess == false)
-                throw new System.Exception("Wink not authorizated!");
+            {
+                Debug.LogError("Wink not authorizated!");
+                return;
+            }
 
             //await SmsAuthAPI.Utility.PlayerPrefs.Load();
             SmsAuthAPI.Utility.PlayerPrefs.DeleteAll();

@@ -33,7 +33,7 @@ namespace Agava.Wink
             DontDestroyOnLoad(this);
 
             if (_winkSignInHandlerUI == null || _winkAccessManager == null)
-                throw new NullReferenceException("Some Auth Component is Missing On Boot!");
+                throw new NullReferenceException("Boot: Some Auth Component is Missing On Boot!");
 
             if (Instance == null)
                 Instance = this;
@@ -71,7 +71,7 @@ namespace Agava.Wink
                 {
                     yield return CloudSavesLoading();
 #if UNITY_EDITOR || TEST
-                    Debug.Log($"App First Started. SignIn successfully");
+                    Debug.Log($"Boot: App First Started. SignIn successfully");
 #endif
                 }
                 else
@@ -91,7 +91,7 @@ namespace Agava.Wink
                     OnSkiped();
                 }
 #if UNITY_EDITOR || TEST
-                Debug.Log($"App Started. SignIn: {WinkAccessManager.Instance.HasAccess}");
+                Debug.Log($"Boot: App Started. SignIn: {WinkAccessManager.Instance.HasAccess}");
 #endif
             }
 
@@ -103,7 +103,7 @@ namespace Agava.Wink
             _winkAccessManager.Successfully -= OnSuccessfully;
 
 #if UNITY_EDITOR || TEST
-                Debug.Log($"Doot: Access Successfully");
+            Debug.Log($"Boot: Access Successfully");
 #endif
             StartCoroutine(Loading());
             IEnumerator Loading()
@@ -119,7 +119,7 @@ namespace Agava.Wink
         private IEnumerator CloudSavesLoading()
         {
 #if UNITY_EDITOR || TEST
-                Debug.Log($"Try load cloud saves");
+            Debug.Log($"Boot: Try load cloud saves");
 #endif
             Coroutine cancelation = null;
             cancelation = StartCoroutine(TimeOutWaiting());
@@ -138,7 +138,7 @@ namespace Agava.Wink
             _winkSignInHandlerUI.CloseAllWindows();
             _winkSignInHandlerUI.OpenWindow(WindowType.Fail);
 #if UNITY_EDITOR || TEST
-            Debug.Log($"Time Out!");
+            Debug.Log($"Boot: Time Out!");
 #endif
         }
 
@@ -146,7 +146,7 @@ namespace Agava.Wink
         {
             _winkAccessManager.Successfully += OnSuccessfully;
 #if UNITY_EDITOR || TEST
-            Debug.Log($"SignIn skiped");
+            Debug.Log($"Boot: SignIn skiped");
 #endif
         }
     }

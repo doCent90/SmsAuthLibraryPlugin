@@ -56,7 +56,6 @@ namespace Agava.Wink
         internal async void Login(LoginData data, Action<IReadOnlyList<string>> onLimitReached, Action<bool> onWinkSubscriptionAccessRequest, Action onSuccessed)
         {
             var response = await SmsAuthApi.Login(data);
-
             if (response.statusCode != UnityWebRequest.Result.Success)
             {
                 Debug.LogError("ValidationError : " + response.statusCode);
