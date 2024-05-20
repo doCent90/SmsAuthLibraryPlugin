@@ -124,11 +124,13 @@ namespace Agava.Wink
 
                 _demoTimer.Construct(_winkAccessManager, seconds, this, this);
                 _demoTimer.Start();
+#if UNITY_EDITOR || TEST
                 Debug.Log("Remote setted: " + response.body);
+#endif
             }
             else
             {
-                Debug.LogError("Fail to recieve remote config: " + response.statusCode);
+                throw new System.Exception("Fail to recieve remote config: " + response.statusCode);
             }
         }
 
@@ -144,7 +146,7 @@ namespace Agava.Wink
             if (WinkAccessManager.Instance.HasAccess == false)
                 throw new System.Exception("Wink not authorizated!");
 
-            await SmsAuthAPI.Utility.PlayerPrefs.Load();
+            //await SmsAuthAPI.Utility.PlayerPrefs.Load();
             SmsAuthAPI.Utility.PlayerPrefs.DeleteAll();
             SmsAuthAPI.Utility.PlayerPrefs.Save();
         }

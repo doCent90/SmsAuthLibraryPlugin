@@ -61,8 +61,9 @@ namespace SmsAuthAPI.Utility
                 {
                     json = response.body;
                 }
-
+#if UNITY_EDITOR || TEST
                 Debug.Log("Cloud Saves Loaded {API}");
+#endif
                 return json;
             }
         }

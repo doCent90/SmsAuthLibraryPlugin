@@ -18,11 +18,7 @@ namespace Agava.Wink
         [SerializeField] private Image _loading;
         [SerializeField] private bool _enable = true;
 
-        private void Update()
-        {
-            if (SmsAuthAPI.Utility.PlayerPrefs.s_Loaded == false)
-                _loading.transform.localEulerAngles += new Vector3(0, 0, 2f);
-        }
+        private void Update() => _loading.transform.localEulerAngles += new Vector3(0, 0, 2f);
 
         internal void Construct()
         {

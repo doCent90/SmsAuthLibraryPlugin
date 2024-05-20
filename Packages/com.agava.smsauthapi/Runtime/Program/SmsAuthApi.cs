@@ -33,7 +33,7 @@ namespace SmsAuthAPI.Program
 
             var request = new Request()
             {
-                method = "Login",
+                apiName = "Login",
                 body = JsonConvert.SerializeObject(loginData),
             };
 
@@ -52,8 +52,8 @@ namespace SmsAuthAPI.Program
 
             var request = new Request()
             {
-                method = "Refresh",
-                body = refreshToken,
+                apiName = "Refresh",
+                refresh_token = refreshToken,
             };
 
             return await _httpClient.Refresh(request);
@@ -65,7 +65,7 @@ namespace SmsAuthAPI.Program
 
             var request = new Request()
             {
-                method = "Login",
+                apiName = "Login",
                 body = _uniqueId,
                 access_token = accessToken,
             };
@@ -79,7 +79,7 @@ namespace SmsAuthAPI.Program
 
             var request = new Request()
             {
-                method = "Unlink",
+                apiName = "Unlink",
                 body = deviceId,
                 access_token = accessToken,
             };
@@ -111,7 +111,7 @@ namespace SmsAuthAPI.Program
 
             var request = new Request()
             {
-                method = "CloudSave",
+                apiName = "CloudSave",
                 body = body,
                 access_token = accessToken,
             };
@@ -125,7 +125,7 @@ namespace SmsAuthAPI.Program
 
             var request = new Request()
             {
-                method = "CloudSave",
+                apiName = "CloudSave",
                 body = _uniqueId,
                 access_token = accessToken,
             };

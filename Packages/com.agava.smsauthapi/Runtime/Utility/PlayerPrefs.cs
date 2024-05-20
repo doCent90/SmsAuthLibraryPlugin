@@ -14,8 +14,6 @@ namespace SmsAuthAPI.Utility
         private static Action<string> s_onLoadErrorCallback;
         private static readonly Dictionary<string, string> s_prefs = new Dictionary<string, string>();
 
-        public static bool s_Loaded = false;
-
         public static void Save()
         {
             var jsonStringBuilder = new StringBuilder();
@@ -39,12 +37,6 @@ namespace SmsAuthAPI.Utility
 
         public static async Task Load()
         {
-            if (s_Loaded)
-            {
-                Debug.Log("Saves already loaded");
-                return;
-            }
-
             var result = await SaveLoadCloudDataService.LoadData();
 
             if (string.IsNullOrEmpty(result))
@@ -206,15 +198,17 @@ namespace SmsAuthAPI.Utility
 
         private static void OnLoadSuccessCallback(string jsonData)
         {
-            s_Loaded = true;
             ParseAndApplyData(jsonData);
+#if UNITY_EDITOR || TEST
             Debug.Log("Cloud saves Success {PlayerPrefs}");
+#endif
         }
 
         private static void OnLoadErrorCallback(string errorMessage)
         {
-            s_Loaded = true;
+#if UNITY_EDITOR || TEST
             Debug.Log($"Warning: Cloud saves is empty: {errorMessage}");
+#endif
             s_onLoadErrorCallback?.Invoke(errorMessage);
         }
 

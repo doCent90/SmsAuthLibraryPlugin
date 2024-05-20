@@ -285,7 +285,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3558283120338427668, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
       propertyPath: _additiveId
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3558283120338427668, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
       propertyPath: _sceneLoader

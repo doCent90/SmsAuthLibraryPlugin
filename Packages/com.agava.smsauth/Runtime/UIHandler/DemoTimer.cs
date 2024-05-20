@@ -45,7 +45,9 @@ namespace Agava.Wink
 
         internal void Dispose()
         {
-            _winkAccessManager.Successfully -= Stop;
+            if (_winkAccessManager != null)
+                _winkAccessManager.Successfully -= Stop;
+
             UnityEngine.PlayerPrefs.SetInt(TimerKey, _seconds);
         }
 

@@ -70,7 +70,9 @@ namespace Agava.Wink
                 if (WinkAccessManager.Instance.HasAccess)
                 {
                     yield return CloudSavesLoading();
+#if UNITY_EDITOR || TEST
                     Debug.Log($"App First Started. SignIn successfully");
+#endif
                 }
                 else
                 {
@@ -88,8 +90,9 @@ namespace Agava.Wink
                 {
                     OnSkiped();
                 }
-
+#if UNITY_EDITOR || TEST
                 Debug.Log($"App Started. SignIn: {WinkAccessManager.Instance.HasAccess}");
+#endif
             }
 
             _signInProcess = null;
@@ -99,10 +102,12 @@ namespace Agava.Wink
         {
             _winkAccessManager.Successfully -= OnSuccessfully;
 
+#if UNITY_EDITOR || TEST
+                Debug.Log($"Doot: Access Successfully");
+#endif
             StartCoroutine(Loading());
             IEnumerator Loading()
             {
-                Debug.Log($"Try load cloud saves");
                 yield return CloudSavesLoading();
                 Restarted?.Invoke();
 
@@ -113,11 +118,14 @@ namespace Agava.Wink
 
         private IEnumerator CloudSavesLoading()
         {
+#if UNITY_EDITOR || TEST
+                Debug.Log($"Try load cloud saves");
+#endif
             Coroutine cancelation = null;
             cancelation = StartCoroutine(TimeOutWaiting());
 
             var task = SmsAuthAPI.Utility.PlayerPrefs.Load();
-            yield return new WaitWhile(() => SmsAuthAPI.Utility.PlayerPrefs.s_Loaded == false);
+            yield return new WaitWhile(() => task.IsCompleted == false);
 
             if (cancelation != null)
                 StopCoroutine(cancelation);
@@ -129,12 +137,17 @@ namespace Agava.Wink
             StopCoroutine(_signInProcess);
             _winkSignInHandlerUI.CloseAllWindows();
             _winkSignInHandlerUI.OpenWindow(WindowType.Fail);
+#if UNITY_EDITOR || TEST
+            Debug.Log($"Time Out!");
+#endif
         }
 
         private void OnSkiped()
         {
             _winkAccessManager.Successfully += OnSuccessfully;
+#if UNITY_EDITOR || TEST
             Debug.Log($"SignIn skiped");
+#endif
         }
     }
 }

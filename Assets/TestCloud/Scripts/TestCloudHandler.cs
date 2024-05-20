@@ -55,7 +55,7 @@ public class TestCloudHandler : MonoBehaviour
         var data = SmsAuthAPI.Utility.PlayerPrefs.GetString("key");
 
         if (string.IsNullOrEmpty(data))
-            Debug.LogError("Load fail: data empty " + data);
+            Debug.Log($"<color=red>Load fail</color>: data empty {data}");
         else
             Debug.Log("Loaded: " + data);
     }
