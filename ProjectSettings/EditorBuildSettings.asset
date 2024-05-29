@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Packages/com.agava.smsauth/Samples/Resource/Scenes/WinkBootstrap.unity
+    path: Packages/com.agava.smsauthvps/Samples/Resource/Scenes/WinkBootstrap.unity
     guid: 6ec8896a1f01d45419aa8a5076d9bc0a
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity

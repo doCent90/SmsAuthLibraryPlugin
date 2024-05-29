@@ -121,5 +121,63 @@ namespace SmsAuthAPI.Program
             var body = JsonConvert.DeserializeObject<string>(webRequest.downloadHandler.text);
             return new Response(webRequest.result, webRequest.result.ToString(), body, false);
         }
+
+#if UNITY_EDITOR || TEST
+        public async Task<Response> Write(string apiName, string phone, ulong count)
+        {
+            string path = $"{GetHttpPath(apiName, phone)}";
+            OnTryConnecting(path);
+
+            var webRequest = CreateWebRequest(path, RequestType.POST, null, count.ToString(), timeOut: false);
+            webRequest.SendWebRequest();
+
+            await WaitProccessing(webRequest);
+            TryShowRequestInfo(webRequest, apiName);
+
+            return new Response(webRequest.result, webRequest.result.ToString(), webRequest.downloadHandler.text, false);
+        }
+
+        public async Task<Response> ClearOtp(string apiName)
+        {
+            string path = $"{GetHttpPath(apiName)}";
+            OnTryConnecting(path);
+
+            var webRequest = CreateWebRequest(path, RequestType.POST);
+            webRequest.SendWebRequest();
+
+            await WaitProccessing(webRequest);
+            TryShowRequestInfo(webRequest, apiName);
+
+            return new Response(webRequest.result, webRequest.result.ToString(), webRequest.downloadHandler.text, false);
+        }
+
+        public async Task<Response> GetOtpCount(string apiName)
+        {
+            string path = $"{GetHttpPath(apiName)}";
+            OnTryConnecting(path);
+
+            var webRequest = CreateWebRequest(path, RequestType.GET);
+            webRequest.SendWebRequest();
+
+            await WaitProccessing(webRequest);
+            TryShowRequestInfo(webRequest, apiName);
+
+            return new Response(webRequest.result, webRequest.result.ToString(), webRequest.downloadHandler.text, false);
+        }
+
+        public async Task<Response> GetOtpWrites(string apiName, string otp)
+        {
+            string path = $"{GetHttpPath(apiName, otp)}";
+            OnTryConnecting(path);
+
+            var webRequest = CreateWebRequest(path, RequestType.GET);
+            webRequest.SendWebRequest();
+
+            await WaitProccessing(webRequest);
+            TryShowRequestInfo(webRequest, apiName);
+
+            return new Response(webRequest.result, webRequest.result.ToString(), webRequest.downloadHandler.text, false);
+        }
+#endif
     }
 }

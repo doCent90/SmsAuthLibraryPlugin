@@ -1,16 +1,16 @@
 {
   "dependencies": {
-    "com.agava.smsauth": {
+    "com.agava.smsauthvps": {
       "version": "file:com.agava.smsauth",
       "depth": 0,
       "source": "embedded",
       "dependencies": {
-        "com.agava.smsauthapi": "1.0.4",
+        "com.agava.smsauthwebapi": "1.0.0",
         "com.unity.nuget.newtonsoft-json": "3.0.2",
         "com.unity.textmeshpro": "3.0.6"
       }
     },
-    "com.agava.smsauthapi": {
+    "com.agava.smsauthwebapi": {
       "version": "file:com.agava.smsauthapi",
       "depth": 0,
       "source": "embedded",

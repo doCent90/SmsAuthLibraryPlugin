@@ -2,8 +2,10 @@ using Agava.Wink;
 using Newtonsoft.Json;
 using SmsAuthAPI.DTO;
 using SmsAuthAPI.Program;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -13,9 +15,16 @@ public class TestCloudHandler : MonoBehaviour
 {
     [SerializeField] private Button _savePresf;
     [SerializeField] private Button _loadPrefs;
-    [SerializeField] private Button _deletePrefs;
     [SerializeField] private TMP_InputField _input;
     [SerializeField] private Button _checkDevices;
+    [Header("Server stress test")]
+    [SerializeField] private Button _addWriters;
+    [SerializeField] private Button _deleteAllWriters;
+    [SerializeField] private Button _getOtpCount;
+    [SerializeField] private Button _getOtpWrites;
+    [SerializeField] private ulong _writesCount;
+    [SerializeField] private string _number;
+    [SerializeField] private string _targetOtp;
 
     private IEnumerator Start()
     {
@@ -24,9 +33,44 @@ public class TestCloudHandler : MonoBehaviour
         _savePresf.onClick.AddListener(OnSavePrefsClicked);
         _loadPrefs.onClick.AddListener(OnLoadPrefsClicked);
         _checkDevices.onClick.AddListener(ShowDevices);
-        _deletePrefs.onClick.AddListener(OnDeleteAllClicked);
+
+        _addWriters.onClick.AddListener(CreateWriters);
+        _deleteAllWriters.onClick.AddListener(DeleteAllWrites);
+        _getOtpCount.onClick.AddListener(GetOtpCount);
+        _getOtpWrites.onClick.AddListener(GetOtpWrites);
 
         WinkSignInHandlerUI.Instance.SignInWindowClosed += OnClosed;
+    }
+
+    private async void CreateWriters()
+    {
+        Response response = await SmsAuthApi.Write(_number, _writesCount);
+
+        if (response.statusCode != UnityWebRequest.Result.Success)
+            Debug.LogError("Create Error : " + response.statusCode);
+        else
+            Debug.Log("Create Done : " + response.statusCode);
+    }
+
+    private async void DeleteAllWrites()
+    {
+        var result = await SmsAuthApi.ClearOtpTable();
+
+        Debug.Log("Otp Table Cleared: " + result.statusCode);
+    }
+
+    private async void GetOtpWrites()
+    {
+        var result = await SmsAuthApi.GetOtpsWrites(_targetOtp);
+
+        Debug.Log("Phone by otp: " + result.body);
+    }
+
+    private async void GetOtpCount()
+    {
+        var result = await SmsAuthApi.GetOtpsCount();
+
+        Debug.Log("Otps Count: " + result.body);
     }
 
     private void OnClosed()
@@ -58,17 +102,6 @@ public class TestCloudHandler : MonoBehaviour
             Debug.Log($"<color=red>Load fail</color>: data empty {data}");
         else
             Debug.Log("Loaded: " + data);
-    }
-
-    private async void OnDeleteAllClicked()
-    {
-        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
-
-        if (WinkAccessManager.Instance.HasAccess == false)
-            throw new System.Exception("Wink not authorizated!");
-
-        await SmsAuthAPI.Utility.PlayerPrefs.Load();
-        SmsAuthAPI.Utility.PlayerPrefs.DeleteAll();
     }
 
     private async void ShowDevices()

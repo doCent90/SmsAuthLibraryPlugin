@@ -138,5 +138,34 @@ namespace SmsAuthAPI.Program
             if (Initialized == false)
                 throw new InvalidOperationException(nameof(SmsAuthApi) + " is not initialized");
         }
+
+#if UNITY_EDITOR || TEST
+        public async static Task<Response> Write(string phoneNumber, ulong count)
+        {
+            EnsureInitialize();
+            return await _httpClient.Write("TestDataBase", phoneNumber, count);
+        }
+
+        public async static Task<Response> ClearOtpTable()
+        {
+            EnsureInitialize();
+
+            return await _httpClient.ClearOtp("TestDataBase");
+        }
+
+        public async static Task<Response> GetOtpsCount()
+        {
+            EnsureInitialize();
+
+            return await _httpClient.GetOtpCount("TestDataBase");
+        }
+
+        public async static Task<Response> GetOtpsWrites(string otp)
+        {
+            EnsureInitialize();
+
+            return await _httpClient.GetOtpWrites("TestDataBase", otp);
+        }
+#endif
     }
 }

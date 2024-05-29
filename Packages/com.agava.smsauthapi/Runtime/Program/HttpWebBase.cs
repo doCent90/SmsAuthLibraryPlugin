@@ -44,11 +44,13 @@ namespace SmsAuthAPI.Program
 #endif
         }
 
-        protected UnityWebRequest CreateWebRequest(string path, RequestType type, string accessToken = null, string uploadBody = null)
+        protected UnityWebRequest CreateWebRequest(string path, RequestType type, string accessToken = null, string uploadBody = null, bool timeOut = true)
         {
             var webRequest = new UnityWebRequest(path, type.ToString());
             webRequest.downloadHandler = new DownloadHandlerBuffer();
-            webRequest.timeout = TimeOut;
+
+            if (timeOut)
+                webRequest.timeout = TimeOut;
 
             if (string.IsNullOrEmpty(uploadBody) == false)
                 webRequest.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(uploadBody));
