@@ -66,11 +66,19 @@ namespace Agava.Wink
                 }
                 else
                 {
-                    _notifyWindowHandler.OpenWindow(WindowType.Fail);
                     _notifyWindowHandler.CloseWindow(WindowType.ProccessOn);
                     _notifyWindowHandler.OpenWindow(WindowType.Redirect);
                 }
             });
+        }
+
+        internal void OnSubsDenied(bool hasAccess)
+        {
+            if (hasAccess == false)
+            {
+                _notifyWindowHandler.CloseWindow(WindowType.ProccessOn);
+                _notifyWindowHandler.OpenWindow(WindowType.Redirect);
+            }
         }
 
         internal void OnUnlinkClicked(string device)

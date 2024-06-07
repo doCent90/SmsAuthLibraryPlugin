@@ -5,8 +5,10 @@ using SmsAuthAPI.Program;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Net.Http;
+using System.Text;
 using TMPro;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -25,6 +27,21 @@ public class TestCloudHandler : MonoBehaviour
     [SerializeField] private ulong _writesCount;
     [SerializeField] private string _number;
     [SerializeField] private string _targetOtp;
+    [Header("Server stress test 2")]
+    [SerializeField] private Button _addSaves;
+    [SerializeField] private Button _addMassiveSaves;
+    [SerializeField] private Button _getSave;
+    [SerializeField] private Button _deleteAllSaves;
+    [SerializeField] private string _phoneNumber;
+    [SerializeField] private string _savesBodyString;
+    [SerializeField] private int _savesSize;
+    [SerializeField] private string _clearPassword;
+    [SerializeField] private int _countMassiveSaves;
+    [Header("Server http client")]
+    [SerializeField] private string _path;
+    [SerializeField] private Button _send;
+
+    private HttpClient _client;
 
     private IEnumerator Start()
     {
@@ -39,7 +56,90 @@ public class TestCloudHandler : MonoBehaviour
         _getOtpCount.onClick.AddListener(GetOtpCount);
         _getOtpWrites.onClick.AddListener(GetOtpWrites);
 
+        _addSaves.onClick.AddListener(OnSavesClicked);
+        _addMassiveSaves.onClick.AddListener(OnMassiveSavesClicked);
+        _getSave.onClick.AddListener(OnGetCurrentSavesClicked);
+        _deleteAllSaves.onClick.AddListener(OnClearAllSavesClicked);
+
+        _send.onClick.AddListener(OnSendClicked);
+
+        _client = new HttpClient();
         WinkSignInHandlerUI.Instance.SignInWindowClosed += OnClosed;
+    }
+
+    private async void OnSendClicked()
+    {
+        var response = await _client.PostAsync(_path, new StringContent(string.Empty));
+        response.EnsureSuccessStatusCode();
+    }
+
+    private async void OnMassiveSavesClicked()
+    {
+        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
+
+        if (WinkAccessManager.Instance.HasAccess == false)
+            throw new System.Exception("Wink not authorizated!");
+
+        for (int i = 0; i < _countMassiveSaves; i++)
+        {
+            StringBuilder sb = new();
+
+            for (int x = 0; x < _savesSize; x++)
+                sb.Append(_savesBodyString);
+
+            TestData testData = new()
+            {
+                Text = sb.ToString()
+            };
+
+            var json = JsonConvert.SerializeObject(testData);
+
+            await SmsAuthApi.WriteSaveClouds(_phoneNumber + i, json);
+        }
+
+        Debug.LogError("Massive Saves DONE");
+    }
+
+    private async void OnSavesClicked()
+    {
+        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
+
+        if (WinkAccessManager.Instance.HasAccess == false)
+            throw new System.Exception("Wink not authorizated!");
+
+        StringBuilder sb = new();
+
+        for (int i = 0; i < _savesSize; i++)
+            sb.Append(_savesBodyString);
+
+        TestData testData = new()
+        {
+            Text = sb.ToString()
+        };
+
+        var json = JsonConvert.SerializeObject(testData);
+
+        await SmsAuthApi.WriteSaveClouds(_phoneNumber, json);
+    }
+
+    private async void OnGetCurrentSavesClicked()
+    {
+        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
+
+        if (WinkAccessManager.Instance.HasAccess == false)
+            throw new System.Exception("Wink not authorizated!");
+
+        var data = await SmsAuthApi.GetSaveCloud(_phoneNumber);
+
+        if (string.IsNullOrEmpty(data.body))
+            Debug.Log($"<color=red>Load fail</color>: data empty {data.body}");
+        else
+            Debug.Log("Loaded: " + data.body);
+    }
+
+    private async void OnClearAllSavesClicked()
+    {
+        await SmsAuthApi.ClearAllSaveCloud(_clearPassword);
     }
 
     private async void CreateWriters()

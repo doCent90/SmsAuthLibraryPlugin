@@ -15,7 +15,6 @@ namespace Agava.Wink
         [SerializeField] private DemoTimer _demoTimer;
         [SerializeField] private NotifyWindowHandler _notifyWindowHandler;
         [Header("UI Input")]
-        [SerializeField] private TMP_InputField _codeInputField;
         [SerializeField] private TMP_InputField _numbersInputField;
         [Header("UI Buttons")]
         [SerializeField] private Button _signInButton;
@@ -27,7 +26,6 @@ namespace Agava.Wink
         [Header("Phone Number Check Settings")]
         [SerializeField] private int _maxNumberCount = 30;
         [SerializeField] private int _minNumberCount = 5;
-        [SerializeField] private int _codeCount = 4;
         [SerializeField] private bool _additivePlusChar = false;
         [Header("Factory components")]
         [SerializeField] private Transform _containerButtons;
@@ -54,7 +52,7 @@ namespace Agava.Wink
             _demoTimer.Dispose();
         }
 
-        public IEnumerator Construct(WinkAccessManager winkAccessManager)
+        public void Construct(WinkAccessManager winkAccessManager)
         {
             if (Instance == null)
                 Instance = this;
@@ -70,6 +68,7 @@ namespace Agava.Wink
             _testSignInButton.gameObject.SetActive(false);
 #endif
             _winkAccessManager = winkAccessManager;
+            _winkAccessManager.SetWinkSubsEvent(_signInFuctionsUI.OnSubsDenied);
             _signInButton.onClick.AddListener(OnSignInClicked);
             _openSignInButton.onClick.AddListener(OpenSignWindow);
             CloseAllWindows();
@@ -78,7 +77,10 @@ namespace Agava.Wink
             _winkAccessManager.LimitReached += OnLimitReached;
             _winkAccessManager.Successfully += OnSuccessfully;
             _demoTimer.TimerExpired += OnTimerExpired;
+        }
 
+        public IEnumerator Initialize()
+        {
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
                 _notifyWindowHandler.OpenWindow(WindowType.NoEnternet);
@@ -99,9 +101,7 @@ namespace Agava.Wink
 
         private void OnSignInClicked()
         {
-            string number = WinkAcceessHelper.GetNumber(_codeInputField.text, _numbersInputField.text,
-                            _minNumberCount, _maxNumberCount, _codeCount, _additivePlusChar);
-
+            string number = WinkAcceessHelper.GetNumber(_numbersInputField.text, _minNumberCount, _maxNumberCount, _additivePlusChar);
             _signInFuctionsUI.OnSignInClicked(number, OnSuccessfully);
         }
 
@@ -132,7 +132,11 @@ namespace Agava.Wink
             _signInFuctionsUI.OnUnlinkClicked(device);
         }
 
-        private void OnSuccessfully() => _openSignInButton.gameObject.SetActive(false);
+        private void OnSuccessfully()
+        {
+            _openSignInButton.gameObject.SetActive(false);
+            _notifyWindowHandler.OpenWindow(WindowType.Hello);
+        }
 
         private void OnTimerExpired() => _notifyWindowHandler.OpenWindow(WindowType.DemoTimerExpired);
         #region TEST_METHODS
