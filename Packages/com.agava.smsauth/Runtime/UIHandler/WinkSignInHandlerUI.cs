@@ -37,6 +37,8 @@ namespace Agava.Wink
         public static WinkSignInHandlerUI Instance { get; private set; }
 
         public bool IsAnyWindowEnabled => _notifyWindowHandler.IsAnyWindowEnabled;
+        public string Number { get; private set; }
+
         public event Action AllWindowsClosed;
         public event Action SignInWindowClosed;
 
@@ -101,8 +103,8 @@ namespace Agava.Wink
 
         private void OnSignInClicked()
         {
-            string number = WinkAcceessHelper.GetNumber(_numbersInputField.text, _minNumberCount, _maxNumberCount, _additivePlusChar);
-            _signInFuctionsUI.OnSignInClicked(number, OnSuccessfully);
+            Number = WinkAcceessHelper.GetNumber(_numbersInputField.text, _minNumberCount, _maxNumberCount, _additivePlusChar);
+            _signInFuctionsUI.OnSignInClicked(Number, OnSuccessfully);
         }
 
         private void OnLimitReached(IReadOnlyList<string> devicesList)
