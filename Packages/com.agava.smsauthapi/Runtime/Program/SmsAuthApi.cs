@@ -147,6 +147,19 @@ namespace SmsAuthAPI.Program
             return await _httpClient.HasActiveAccount(request);
         }
 
+        public async static Task<Response> GetSanId(string phoneNumber)
+        {
+            EnsureInitialize();
+
+            var request = new Request()
+            {
+                apiName = "Account/subscription/get-san-id",
+                body = phoneNumber,
+            };
+
+            return await _httpClient.GetSanId(request);
+        }
+
         private static void EnsureInitialize()
         {
             if (Initialized == false)

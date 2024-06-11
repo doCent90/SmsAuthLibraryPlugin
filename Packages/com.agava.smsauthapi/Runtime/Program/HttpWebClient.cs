@@ -137,6 +137,20 @@ namespace SmsAuthAPI.Program
             return new Response(webRequest.result, webRequest.result.ToString(), null, false);
         }
 
+        public async Task<Response> GetSanId(Request request)
+        {
+            string path = $"{GetHttpPath(request.apiName, request.body, api: false)}";
+            OnTryConnecting(path);
+
+            var webRequest = CreateWebRequest(path, RequestType.GET);
+            webRequest.SendWebRequest();
+
+            await WaitProccessing(webRequest);
+            TryShowRequestInfo(webRequest, request.apiName);
+
+            return new Response(webRequest.result, webRequest.result.ToString(), null, false);
+        }
+
 #if UNITY_EDITOR || TEST
         public async Task<Response> WriteCloudData(Request request, string phone)
         {

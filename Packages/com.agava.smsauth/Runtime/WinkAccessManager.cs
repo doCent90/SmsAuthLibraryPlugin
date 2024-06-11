@@ -109,14 +109,19 @@ namespace Agava.Wink
         private async void TrySendAnalyticsData(string phone)
         {
             string key = "FirstRegist";
-            var response = await SmsAuthApi.HasActiveAccount(phone);
+            var responseActiveAccount = await SmsAuthApi.HasActiveAccount(phone);
 
             if (PlayerPrefs.HasKey(key))
             {
-                if (response.statusCode == UnityEngine.Networking.UnityWebRequest.Result.Success)
+                if (responseActiveAccount.statusCode == UnityEngine.Networking.UnityWebRequest.Result.Success)
                 {
-                    AnalyticsWinkService.SendSanId(response.body);
-                    PlayerPrefs.SetString(key, "done");
+                    var responseGetSanId = await SmsAuthApi.GetSanId(phone);
+
+                    if (responseGetSanId.statusCode == UnityEngine.Networking.UnityWebRequest.Result.Success)
+                    {
+                        AnalyticsWinkService.SendSanId(responseGetSanId.body);
+                        PlayerPrefs.SetString(key, "done");
+                    }
                 }
             }
         }
