@@ -8,26 +8,24 @@ namespace Agava.Wink
        /// Auditory
        /// </summary>
         public static void SendSanId(string sanId) => AppMetrica.ReportEvent("SanId", sanId);
-        public static void SendSex(string sex) => AppMetrica.ReportEvent("Sex", sex);
-        public static void SendAge(string age) => AppMetrica.ReportEvent("Age", age);
-        public static void SendLocation(string location) => AppMetrica.ReportEvent("Location", location);
-        public static void SendOsType(string osType) => AppMetrica.ReportEvent("Os Type", osType);
-        public static void SendOsVersion(string osVersion) => AppMetrica.ReportEvent("Os Version", osVersion);
-        public static void SendDevice(string device) => AppMetrica.ReportEvent("Device", device);
-        public static void SendAppVersion(string appVersion) => AppMetrica.ReportEvent("App Version", appVersion);
+        public static void SendSex(string sex) => AppMetrica.ReportEvent("Sex", sex);//N/A
+        public static void SendAge(string age) => AppMetrica.ReportEvent("Age", age);//N/A
+        public static void SendLocation(string location) => AppMetrica.ReportEvent("Location", location);//Recieved from AppMetrica
+        public static void SendOsType(string osType) => AppMetrica.ReportEvent("Os Type", osType);//Recieved from AppMetrica
+        public static void SendOsVersion(string osVersion) => AppMetrica.ReportEvent("Os Version", osVersion);//Recieved from AppMetrica
+        public static void SendDevice(string device) => AppMetrica.ReportEvent("Device", device);//Recieved from AppMetrica
+        public static void SendAppVersion(string appVersion) => AppMetrica.ReportEvent("App Version", appVersion);//Recieved from AppMetrica
 
         /// <summary>
         /// User data
         /// </summary>
-        public static void SendHasActiveAccount(bool hasActiveAcc) => AppMetrica.ReportEvent("Has Active Account", hasActiveAcc.ToString());
+        public static void SendHasActiveAccountNewUser(bool hasActiveAcc) => AppMetrica.ReportEvent("Has Active Account New User", hasActiveAcc.ToString());
+        public static void SendHasActiveAccountUser(bool hasActiveAcc) => AppMetrica.ReportEvent("Has Active Account Regular User", hasActiveAcc.ToString());
 
         /// <summary>
         /// Retention
         /// </summary>
-        public static void SendTimespent(int time) => AppMetrica.ReportEvent("Timespent", time.ToString());
-        public static void SendSessionTimespent(int time) => AppMetrica.ReportEvent("Session Timespent", time.ToString());
         public static void SendAverageSessionLength(int time) => AppMetrica.ReportEvent("Average Session Length", time.ToString());
-        public static void SendAverageAppsOnUser(int count) => AppMetrica.ReportEvent("Average App`s On User", count.ToString());
 
         /// <summary>
         /// First time events

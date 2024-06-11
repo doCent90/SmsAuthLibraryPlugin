@@ -5,7 +5,7 @@ using SmsAuthAPI.DTO;
 
 namespace SmsAuthAPI.Program
 {
-    public static class SmsAuthApi
+    public static partial class SmsAuthApi
     {
         private static HttpWebClient _httpClient;
         private static string _uniqueId;
@@ -15,10 +15,10 @@ namespace SmsAuthAPI.Program
 
         public static void Initialize(string connectId, string uniqueId)
         {
-            if(string.IsNullOrEmpty(connectId))
+            if (string.IsNullOrEmpty(connectId))
                 throw new InvalidOperationException(nameof(SmsAuthApi) + " Ip not entered");
 
-            if(string.IsNullOrEmpty(uniqueId))
+            if (string.IsNullOrEmpty(uniqueId))
                 throw new InvalidOperationException(nameof(SmsAuthApi) + " uniqueId not entered");
 
             if (Initialized)
@@ -165,8 +165,68 @@ namespace SmsAuthAPI.Program
             if (Initialized == false)
                 throw new InvalidOperationException(nameof(SmsAuthApi) + " is not initialized");
         }
+    }
 
+    public static partial class SmsAuthApi
+    {
+        class TimespentAllUsersData
+        {
+            public string app_id;
+            public int time;
+        }
+
+        class TimespentUserAllAppData
+        {
+            public string phone;
+            public string device_id;
+            public int time;
+        }
+
+        public async static void SetTimespentAllUsers(string appId, int time)
+        {
+            EnsureInitialize();
+
+            string data = JsonConvert.SerializeObject(new TimespentAllUsersData()
+            {
+                app_id = appId,
+                time = time
+            });
+
+            var request = new Request()
+            {
+                apiName = "Analytics/timespent-all-users",
+                body = data,
+            };
+
+            await _httpClient.SetTimespent(request);
+        }
+
+        public async static void SetTimespentAllApp(string phone, string deviceId, int time)
+        {
+            EnsureInitialize();
+
+            string data = JsonConvert.SerializeObject(new TimespentUserAllAppData()
+            {
+                phone = phone,
+                device_id = deviceId,
+                time = time
+            });
+
+            var request = new Request()
+            {
+                apiName = "Analytics/timespent-all-app",
+                body = data,
+            };
+
+            await _httpClient.SetTimespent(request);
+        }
+    }
+
+
+    #region Test function
 #if UNITY_EDITOR || TEST
+    public static partial class SmsAuthApi
+    { 
         public async static Task<Response> WriteSaveClouds(string phoneNumber, string body)
         {
             EnsureInitialize();
@@ -218,6 +278,7 @@ namespace SmsAuthAPI.Program
 
             return await _httpClient.GetOtpWrites("StressTest", otp);
         }
-#endif
     }
+#endif
+    #endregion
 }

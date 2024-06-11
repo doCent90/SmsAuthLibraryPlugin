@@ -65,6 +65,7 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\IWinkAccessManager.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\StartLogoPresenter.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\Services\TimespentService.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\RequestHandler.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\DemoTimer.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowType.cs" />
@@ -447,6 +448,10 @@
       <HintPath>Library\PackageCache\com.unity.visualscripting@1.9.1\Editor\VisualScripting.Core\Dependencies\YamlDotNet\Unity.VisualScripting.YamlDotNet.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Google.PackageManagerResolver">
+      <HintPath>Library\PackageCache\com.google.external-dependency-manager@64445bb59f\ExternalDependencyManager\Editor\1.2.177\Google.PackageManagerResolver.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System.Text.Encodings.Web">
       <HintPath>Packages\com.agava.smsauthapi\Runtime\Dlls\System.Text.Encodings.Web.dll</HintPath>
       <Private>False</Private>
@@ -463,8 +468,16 @@
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.3.1\Lib\Editor\PlasticSCM\Unity.Plastic.Antlr3.Runtime.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Google.IOSResolver">
+      <HintPath>Library\PackageCache\com.google.external-dependency-manager@64445bb59f\ExternalDependencyManager\Editor\1.2.177\Google.IOSResolver.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Unity.Plastic.Newtonsoft.Json">
       <HintPath>Library\PackageCache\com.unity.collab-proxy@2.3.1\Lib\Editor\PlasticSCM\Unity.Plastic.Newtonsoft.Json.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Google.VersionHandler">
+      <HintPath>Library\PackageCache\com.google.external-dependency-manager@64445bb59f\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="log4netPlastic">
@@ -485,6 +498,10 @@
     </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe">
       <HintPath>Packages\com.agava.smsauthapi\Runtime\Dlls\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Google.VersionHandlerImpl">
+      <HintPath>Library\PackageCache\com.google.external-dependency-manager@64445bb59f\ExternalDependencyManager\Editor\1.2.177\Google.VersionHandlerImpl.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Text.Json">
@@ -521,22 +538,6 @@
     </Reference>
     <Reference Include="Google.JarResolver">
       <HintPath>Library\PackageCache\com.google.external-dependency-manager@64445bb59f\ExternalDependencyManager\Editor\1.2.177\Google.JarResolver.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.VersionHandler">
-      <HintPath>Library\PackageCache\com.google.external-dependency-manager@64445bb59f\ExternalDependencyManager\Editor\Google.VersionHandler.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.VersionHandlerImpl">
-      <HintPath>Library\PackageCache\com.google.external-dependency-manager@64445bb59f\ExternalDependencyManager\Editor\1.2.177\Google.VersionHandlerImpl.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.PackageManagerResolver">
-      <HintPath>Library\PackageCache\com.google.external-dependency-manager@64445bb59f\ExternalDependencyManager\Editor\1.2.177\Google.PackageManagerResolver.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Google.IOSResolver">
-      <HintPath>Library\PackageCache\com.google.external-dependency-manager@64445bb59f\ExternalDependencyManager\Editor\1.2.177\Google.IOSResolver.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEditor.iOS.Extensions.Xcode">
