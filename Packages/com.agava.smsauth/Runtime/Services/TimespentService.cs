@@ -43,10 +43,10 @@ namespace Agava.Wink
             if (_current != null)
             {
                 _coroutine.StopCoroutine(_current);
-                _spentTimeMin = 0;
                 _current = null;
                 SmsAuthApi.SetTimespentAllApp(_phone, _deviceId, _spentTimeMin);
                 SmsAuthApi.SetTimespentAllUsers(_appId, _spentTimeMin);
+                _spentTimeMin = 0;
             }
         }
     }
