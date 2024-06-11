@@ -58,8 +58,8 @@ namespace Agava.Wink
             if (UnityEngine.PlayerPrefs.HasKey(PhoneNumber))
                 _data = new LoginData() { phone = UnityEngine.PlayerPrefs.GetString(PhoneNumber), device_id = _uniqueId};
 
-            _timespentService = new(this, _data.phone, _uniqueId, Application.identifier);
-            _timespentService.OnStartedApp();
+            if (_data != null)
+                StartTimespentAnalytics();
 
             if (SmsAuthApi.Initialized == false)
                 SmsAuthApi.Initialize(_ip, _uniqueId);
@@ -88,6 +88,9 @@ namespace Agava.Wink
             _winkSubscriptionAccessRequest = winkSubscriptionAccessRequest;
             UnityEngine.PlayerPrefs.SetString(PhoneNumber, phoneNumber);
             _data = await _requestHandler.Regist(phoneNumber, _uniqueId, otpCodeRequest);
+
+            if (_timespentService == null)
+                StartTimespentAnalytics();
         }
 
         public void Unlink(string deviceId) => _requestHandler.Unlink(deviceId, ResetLogin);
@@ -150,6 +153,12 @@ namespace Agava.Wink
                     AnalyticsWinkService.SendHasActiveAccountNewUser(hasActiveAcc: false);
                 }
             }
+        }
+
+        private void StartTimespentAnalytics()
+        {
+            _timespentService = new(this, _data.phone, _uniqueId, Application.identifier);
+            _timespentService.OnStartedApp();
         }
     }
 }
