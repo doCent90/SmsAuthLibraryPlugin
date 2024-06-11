@@ -83,8 +83,15 @@ namespace Agava.Wink
         }
 #endif
 
-        private void Login(LoginData data) 
-            => _requestHandler.Login(data, LimitReached, _winkSubscriptionAccessRequest, OnSubscriptionExist);
+        private void Login(LoginData data)
+        {
+            _requestHandler.Login(data, LimitReached, _winkSubscriptionAccessRequest, 
+            () => 
+                { 
+                    OnSubscriptionExist();
+                    TrySendAnalyticsData(_data.phone);
+                });
+        }
 
         private async void QuickAccess()
         {
@@ -97,6 +104,21 @@ namespace Agava.Wink
             HasAccess = true;
             Successfully?.Invoke();
             Debug.Log("Access succesfully");
+        }
+
+        private async void TrySendAnalyticsData(string phone)
+        {
+            string key = "FirstRegist";
+            var response = await SmsAuthApi.HasActiveAccount(phone);
+
+            if (PlayerPrefs.HasKey(key))
+            {
+                if (response.statusCode == UnityEngine.Networking.UnityWebRequest.Result.Success)
+                {
+                    AnalyticsWinkService.SendSanId(response.body);
+                    PlayerPrefs.SetString(key, "done");
+                }
+            }
         }
     }
 }

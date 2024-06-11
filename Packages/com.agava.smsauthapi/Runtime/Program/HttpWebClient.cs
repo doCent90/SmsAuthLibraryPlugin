@@ -123,7 +123,7 @@ namespace SmsAuthAPI.Program
             return new Response(webRequest.result, webRequest.result.ToString(), body, false);
         }
 
-        public async Task<Response> GetAccountData(Request request)
+        public async Task<Response> HasActiveAccount(Request request)
         {
             string path = $"{GetHttpPath(request.apiName, request.body, api: false)}";
             OnTryConnecting(path);

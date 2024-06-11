@@ -134,7 +134,7 @@ namespace SmsAuthAPI.Program
             return await _httpClient.GetCloudData(request, DownloadCloudSavesProgress);
         }
 
-        public async static Task<Response> GetAccountData(string phoneNumber)
+        public async static Task<Response> HasActiveAccount(string phoneNumber)
         {
             EnsureInitialize();
 
@@ -144,7 +144,7 @@ namespace SmsAuthAPI.Program
                 body = phoneNumber,
             };
 
-            return await _httpClient.GetAccountData(request);
+            return await _httpClient.HasActiveAccount(request);
         }
 
         private static void EnsureInitialize()
