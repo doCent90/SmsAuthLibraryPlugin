@@ -68,10 +68,8 @@ namespace Agava.Wink
 
             if (UnityEngine.PlayerPrefs.HasKey(TokenLifeHelper.Tokens))
                 QuickAccess();
-            yield return new WaitForSecondsRealtime(time: 120f);
 
-            if (HasAccess == false)
-                AnalyticsWinkService.SendHasActiveAccountUser(hasActiveAcc: false);
+            StartCoroutine(DelayedSendStatistic());
         }
 
         public void SetWinkSubsEvent(Action<bool> winkSubscriptionAccessRequest) 
@@ -159,6 +157,14 @@ namespace Agava.Wink
         {
             _timespentService = new(this, _data.phone, _uniqueId, Application.identifier);
             _timespentService.OnStartedApp();
+        }
+
+        private IEnumerator DelayedSendStatistic()
+        {
+            yield return new WaitForSecondsRealtime(time: 120f);
+
+            if (HasAccess == false)
+                AnalyticsWinkService.SendHasActiveAccountUser(hasActiveAcc: false);
         }
     }
 }

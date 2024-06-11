@@ -154,10 +154,10 @@ namespace SmsAuthAPI.Program
 
         public async Task<Response> SetTimespent(Request request)
         {
-            string path = $"{GetHttpPath(request.apiName, request.body, api: false)}";
+            string path = $"{GetHttpPath(request.apiName, null, api: false)}";
             OnTryConnecting(path);
 
-            var webRequest = CreateWebRequest(path, RequestType.POST);
+            var webRequest = CreateWebRequest(path, RequestType.POST, null, request.body);
             webRequest.SendWebRequest();
 
             await WaitProccessing(webRequest);
