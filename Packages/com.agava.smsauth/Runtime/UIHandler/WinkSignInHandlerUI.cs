@@ -29,6 +29,8 @@ namespace Agava.Wink
         [SerializeField] private bool _additivePlusChar = false;
         [Header("Factory components")]
         [SerializeField] private Transform _containerButtons;
+        [Header("Phone Number Placeholders")]
+        [SerializeField] private PhoneNumberPlaceholder[] _phoneNumberPlaceholders;
 
         private SignInFuctionsUI _signInFuctionsUI;
         private WinkAccessManager _winkAccessManager;
@@ -37,8 +39,10 @@ namespace Agava.Wink
         public static WinkSignInHandlerUI Instance { get; private set; }
 
         public bool IsAnyWindowEnabled => _notifyWindowHandler.IsAnyWindowEnabled;
+
         public event Action AllWindowsClosed;
         public event Action SignInWindowClosed;
+        public event Action HelloWindowsClosed;
 
         public void Dispose()
         {
@@ -101,7 +105,12 @@ namespace Agava.Wink
 
         private void OnSignInClicked()
         {
-            string number = WinkAcceessHelper.GetNumber(_numbersInputField.text, _minNumberCount, _maxNumberCount, _additivePlusChar);
+            string formattedNumber = _numbersInputField.text;
+
+            foreach (PhoneNumberPlaceholder placeholder in _phoneNumberPlaceholders)
+                placeholder.ReplaceValue(formattedNumber);
+
+            string number = WinkAcceessHelper.GetNumber(formattedNumber, _minNumberCount, _maxNumberCount, _additivePlusChar);
             _signInFuctionsUI.OnSignInClicked(number, OnSuccessfully);
         }
 
@@ -135,6 +144,18 @@ namespace Agava.Wink
         private void OnSuccessfully()
         {
             _openSignInButton.gameObject.SetActive(false);
+
+            bool subscribed = true;
+
+            if (_winkAccessManager.HasAccess)
+            {
+                _notifyWindowHandler.OpenHelloWindow(onEnd: () =>
+                {
+                    if (subscribed == false)
+                        _notifyWindowHandler.OpenHelloSubscribeWindow(null);
+                });
+            }
+
             _notifyWindowHandler.OpenWindow(WindowType.Hello);
         }
 
