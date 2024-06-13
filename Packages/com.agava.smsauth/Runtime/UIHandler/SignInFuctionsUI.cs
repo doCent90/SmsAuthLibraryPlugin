@@ -38,6 +38,7 @@ namespace Agava.Wink
             }
 
             _notifyWindowHandler.OpenWindow(WindowType.ProccessOn);
+            AnalyticsWinkService.SendOnEnteredPhoneWindow();
 
             _winkAccessManager.Regist(phoneNumber: number,
             otpCodeRequest: (hasOtpCode) =>
@@ -45,11 +46,13 @@ namespace Agava.Wink
                 if (hasOtpCode)
                 {
                     _notifyWindowHandler.CloseWindow(WindowType.ProccessOn);
+                    AnalyticsWinkService.SendEnterOtpCodeWindow();
 
                     _notifyWindowHandler.OpenInputWindow(onInputDone: (code) =>
                     {
                         _notifyWindowHandler.OpenWindow(WindowType.ProccessOn);
                         _winkAccessManager.SendOtpCode(code);
+                        AnalyticsWinkService.SendOnEnteredOtpCodeWindow();
                     });
                 }
                 else
@@ -78,6 +81,7 @@ namespace Agava.Wink
             {
                 _notifyWindowHandler.CloseWindow(WindowType.ProccessOn);
                 _notifyWindowHandler.OpenWindow(WindowType.Redirect);
+                AnalyticsWinkService.SendPayWallWindow();
             }
         }
 
@@ -125,8 +129,13 @@ namespace Agava.Wink
 
             _notifyWindowHandler.OpenHelloWindow(onEnd: () =>
             {
+                AnalyticsWinkService.SendHelloWindow();
+
                 if (hasAccess == false)
+                {
                     _notifyWindowHandler.OpenHelloSubscribeWindow(null);
+                    AnalyticsWinkService.SendPayWallWindow();
+                }
             });
         }
 

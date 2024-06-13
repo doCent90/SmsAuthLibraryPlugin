@@ -25,6 +25,7 @@ namespace Agava.Wink
         private void OnYesClicked()
         {
             Application.OpenURL(_url);
+            AnalyticsWinkService.SendPayWallRedirect();
             Disable();
         }
     }

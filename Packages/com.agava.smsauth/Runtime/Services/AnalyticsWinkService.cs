@@ -25,8 +25,16 @@ namespace Agava.Wink
         /// <summary>
         /// First time events
         /// </summary>
-        public static void SendFirstOpen() => AppMetrica.ReportEvent("First Open App");        
         public static void SendSubscribeOfferWindow() => AppMetrica.ReportEvent("Subscribe Offer Window (Unsigned user)");        
         public static void SendHelloWindow() => AppMetrica.ReportEvent("Hello Window (Signed user)");        
+        public static void SendEnterPhoneWindow() => AppMetrica.ReportEvent("Enter Phone Window");        
+        public static void SendOnEnteredPhoneWindow() => AppMetrica.ReportEvent("On Entered Phone");        
+        public static void SendEnterOtpCodeWindow() => AppMetrica.ReportEvent("Enter Otp Code Window");        
+        public static void SendOnEnteredOtpCodeWindow() => AppMetrica.ReportEvent("On Entered Otp Code");        
+        public static void SendPayWallWindow() => AppMetrica.ReportEvent("PayWall Window");        
+        public static void SendPayWallRedirect() => AppMetrica.ReportEvent("PayWall Redirect");        
+        public static void SendFirstOpen() => AppMetrica.ReportEvent("First Open Game");        
+        public static void SendSubscribeProfileWindow() => AppMetrica.ReportEvent("Subscribe Profile Window");        
+        public static void SendSubscribeProfileRemote() => AppMetrica.ReportEvent("Subscribe Profile Remote");        
     }
 }

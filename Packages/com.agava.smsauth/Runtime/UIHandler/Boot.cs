@@ -77,6 +77,7 @@ namespace Agava.Wink
             {
                 _winkSignInHandlerUI.OpenSignWindow();
                 UnityEngine.PlayerPrefs.SetString(FirsttimeStartApp, "true");
+                AnalyticsWinkService.SendSubscribeOfferWindow();
 
                 yield return new WaitUntil(() => (WinkAccessManager.Instance.HasAccess == true || _winkSignInHandlerUI.IsAnyWindowEnabled == false));
 
