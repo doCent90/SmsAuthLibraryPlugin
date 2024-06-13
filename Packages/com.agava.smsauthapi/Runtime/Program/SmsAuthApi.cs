@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using SmsAuthAPI.DTO;
+using UnityEngine;
 
 namespace SmsAuthAPI.Program
 {
@@ -182,6 +184,14 @@ namespace SmsAuthAPI.Program
             public int time;
         }
 
+        class AverageCountAppsUserData
+        {
+            public string phone { get; set; }
+            public string san_id { get; set; }
+            public string app_ids { get; set; }
+            public int count { get; set; }
+        }
+
         public async static void SetTimespentAllUsers(string appId, int time)
         {
             EnsureInitialize();
@@ -220,8 +230,28 @@ namespace SmsAuthAPI.Program
 
             await _httpClient.SetTimespent(request);
         }
-    }
 
+        public async static void OnUserAddApp(string phone, string sanId)
+        {
+            EnsureInitialize();
+            Debug.Log($"{phone} {sanId}");
+            string data = JsonConvert.SerializeObject(new AverageCountAppsUserData()
+            {
+                phone = phone,
+                san_id = sanId,
+                app_ids = Application.identifier,
+                count = 0,
+            });
+
+            var request = new Request()
+            {
+                apiName = "Analytics/user-add-app",
+                body = data,
+            };
+
+            await _httpClient.OnUserAddApp(request);
+        }
+    }
 
     #region Test function
 #if UNITY_EDITOR || TEST

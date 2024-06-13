@@ -134,7 +134,7 @@ namespace SmsAuthAPI.Program
             await WaitProccessing(webRequest);
             TryShowRequestInfo(webRequest, request.apiName);
 
-            return new Response(webRequest.result, webRequest.result.ToString(), null, false);
+            return new Response(webRequest.result, webRequest.result.ToString(), webRequest.downloadHandler.text, false);
         }
 
         public async Task<Response> GetSanId(Request request)
@@ -148,11 +148,25 @@ namespace SmsAuthAPI.Program
             await WaitProccessing(webRequest);
             TryShowRequestInfo(webRequest, request.apiName);
 
-            return new Response(webRequest.result, webRequest.result.ToString(), null, false);
+            return new Response(webRequest.result, webRequest.result.ToString(), webRequest.downloadHandler.text, false);
         }
 
 
         public async Task<Response> SetTimespent(Request request)
+        {
+            string path = $"{GetHttpPath(request.apiName, null, api: false)}";
+            OnTryConnecting(path);
+
+            var webRequest = CreateWebRequest(path, RequestType.POST, null, request.body);
+            webRequest.SendWebRequest();
+
+            await WaitProccessing(webRequest);
+            TryShowRequestInfo(webRequest, request.apiName);
+
+            return new Response(webRequest.result, webRequest.result.ToString(), null, false);
+        }
+
+        public async Task<Response> OnUserAddApp(Request request)
         {
             string path = $"{GetHttpPath(request.apiName, null, api: false)}";
             OnTryConnecting(path);
