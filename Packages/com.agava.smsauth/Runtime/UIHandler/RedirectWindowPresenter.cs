@@ -10,11 +10,11 @@ namespace Agava.Wink
         [SerializeField] private Button _closeButton;
         [SerializeField] private string _url;
 
-        private void OnDestroy() => _closeButton.onClick.RemoveAllListeners();
+        private void OnDestroy() => _closeButton?.onClick.RemoveAllListeners();
 
         private void Awake()
         {
-            _closeButton.onClick.AddListener(Disable);
+            _closeButton?.onClick.AddListener(Disable);
             _yesButton.onClick.AddListener(OnYesClicked);
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -133,7 +132,7 @@ namespace Agava.Wink
 
                 if (hasAccess == false)
                 {
-                    _notifyWindowHandler.OpenHelloSubscribeWindow(null);
+                    _notifyWindowHandler.OpenWindow(WindowType.Redirect);
                     AnalyticsWinkService.SendPayWallWindow();
                 }
             });
