@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\SceneLoader.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WinkSignInHandlerUI.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\IInputFieldFormatting.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\PhoneNumberPlaceholder.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\IWinkAccessManager.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowPresenter.cs" />
@@ -70,11 +71,13 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\HelloSubscribeWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\TimespentService.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\HelloWindowPresenter.cs" />
-    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\SignInButton.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\SubmitInputButton.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\RequestHandler.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\DemoTimer.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowType.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\InputWindowPresenter.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\SlicedFilledImage.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\LoadingProgressBar.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\RedirectWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\CodeFormatter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\ICoroutine.cs" />
