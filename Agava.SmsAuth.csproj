@@ -60,6 +60,7 @@
     <Analyzer Include="E:\IDE`s\Unitys\Unity\2022.3.20f1\Editor\Data\Tools\Unity.SourceGenerators\Unity.Properties.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\ModifiedShadow.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\SceneLoader.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WinkSignInHandlerUI.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\IInputFieldFormatting.cs" />
@@ -68,7 +69,7 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\PhoneNumberFormatting.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\StartLogoPresenter.cs" />
-    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\HelloSubscribeWindowPresenter.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\BoxOutline.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\TimespentService.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\HelloWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\SubmitInputButton.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\SlicedFilledImage.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\LoadingProgressBar.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\RedirectWindowPresenter.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\ObjectPool.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\CodeFormatter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\ICoroutine.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\SignInWindowPresenter.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\AnalyticsWinkService.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\IWinkSignInHandlerUI.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\WinkAcceessHelper.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\ListPool.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\Boot.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\LockedObject.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\NotifyWindowPresenter.cs" />
