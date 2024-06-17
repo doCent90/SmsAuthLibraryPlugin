@@ -31,6 +31,8 @@ namespace Agava.Wink
         internal void OpenInputWindow(Action<uint> onInputDone) => _enterCodeWindow.Enable(onInputDone);
         internal void OpenHelloWindow(Action onEnd) => _helloWindow.Enable(onEnd);
 
+        internal void ResetInputWindow() => _enterCodeWindow.ResetInputText();
+
         internal void CloseAllWindows(Action onClosed)
         {
             _windows.ForEach(window => window.Disable());

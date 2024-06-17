@@ -30,7 +30,7 @@ namespace Agava.Wink
         [Header("Factory components")]
         [SerializeField] private Transform _containerButtons;
         [Header("Phone Number Placeholders")]
-        [SerializeField] private PhoneNumberPlaceholder[] _phoneNumberPlaceholders;
+        [SerializeField] private TextPlaceholder[] _phoneNumberPlaceholders;
 
         private SignInFuctionsUI _signInFuctionsUI;
         private WinkAccessManager _winkAccessManager;
@@ -112,7 +112,7 @@ namespace Agava.Wink
         {
             string formattedNumber = _numbersInputField.text;
 
-            foreach (PhoneNumberPlaceholder placeholder in _phoneNumberPlaceholders)
+            foreach (TextPlaceholder placeholder in _phoneNumberPlaceholders)
                 placeholder.ReplaceValue(formattedNumber);
 
             string number = WinkAcceessHelper.GetNumber(formattedNumber, _minNumberCount, _maxNumberCount, _additivePlusChar);
@@ -149,7 +149,17 @@ namespace Agava.Wink
         private void OnSuccessfully()
         {
             _openSignInButton.gameObject.SetActive(false);
-            //_notifyWindowHandler.OpenWindow(WindowType.Hello);
+
+            _notifyWindowHandler.OpenHelloWindow(onEnd: () =>
+            {
+                AnalyticsWinkService.SendHelloWindow();
+
+                if (WinkAccessManager.Instance.HasAccess == false)
+                {
+                    _notifyWindowHandler.OpenWindow(WindowType.Redirect);
+                    AnalyticsWinkService.SendPayWallWindow();
+                }
+            });
         }
 
         private void OnTimerExpired() => _notifyWindowHandler.OpenWindow(WindowType.DemoTimerExpired);

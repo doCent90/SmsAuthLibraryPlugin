@@ -33,6 +33,7 @@ namespace Agava.Wink
         public event Action<IReadOnlyList<string>> LimitReached;
         public event Action ResetLogin;
         public event Action Successfully;
+        public event Action LogInSuccessfully;
 
         private void OnApplicationFocus(bool focus)
         {
@@ -110,6 +111,7 @@ namespace Agava.Wink
             () =>
                 {
                     OnSubscriptionExist();
+                    OnLogInSuccessfully();
                     TrySendAnalyticsData(_data.phone);
                 });
         }
@@ -117,7 +119,7 @@ namespace Agava.Wink
         private async void QuickAccess()
         {
             while (_winkSubscriptionAccessRequest == null) await Task.Yield();
-            _requestHandler.QuickAccess(_data.phone, OnSubscriptionExist, ResetLogin, _winkSubscriptionAccessRequest);
+            _requestHandler.QuickAccess(_data.phone, OnSubscriptionExist, ResetLogin, _winkSubscriptionAccessRequest, OnLogInSuccessfully);
         }
 
         private void OnSubscriptionExist()
@@ -145,12 +147,12 @@ namespace Agava.Wink
 
                     if (responseGetSanId.statusCode == UnityEngine.Networking.UnityWebRequest.Result.Success)
                     {
-                        Debug.Log($"san_id: " +  responseGetSanId.body);
+                        Debug.Log($"san_id: " + responseGetSanId.body);
 
                         AnalyticsWinkService.SendSanId(responseGetSanId.body);
                         AnalyticsWinkService.SendHasActiveAccountNewUser(hasActiveAcc: true);
                         SmsAuthApi.OnUserAddApp(_data.phone, responseGetSanId.body);
-                        PlayerPrefs.SetString(FirstRegist, "done"); 
+                        PlayerPrefs.SetString(FirstRegist, "done");
                     }
                 }
                 else
@@ -172,6 +174,11 @@ namespace Agava.Wink
 
             if (HasAccess == false)
                 AnalyticsWinkService.SendHasActiveAccountUser(hasActiveAcc: false);
+        }
+
+        private void OnLogInSuccessfully()
+        {
+            LogInSuccessfully?.Invoke();
         }
     }
 }
