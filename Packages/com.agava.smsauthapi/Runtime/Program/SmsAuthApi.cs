@@ -247,7 +247,7 @@ namespace SmsAuthAPI.Program
         public async static void OnUserAddApp(string phone, string sanId)
         {
             EnsureInitialize();
-            Debug.Log($"{phone} {sanId}");
+
             string data = JsonConvert.SerializeObject(new AverageCountAppsUserData()
             {
                 phone = phone,
