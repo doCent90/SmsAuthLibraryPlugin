@@ -77,7 +77,7 @@ public class TestCloudHandler : MonoBehaviour
     {
         Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
 
-        if (WinkAccessManager.Instance.HasAccess == false)
+        if (WinkAccessManager.Instance.Authorized == false)
             throw new System.Exception("Wink not authorizated!");
 
         for (int i = 0; i < _countMassiveSaves; i++)
@@ -104,7 +104,7 @@ public class TestCloudHandler : MonoBehaviour
     {
         Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
 
-        if (WinkAccessManager.Instance.HasAccess == false)
+        if (WinkAccessManager.Instance.Authorized == false)
             throw new System.Exception("Wink not authorizated!");
 
         StringBuilder sb = new();
@@ -126,7 +126,7 @@ public class TestCloudHandler : MonoBehaviour
     {
         Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
 
-        if (WinkAccessManager.Instance.HasAccess == false)
+        if (WinkAccessManager.Instance.Authorized == false)
             throw new System.Exception("Wink not authorizated!");
 
         var data = await SmsAuthApi.GetSaveCloud(_phoneNumber);
@@ -182,7 +182,7 @@ public class TestCloudHandler : MonoBehaviour
     {
         Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
 
-        if (WinkAccessManager.Instance.HasAccess == false)
+        if (WinkAccessManager.Instance.Authorized == false)
             throw new System.Exception("Wink not authorizated!");
 
         SmsAuthAPI.Utility.PlayerPrefs.SetString("key", _input.text);
@@ -193,7 +193,7 @@ public class TestCloudHandler : MonoBehaviour
     {
         Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
 
-        if (WinkAccessManager.Instance.HasAccess == false)
+        if (WinkAccessManager.Instance.Authorized == false)
             throw new System.Exception("Wink not authorizated!");
 
         var data = SmsAuthAPI.Utility.PlayerPrefs.GetString("key");
@@ -208,7 +208,7 @@ public class TestCloudHandler : MonoBehaviour
     {
         Debug.Log("Wink access: " + WinkAccessManager.Instance.HasAccess);
 
-        if (WinkAccessManager.Instance.HasAccess == false)
+        if (WinkAccessManager.Instance.Authorized == false)
             throw new System.Exception("Wink not authorizated!");
 
         Tokens tokens = TokenLifeHelper.GetTokens();
