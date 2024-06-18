@@ -27,13 +27,15 @@ namespace Agava.Wink
         private Action<bool> _otpCodeAccepted;
         private string _uniqueId;
 
+        public bool Authorized { get; private set; } = false;
         public bool HasAccess { get; private set; } = false;
+
         public static WinkAccessManager Instance { get; private set; }
 
         public event Action<IReadOnlyList<string>> LimitReached;
         public event Action ResetLogin;
         public event Action Successfully;
-        public event Action LogInSuccessfully;
+        public event Action AuthorizedSuccessfully;
 
         private void OnApplicationFocus(bool focus)
         {
@@ -107,11 +109,16 @@ namespace Agava.Wink
 
         private void Login(LoginData data)
         {
-            _requestHandler.Login(data, LimitReached, _winkSubscriptionAccessRequest, _otpCodeAccepted,
+            _requestHandler.Login(data, LimitReached, _winkSubscriptionAccessRequest, (bool otpCodeAccepted) =>
+            {
+                _otpCodeAccepted?.Invoke(otpCodeAccepted);
+
+                if (otpCodeAccepted)
+                    OnAuthorizedSuccessfully();
+            },
             () =>
                 {
                     OnSubscriptionExist();
-                    OnLogInSuccessfully();
                     TrySendAnalyticsData(_data.phone);
                 });
         }
@@ -119,7 +126,7 @@ namespace Agava.Wink
         private async void QuickAccess()
         {
             while (_winkSubscriptionAccessRequest == null) await Task.Yield();
-            _requestHandler.QuickAccess(_data.phone, OnSubscriptionExist, ResetLogin, _winkSubscriptionAccessRequest, OnLogInSuccessfully);
+            _requestHandler.QuickAccess(_data.phone, OnSubscriptionExist, ResetLogin, _winkSubscriptionAccessRequest, OnAuthorizedSuccessfully);
         }
 
         private void OnSubscriptionExist()
@@ -130,7 +137,7 @@ namespace Agava.Wink
             if (PlayerPrefs.HasKey(FirstRegist))
                 AnalyticsWinkService.SendHasActiveAccountUser(hasActiveAcc: true);
 
-            Debug.Log("Access succesfully");
+            Debug.Log("Wink access succesfully");
         }
 
         private async void TrySendAnalyticsData(string phone)
@@ -176,9 +183,12 @@ namespace Agava.Wink
                 AnalyticsWinkService.SendHasActiveAccountUser(hasActiveAcc: false);
         }
 
-        private void OnLogInSuccessfully()
+        private void OnAuthorizedSuccessfully()
         {
-            LogInSuccessfully?.Invoke();
+            Authorized = true;
+            AuthorizedSuccessfully?.Invoke();
+
+            Debug.Log("Authorizated successfully");
         }
     }
 }

@@ -79,12 +79,12 @@ namespace Agava.Wink
 
         internal void OnSubsDenied(bool hasAccess)
         {
-            if (hasAccess == false)
-            {
-                _notifyWindowHandler.CloseWindow(WindowType.ProccessOn);
-                _notifyWindowHandler.OpenWindow(WindowType.Redirect);
-                AnalyticsWinkService.SendPayWallWindow();
-            }
+            //if (hasAccess == false)
+            //{
+            //    _notifyWindowHandler.CloseWindow(WindowType.ProccessOn);
+            //    _notifyWindowHandler.OpenWindow(WindowType.Redirect);
+            //    AnalyticsWinkService.SendPayWallWindow();
+            //}
         }
 
         internal void OnUnlinkClicked(string device)
