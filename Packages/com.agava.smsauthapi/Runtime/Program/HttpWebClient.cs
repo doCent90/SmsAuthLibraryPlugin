@@ -121,15 +121,7 @@ namespace SmsAuthAPI.Program
             await WaitProccessing(webRequest, progress);
             TryShowRequestInfo(webRequest, request.apiName);
 
-            string body = webRequest.downloadHandler.text;
-
-            try
-            {
-                body = JsonConvert.DeserializeObject<string>(webRequest.downloadHandler.text);
-            }
-            catch (Exception) { }
-
-            return new Response(webRequest.result, webRequest.result.ToString(), body, false);
+            return new Response(webRequest.result, webRequest.result.ToString(), webRequest.downloadHandler.text, false);
         }
 
         public async Task<Response> HasActiveAccount(Request request)

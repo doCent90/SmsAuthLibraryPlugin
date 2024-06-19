@@ -146,10 +146,6 @@ namespace Agava.Wink
             var task = SmsAuthAPI.Utility.PlayerPrefs.Load();
             yield return new WaitUntil(() => task.IsCompleted);
 
-#if UNITY_EDITOR || TEST
-            Debug.Log($"[Boot] PlayerPrefs loading result: {task.Status}, is completed: {task.IsCompleted}");
-#endif
-
             if (cancelation != null)
                 StopCoroutine(cancelation);
         }
