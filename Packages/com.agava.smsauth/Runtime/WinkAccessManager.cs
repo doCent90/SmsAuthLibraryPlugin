@@ -110,7 +110,7 @@ namespace Agava.Wink
             {
                 OnAuthenficationSuccessfully();
             },
-            onAutherizationSuccessfully: () =>
+            onAuthorizationSuccessfully: () =>
             {
                 OnSubscriptionExist();
                 TrySendAnalyticsData(LoginData.phone);
