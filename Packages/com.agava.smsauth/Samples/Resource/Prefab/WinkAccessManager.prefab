@@ -2517,7 +2517,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 8884775904
+  m_text: '{id}'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b663b39fdf889c84d98d84b7f77f5eac, type: 2}
   m_sharedMaterial: {fileID: -3705676080865896927, guid: b663b39fdf889c84d98d84b7f77f5eac, type: 2}
@@ -7028,6 +7028,7 @@ MonoBehaviour:
   _yesButton: {fileID: 548584281886736976}
   _closeButton: {fileID: 5053893882087918898}
   _url: https://wink.ru/
+  _closeOnYesClicked: 0
 --- !u!1 &4129842310441096008
 GameObject:
   m_ObjectHideFlags: 0
@@ -9376,6 +9377,8 @@ MonoBehaviour:
   _phoneNumberPlaceholders:
   - {fileID: 4018974058198934512}
   - {fileID: 778152055260337489}
+  _idPlaceholders:
+  - {fileID: 5927538027320468455}
 --- !u!1 &5365033216578547088
 GameObject:
   m_ObjectHideFlags: 0
@@ -15966,6 +15969,7 @@ MonoBehaviour:
   _yesButton: {fileID: 7337809712963273143}
   _closeButton: {fileID: 7779470885959386775}
   _url: https://wink.ru/
+  _closeOnYesClicked: 1
 --- !u!1 &9125395527845628807
 GameObject:
   m_ObjectHideFlags: 0
