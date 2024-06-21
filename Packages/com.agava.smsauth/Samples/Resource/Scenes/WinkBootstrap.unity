@@ -2422,8 +2422,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 225ec97158446a94d9cb40a9f742a8b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  translationCode: ru-RU
+  translationCode: ru
   cultures:
+  - ru
   - ru-RU
 --- !u!1 &1849560778
 GameObject:
@@ -2515,9 +2516,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 225ec97158446a94d9cb40a9f742a8b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  translationCode: en-EN
+  translationCode: en
   cultures:
-  - en-EN
+  - en
+  - en-GB
+  - en-US
+  - en-AU
+  - en-CA
+  - en-NZ
+  - en-IE
+  - en-ZA
+  - en-JM
+  - en-en029
+  - en-BZ
+  - en-TT
+  - en-ZW
+  - en-PH
 --- !u!1 &2111488311
 GameObject:
   m_ObjectHideFlags: 0
