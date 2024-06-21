@@ -1,10 +1,13 @@
-﻿using Lean.Localization;
+﻿using System;
 using UnityEngine;
+using Lean.Localization;
 
 namespace Agava.Wink
 {
     public class WinkLocalization : MonoBehaviour
     {
+        private const string SavedGameSystemLang = nameof(SavedGameSystemLang);
+
         [SerializeField] private LeanLocalization _leanLocalization;
 
         public static WinkLocalization Instance;
@@ -14,25 +17,45 @@ namespace Agava.Wink
             DontDestroyOnLoad(this);
 
             Instance = this;
+            SystemLanguage language;
 
-            ChangeLang(Application.systemLanguage);
+            if (UnityEngine.PlayerPrefs.HasKey(SavedGameSystemLang))
+            {
+                Enum.TryParse(UnityEngine.PlayerPrefs.GetString(SavedGameSystemLang), out SystemLanguage parsedLang);
+                language = parsedLang;
+            }
+            else
+            {
+                language = Application.systemLanguage;
+            }
+
+            ChangeLang(language);
         }
 
-        public void ChangeLang(SystemLanguage lang)
+        public void SetCurrentLang(SystemLanguage lang)
+        {
+            ChangeLang(lang);
+            UnityEngine.PlayerPrefs.SetString(SavedGameSystemLang, lang.ToString());
+        }
+
+        private void ChangeLang(SystemLanguage lang)
         {
             switch (lang)
             {
                 case SystemLanguage.Russian:
-                    SetRuLang();
+                    SetLang(SystemLanguage.Russian.ToString());
                     break;
                 default:
-                    SetEnLang();
+                    SetLang(SystemLanguage.English.ToString());
                     break;
             }
         }
 
-        private void SetRuLang() => _leanLocalization.CurrentLanguage = "ru";
-
-        private void SetEnLang() => _leanLocalization.CurrentLanguage = "en";
+        private void SetLang(string lang)
+        {
+            _leanLocalization.DetectLanguage = LeanLocalization.DetectType.None;
+            _leanLocalization.CurrentLanguage = lang;
+            _leanLocalization.SetCurrentLanguage(lang);
+        }
     }
 }

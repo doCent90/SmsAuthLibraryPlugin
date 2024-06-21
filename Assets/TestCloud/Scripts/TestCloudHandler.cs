@@ -40,6 +40,9 @@ public class TestCloudHandler : MonoBehaviour
     [Header("Server http client")]
     [SerializeField] private string _path;
     [SerializeField] private Button _send;
+    [Header("Lang buttons")]
+    [SerializeField] private Button _ruButton;
+    [SerializeField] private Button _enButton;
 
     private HttpClient _client;
 
@@ -62,10 +65,16 @@ public class TestCloudHandler : MonoBehaviour
         _deleteAllSaves.onClick.AddListener(OnClearAllSavesClicked);
 
         _send.onClick.AddListener(OnSendClicked);
+        _ruButton.onClick.AddListener(OnRuClicked);
+        _enButton.onClick.AddListener(OnEnClicked);
 
         _client = new HttpClient();
         WinkSignInHandlerUI.Instance.SignInWindowClosed += OnClosed;
     }
+
+    private void OnEnClicked() => WinkLocalization.Instance.SetCurrentLang(SystemLanguage.English);
+
+    private void OnRuClicked() => WinkLocalization.Instance.SetCurrentLang(SystemLanguage.Russian);
 
     private async void OnSendClicked()
     {
