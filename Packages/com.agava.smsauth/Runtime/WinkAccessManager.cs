@@ -132,7 +132,6 @@ namespace Agava.Wink
         private void OnSubscriptionExist()
         {
             HasAccess = true;
-            Authorized = true;
             AuthorizationSuccessfully?.Invoke();
 
             if (PlayerPrefs.HasKey(FirstRegist))
