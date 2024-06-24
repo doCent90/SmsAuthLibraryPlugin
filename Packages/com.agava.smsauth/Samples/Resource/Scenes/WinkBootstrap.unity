@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731715, g: 0.13414735, b: 0.121078536, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -480,7 +480,7 @@ MonoBehaviour:
   data: 0
   entries:
   - Language: English
-    Text: "WINK \nCHILDREN"
+    Text: "WINK \n\u0414\u0415\u0422\u0418"
     Object: {fileID: 0}
   - Language: Russian
     Text: "WINK \n\u0414\u0415\u0422\u0418"
@@ -2853,10 +2853,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 889456908364218159, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -6.496338
-      objectReference: {fileID: 0}
     - target: {fileID: 1062060887323826377, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -3776,10 +3772,6 @@ PrefabInstance:
     - target: {fileID: 5871612463835652688, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6216864216528146972, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -6.496338
       objectReference: {fileID: 0}
     - target: {fileID: 6396992294512962067, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
       propertyPath: m_AnchorMax.y
