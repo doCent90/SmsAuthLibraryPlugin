@@ -2425,11 +2425,11 @@ MonoBehaviour:
   data: 0
   entries:
   - Language: English
-    Text: 'Active devices: {devices} of {totalDevices}.'
+    Text: 'Active devices: 5 of 5.'
     Object: {fileID: 0}
   - Language: Russian
     Text: "\u0410\u043A\u0442\u0438\u0432\u043D\u044B\u0435 \u0443\u0441\u0442\u0440\u043E\u0439\u0441\u0442\u0432\u0430:
-      {devices} \u0438\u0437 {totalDevices}."
+      5 \u0438\u0437 5."
     Object: {fileID: 0}
 --- !u!4 &6160154910267008899
 Transform:
