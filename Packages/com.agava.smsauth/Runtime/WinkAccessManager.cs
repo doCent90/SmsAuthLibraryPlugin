@@ -114,7 +114,7 @@ namespace Agava.Wink
             {
                 OnSubscriptionExist();
                 TrySendAnalyticsData(LoginData.phone);
-            }); 
+            });
         }
 
         private void QuickAccess() =>
@@ -132,6 +132,7 @@ namespace Agava.Wink
         private void OnSubscriptionExist()
         {
             HasAccess = true;
+            Authorized = true;
             AuthorizationSuccessfully?.Invoke();
 
             if (PlayerPrefs.HasKey(FirstRegist))
