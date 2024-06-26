@@ -11,6 +11,7 @@ namespace Agava.Wink
         [SerializeField] private TMP_InputField _inputField;
         [SerializeField] private TMP_Text _placeholder;
         [SerializeField] private TMP_Text _visibleText;
+        [SerializeField] private WindowScalerPresenter _scalerPresenter;
 
         private int _placeholderLength;
         private string _colorCode;
@@ -23,6 +24,7 @@ namespace Agava.Wink
 
         private void Awake()
         {
+            _scalerPresenter.Construct();
             _inputField.contentType = TMP_InputField.ContentType.IntegerNumber;
             _placeholder.text = PhoneNumber.PlaceholderText;
             _placeholderLength = PhoneNumber.PlaceholderText.Length;
@@ -39,6 +41,9 @@ namespace Agava.Wink
         {
             _inputField.caretColor = new Color(0, 0, 0, 0);
             _inputField.caretPosition = _length;
+
+            if (InputDone == false)
+                _scalerPresenter.Update();
         }
 
         private void OnValueChanged(string newValue)
@@ -73,6 +78,7 @@ namespace Agava.Wink
                 );
 
             _inputDone = true;
+            _scalerPresenter.OnTargetWindowClosed();
         }
 
         private string ColorText(string colorCode, string text) => $"<color=#{colorCode}>{text}</color>";
