@@ -1,5 +1,5 @@
 ﻿using System;
-using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Agava.Wink
@@ -7,32 +7,37 @@ namespace Agava.Wink
     [Serializable]
     internal class WindowScalerPresenter
     {
-        [SerializeField] private RectTransform _target;
-        [SerializeField] private TMP_InputField _inputField;
-        [SerializeField] private float _yOffset;
+        [SerializeField] private List<Transform> _target;
+        [SerializeField] private float _yOffset = 150f;
 
-        private Vector3 _defaultPosition;
         private bool _hasMoved = false;
 
-        internal void Construct() => _defaultPosition = _target.position;
+        internal void Construct()
+        {
+            TouchScreenKeyboard.hideInput = true;
+        }
 
         internal void Update() 
         {
-            if (_inputField.isFocused && _hasMoved == false)
-                OnTargetWindowOpened();
+            if (Screen.autorotateToPortrait || Screen.autorotateToPortraitUpsideDown 
+                || Screen.orientation == ScreenOrientation.Portrait || Screen.orientation == ScreenOrientation.PortraitUpsideDown)
+                return;
+
+            if (TouchScreenKeyboard.visible && _hasMoved == false)
+                MoveWindow();
+            else if (TouchScreenKeyboard.visible == false && _hasMoved)
+                ResetWindow();
         }
 
-        internal void OnTargetWindowOpened()
+        private void MoveWindow()
         {
-            Debug.LogWarning("KEY");
-            _target.position += new Vector3(0, _yOffset, 0);
+            _target.ForEach(window => window.position = window.position + new Vector3(0, _yOffset, 0));
             _hasMoved = true;
-            TouchScreenKeyboard.Open("", TouchScreenKeyboardType.PhonePad);
         }
 
-        internal void OnTargetWindowClosed()
+        private void ResetWindow()
         {
-            _target.position = _defaultPosition;
+            _target.ForEach(window => window.position = window.position - new Vector3(0, _yOffset, 0));
             _hasMoved = false;
         }
     }

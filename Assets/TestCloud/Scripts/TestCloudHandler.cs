@@ -2,13 +2,11 @@ using Agava.Wink;
 using Newtonsoft.Json;
 using SmsAuthAPI.DTO;
 using SmsAuthAPI.Program;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using TMPro;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -54,15 +52,9 @@ public class TestCloudHandler : MonoBehaviour
         _loadPrefs.onClick.AddListener(OnLoadPrefsClicked);
         _checkDevices.onClick.AddListener(ShowDevices);
 
-        _addWriters.onClick.AddListener(CreateWriters);
-        _deleteAllWriters.onClick.AddListener(DeleteAllWrites);
-        _getOtpCount.onClick.AddListener(GetOtpCount);
-        _getOtpWrites.onClick.AddListener(GetOtpWrites);
-
         _addSaves.onClick.AddListener(OnSavesClicked);
         _addMassiveSaves.onClick.AddListener(OnMassiveSavesClicked);
         _getSave.onClick.AddListener(OnGetCurrentSavesClicked);
-        _deleteAllSaves.onClick.AddListener(OnClearAllSavesClicked);
 
         _send.onClick.AddListener(OnSendClicked);
         _ruButton.onClick.AddListener(OnRuClicked);
@@ -84,103 +76,72 @@ public class TestCloudHandler : MonoBehaviour
 
     private async void OnMassiveSavesClicked()
     {
-        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
+        //Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
 
-        if (WinkAccessManager.Instance.HasAccess == false)
-            throw new System.Exception("Wink not authorizated!");
+        //if (WinkAccessManager.Instance.HasAccess == false)
+        //    throw new System.Exception("Wink not authorizated!");
 
-        for (int i = 0; i < _countMassiveSaves; i++)
-        {
-            StringBuilder sb = new();
+        //for (int i = 0; i < _countMassiveSaves; i++)
+        //{
+        //    StringBuilder sb = new();
 
-            for (int x = 0; x < _savesSize; x++)
-                sb.Append(_savesBodyString);
+        //    for (int x = 0; x < _savesSize; x++)
+        //        sb.Append(_savesBodyString);
 
-            TestData testData = new()
-            {
-                Text = sb.ToString()
-            };
+        //    TestData testData = new()
+        //    {
+        //        Text = sb.ToString()
+        //    };
 
-            var json = JsonConvert.SerializeObject(testData);
+        //    var json = JsonConvert.SerializeObject(testData);
 
-            await SmsAuthApi.WriteSaveClouds(_phoneNumber + i, json);
-        }
+        //    await SmsAuthApi.WriteSaveClouds(_phoneNumber + i, json);
+        //}
 
-        Debug.LogError("Massive Saves DONE");
+        //Debug.LogError("Massive Saves DONE");
     }
 
     private async void OnSavesClicked()
     {
-        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
+        //Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
 
-        if (WinkAccessManager.Instance.HasAccess == false)
-            throw new System.Exception("Wink not authorizated!");
+        //if (WinkAccessManager.Instance.HasAccess == false)
+        //    throw new System.Exception("Wink not authorizated!");
 
-        StringBuilder sb = new();
+        //StringBuilder sb = new();
 
-        for (int i = 0; i < _savesSize; i++)
-            sb.Append(_savesBodyString);
+        //for (int i = 0; i < _savesSize; i++)
+        //    sb.Append(_savesBodyString);
 
-        TestData testData = new()
-        {
-            Text = sb.ToString()
-        };
+        //TestData testData = new()
+        //{
+        //    Text = sb.ToString()
+        //};
 
-        var json = JsonConvert.SerializeObject(testData);
+        //var json = JsonConvert.SerializeObject(testData);
 
-        await SmsAuthApi.WriteSaveClouds(_phoneNumber, json);
+        //await SmsAuthApi.WriteSaveClouds(_phoneNumber, json);
     }
 
     private async void OnGetCurrentSavesClicked()
     {
-        Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
+        //Debug.Log("Wink: " + WinkAccessManager.Instance.HasAccess);
 
-        if (WinkAccessManager.Instance.HasAccess == false)
-            throw new System.Exception("Wink not authorizated!");
+        //if (WinkAccessManager.Instance.HasAccess == false)
+        //    throw new System.Exception("Wink not authorizated!");
 
-        var data = await SmsAuthApi.GetSaveCloud(_phoneNumber);
+        //var data = await SmsAuthApi.GetSaveCloud(_phoneNumber);
 
-        if (string.IsNullOrEmpty(data.body))
-            Debug.Log($"<color=red>Load fail</color>: data empty {data.body}");
-        else
-            Debug.Log("Loaded: " + data.body);
+        //if (string.IsNullOrEmpty(data.body))
+        //    Debug.Log($"<color=red>Load fail</color>: data empty {data.body}");
+        //else
+        //    Debug.Log("Loaded: " + data.body);
     }
 
-    private async void OnClearAllSavesClicked()
-    {
-        await SmsAuthApi.ClearAllSaveCloud(_clearPassword);
-    }
-
-    private async void CreateWriters()
-    {
-        Response response = await SmsAuthApi.Write(_number, _writesCount);
-
-        if (response.statusCode != UnityWebRequest.Result.Success)
-            Debug.LogError("Create Error : " + response.statusCode);
-        else
-            Debug.Log("Create Done : " + response.statusCode);
-    }
-
-    private async void DeleteAllWrites()
-    {
-        var result = await SmsAuthApi.ClearOtpTable();
-
-        Debug.Log("Otp Table Cleared: " + result.statusCode);
-    }
-
-    private async void GetOtpWrites()
-    {
-        var result = await SmsAuthApi.GetOtpsWrites(_targetOtp);
-
-        Debug.Log("Phone by otp: " + result.body);
-    }
-
-    private async void GetOtpCount()
-    {
-        var result = await SmsAuthApi.GetOtpsCount();
-
-        Debug.Log("Otps Count: " + result.body);
-    }
+    //private async void OnClearAllSavesClicked()
+    //{
+    //    await SmsAuthApi.ClearAllSaveCloud(_clearPassword);
+    //}
 
     private void OnClosed()
     {

@@ -7254,6 +7254,12 @@ MonoBehaviour:
   <Type>k__BackingField: 1
   _canvasGroup: {fileID: 709763903809266366}
   _closeButton: {fileID: 8120610116428804691}
+  _scalerPresenter:
+    _target:
+    - {fileID: 2245853417595682115}
+    - {fileID: 6843718290384292502}
+    - {fileID: 543466703237630229}
+    _yOffset: 150
 --- !u!225 &709763903809266366
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8655,7 +8661,7 @@ MonoBehaviour:
   m_AsteriskChar: 42
   m_KeyboardType: 4
   m_LineType: 0
-  m_HideMobileInput: 0
+  m_HideMobileInput: 1
   m_HideSoftKeyboard: 0
   m_CharacterValidation: 2
   m_RegexValue: 
@@ -8695,8 +8701,8 @@ MonoBehaviour:
   m_RichText: 1
   m_GlobalFontAsset: {fileID: 11400000, guid: b663b39fdf889c84d98d84b7f77f5eac, type: 2}
   m_OnFocusSelectAll: 1
-  m_ResetOnDeActivation: 1
-  m_RestoreOriginalTextOnEscape: 1
+  m_ResetOnDeActivation: 0
+  m_RestoreOriginalTextOnEscape: 0
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
@@ -8957,6 +8963,12 @@ MonoBehaviour:
   _repeatCodeTimer: {fileID: 2534286649880119294}
   _enterCodeShaking: {fileID: 4668448003229957748}
   _codeFormatter: {fileID: 6780325995266552176}
+  _scalerPresenter:
+    _target:
+    - {fileID: 2468091213368922852}
+    - {fileID: 2323486917268128332}
+    - {fileID: 8902247070848643133}
+    _yOffset: 150
   _sendButton: {fileID: 4842654881212755993}
   _sendRepeatCodeButton: {fileID: 8924164875623098961}
   _backButton: {fileID: 5299554304743929093}
@@ -13698,7 +13710,7 @@ MonoBehaviour:
   m_KeyboardType: 4
   m_LineType: 0
   m_HideMobileInput: 1
-  m_HideSoftKeyboard: 1
+  m_HideSoftKeyboard: 0
   m_CharacterValidation: 2
   m_RegexValue: 
   m_GlobalPointSize: 14
@@ -13737,8 +13749,8 @@ MonoBehaviour:
   m_RichText: 1
   m_GlobalFontAsset: {fileID: 11400000, guid: b663b39fdf889c84d98d84b7f77f5eac, type: 2}
   m_OnFocusSelectAll: 1
-  m_ResetOnDeActivation: 1
-  m_RestoreOriginalTextOnEscape: 1
+  m_ResetOnDeActivation: 0
+  m_RestoreOriginalTextOnEscape: 0
   m_isRichTextEditingAllowed: 0
   m_LineLimit: 0
   m_InputValidator: {fileID: 0}
@@ -13757,10 +13769,6 @@ MonoBehaviour:
   _inputField: {fileID: 822944845063432204}
   _placeholder: {fileID: 1339340594175050556}
   _visibleText: {fileID: 5513312773542080421}
-  _scalerPresenter:
-    _target: {fileID: 2245853417595682115}
-    _inputField: {fileID: 822944845063432204}
-    _yOffset: 100
 --- !u!1 &6921553671479300716
 GameObject:
   m_ObjectHideFlags: 0
