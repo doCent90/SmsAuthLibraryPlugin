@@ -9,7 +9,7 @@
         "io.appmetrica.analytics": "https://github.com/appmetrica/appmetrica-unity-plugin.git#v6.1.0",
         "com.agava.smsauthwebapi": "1.0.0",
         "com.unity.nuget.newtonsoft-json": "3.0.2",
-        "com.unity.textmeshpro": "3.0.6"
+        "com.unity.textmeshpro": "3.0.9"
       }
     },
     "com.agava.smsauthwebapi": {
