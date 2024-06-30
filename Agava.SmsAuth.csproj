@@ -79,6 +79,7 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\StartLogoPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowType.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\InputWindowPresenter.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\Services\AppMetricaActivator.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowScalerPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\IBoot.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\SlicedFilledImage.cs" />
