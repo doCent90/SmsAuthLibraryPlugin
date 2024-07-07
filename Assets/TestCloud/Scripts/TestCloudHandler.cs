@@ -178,13 +178,13 @@ public class TestCloudHandler : MonoBehaviour
     {
         Debug.Log("Wink access: " + WinkAccessManager.Instance.HasAccess);
 
-        if (WinkAccessManager.Instance.HasAccess == false)
-            throw new System.Exception("Wink not authorizated!");
+        if (WinkAccessManager.Instance.Authenficated == false)
+            throw new System.Exception("Wink not authenticated!");
 
         Tokens tokens = TokenLifeHelper.GetTokens();
-        var response = await SmsAuthApi.GetDevices(tokens.access);
+        var response = await SmsAuthApi.GetDevices(tokens.access, Application.identifier);
 
-        if(response.statusCode != UnityWebRequest.Result.Success)
+        if (response.statusCode != UnityWebRequest.Result.Success)
         {
             Debug.Log("Error");
         }
