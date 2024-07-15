@@ -49,6 +49,12 @@ namespace Agava.Wink
                 _timespentService.OnStartedApp();
         }
 
+        public void Initialize()
+        {
+            if (SmsAuthApi.Initialized == false)
+                SmsAuthApi.Initialize(_ip, AppId);
+        }
+
         public IEnumerator Construct()
         {
             if (Instance == null)
@@ -68,9 +74,6 @@ namespace Agava.Wink
 
             if (LoginData != null)
                 StartTimespentAnalytics();
-
-            if (SmsAuthApi.Initialized == false)
-                SmsAuthApi.Initialize(_ip, AppId);
 
             yield return null;
 

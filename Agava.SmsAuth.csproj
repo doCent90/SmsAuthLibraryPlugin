@@ -107,6 +107,7 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\ListPool.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\TextTimer.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WinkProfileWindow.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\PreloadService.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\LockedObject.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\NotifyWindowPresenter.cs" />
   </ItemGroup>
