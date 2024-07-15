@@ -124,7 +124,8 @@ namespace Agava.Wink
                     OnSkiped();
                 }
 #if UNITY_EDITOR || TEST
-                Debug.Log($"Boot: App Started. SignIn: {WinkAccessManager.Instance.Authenficated}");
+                Debug.Log($"Boot: App Started. Authenficated: {WinkAccessManager.Instance.Authenficated}");
+                Debug.Log($"Boot: App Started. Authorized: {WinkAccessManager.Instance.HasAccess}");
 #endif
             }
 

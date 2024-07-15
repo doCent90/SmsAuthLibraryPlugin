@@ -17,6 +17,7 @@ public class TestCloudHandler : MonoBehaviour
     [SerializeField] private Button _loadPrefs;
     [SerializeField] private TMP_InputField _input;
     [SerializeField] private Button _checkDevices;
+    [SerializeField] private Image _indicator;
     [Header("Server stress test")]
     [SerializeField] private Button _addWriters;
     [SerializeField] private Button _deleteAllWriters;
@@ -72,6 +73,18 @@ public class TestCloudHandler : MonoBehaviour
     {
         var response = await _client.PostAsync(_path, new StringContent(string.Empty));
         response.EnsureSuccessStatusCode();
+    }
+
+    private void Update()
+    {
+        if (WinkAccessManager.Instance == null) return;
+
+        if (WinkAccessManager.Instance.HasAccess)
+            _indicator.color = Color.green;
+        else if (WinkAccessManager.Instance.Authenficated)
+            _indicator.color = Color.yellow;
+        else
+            _indicator.color = Color.red;
     }
 
     private async void OnMassiveSavesClicked()
