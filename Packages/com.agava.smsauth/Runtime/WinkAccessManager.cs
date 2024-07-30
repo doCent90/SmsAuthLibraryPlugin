@@ -37,8 +37,8 @@ namespace Agava.Wink
 
         public event Action<IReadOnlyList<string>> LimitReached;
         public event Action ResetLogin;
+        public event Action<bool> SignInSuccessfully;
         public event Action AuthorizationSuccessfully;
-        public event Action AuthenficationSuccessfully;
         public event Action AccountDeleted;
 
         private void OnApplicationFocus(bool focus)
@@ -92,9 +92,9 @@ namespace Agava.Wink
             Login(LoginData);
         }
 
-        public async void Regist(string phoneNumber, Action<bool> otpCodeRequest, Action<bool> winkSubscriptionAccessRequest, Action<bool> otpCodeAccepted)
+        public async void Regist(string phoneNumber, Action<bool> otpCodeRequest, Action<bool> otpCodeAccepted)
         {
-            _winkSubscriptionAccessRequest = winkSubscriptionAccessRequest;
+            _winkSubscriptionAccessRequest = OnSignInSuccessfully;
             _otpCodeAccepted = otpCodeAccepted;
             UnityEngine.PlayerPrefs.SetString(PhoneNumber, phoneNumber);
             LoginData = await _requestHandler.Regist(phoneNumber, _uniqueId, AppId, otpCodeRequest);
@@ -115,22 +115,10 @@ namespace Agava.Wink
         }
 #endif
 
-        private void Login(LoginData data)
-        {
-            _requestHandler.Login(data, LimitReached, _winkSubscriptionAccessRequest, _otpCodeAccepted,
-            onAuthenficationSuccessfully: () =>
-            {
-                OnAuthenficationSuccessfully();
-            },
-            onAuthorizationSuccessfully: () =>
-            {
-                OnSubscriptionExist();
-                TrySendAnalyticsData(LoginData.phone);
-            });
-        }
+        private void Login(LoginData data) => _requestHandler.Login(data, LimitReached, _winkSubscriptionAccessRequest, _otpCodeAccepted);
 
         public void QuickAccess()
-            => _requestHandler.QuickAccess(LoginData.phone, OnSubscriptionExist, ResetLogin, _winkSubscriptionAccessRequest, OnAuthenficationSuccessfully);
+            => _requestHandler.QuickAccess(LoginData.phone, ResetLogin, null, OnSignInSuccessfully);
 
         public void DeleteAccount()
         {
@@ -149,25 +137,31 @@ namespace Agava.Wink
             });
         }
 
-        private void OnAuthenficationSuccessfully()
+        private void OnSignInSuccessfully(bool hasAccess)
         {
             Authenficated = true;
-            AuthenficationSuccessfully?.Invoke();
+            SignInSuccessfully?.Invoke(hasAccess);
             SearchSubscription(LoginData.phone);
+
 #if UNITY_EDITOR || TEST
             Debug.Log("Authenfication succesfully");
 #endif
+
+            if (hasAccess)
+            {
+                OnSubscriptionExist();
+            }
         }
 
         private void OnSubscriptionExist()
         {
             _subscribeSearchSystem?.Stop();
             HasAccess = true;
-            Authenficated = true;
             AuthorizationSuccessfully?.Invoke();
 
             if (PlayerPrefs.HasKey(FirstRegist))
                 AnalyticsWinkService.SendHasActiveAccountUser(hasActiveAcc: true);
+
 #if UNITY_EDITOR || TEST
             Debug.Log("Wink access succesfully");
 #endif

@@ -30,7 +30,7 @@ namespace Agava.Wink
 
         public event Action Restarted;
 
-        private void OnDestroy() => _winkSignInHandlerUI.Dispose();
+        private void OnDestroy() => _winkSignInHandlerUI?.Dispose();
 
         private IEnumerator Start()
         {
