@@ -180,6 +180,38 @@ namespace Agava.Wink
             }
         }
 
+        internal async void UnlinkDevices(string app_id, string device_id, Action onUnlink = null)
+        {
+            Tokens tokens = TokenLifeHelper.GetTokens();
+            var response = await SmsAuthApi.GetDevices(tokens.access, Application.identifier);
+
+            if (response.statusCode != UnityWebRequest.Result.Success)
+            {
+                Debug.Log("Fail get devices: " + response.statusCode);
+            }
+            else
+            {
+                List<string> devices = JsonConvert.DeserializeObject<List<string>>(response.body);
+
+                foreach (string device in devices)
+                {
+                    response = await SmsAuthApi.Unlink(tokens.access, new UnlinkData { device_id = device, app_id = app_id });
+
+                    if (response.statusCode != UnityWebRequest.Result.Success)
+                    {
+                        Debug.LogError($"Unlink fail for device {device}: {response.statusCode}");
+                    }
+                    else
+                    {
+                        if (device == device_id)
+                        {
+                            onUnlink?.Invoke();
+                        }
+                    }
+                }
+            }
+        }
+
         private async Task<bool> RequestWinkDataBase(string phoneNumber, Action<bool> onWinkSubscriptionAccessRequest, Action onSuccessed)
         {
             var response = await SmsAuthApi.HasActiveAccount(phoneNumber);

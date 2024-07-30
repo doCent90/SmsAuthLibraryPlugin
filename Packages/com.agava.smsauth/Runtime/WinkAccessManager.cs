@@ -59,7 +59,7 @@ namespace Agava.Wink
         }
 
         public IEnumerator Construct()
-        {         
+        {
             _requestHandler = new();
 
             DontDestroyOnLoad(this);
@@ -100,10 +100,7 @@ namespace Agava.Wink
                 StartTimespentAnalytics();
         }
 
-        public void Unlink(string deviceId, Action onResetLogin = null) => _requestHandler.Unlink(
-            new UnlinkData() { device_id = deviceId, app_id = AppId },
-            onResetLogin = onResetLogin == null ? ResetLogin : onResetLogin
-            );
+        public void Unlink(string deviceId) => _requestHandler.Unlink(new UnlinkData() { device_id = deviceId, app_id = AppId }, ResetLogin);
 
 #if UNITY_EDITOR || TEST
         public void TestEnableSubsription()
@@ -140,13 +137,13 @@ namespace Agava.Wink
                 _timespentService = null;
             }
 
-            Unlink(_uniqueId, () => _requestHandler.DeleteAccount(() =>
+            _requestHandler.UnlinkDevices(AppId, _uniqueId, () =>
             {
                 HasAccess = false;
                 Authenficated = false;
                 UnityEngine.PlayerPrefs.DeleteKey(TokenLifeHelper.Tokens);
                 AccountDeleted?.Invoke();
-            }));
+            });
         }
 
         private void OnAuthenficationSuccessfully()
@@ -175,7 +172,7 @@ namespace Agava.Wink
 
         private void SearchSubscription(string phone)
         {
-            if (_subscribeSearchSystem != null) 
+            if (_subscribeSearchSystem != null)
                 return;
 
             _subscribeSearchSystem = new(phone);
