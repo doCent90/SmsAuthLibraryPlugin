@@ -57,6 +57,7 @@ namespace Agava.Wink
                 yield return _winkAccessManager.Construct();
                 _winkSignInHandlerUI.StartSevice(_winkAccessManager);
                 _winkSignInHandlerUI.Construct();
+                _winkAccessManager.TryQuickAccess();
 
                 yield return new WaitForSecondsRealtime(_startLogoPresenter.LogoDuration);
                 yield return _startLogoPresenter.HidingLogo();

@@ -124,14 +124,15 @@ namespace Agava.Wink
 
                 if (string.IsNullOrEmpty(currentToken))
                 {
+                    TokenLifeHelper.ClearTokens();
                     onResetLogin?.Invoke();
                     return;
                 }
             }
             else
             {
+                TokenLifeHelper.ClearTokens();
                 onResetLogin?.Invoke();
-                SaveLoadLocalDataService.Delete(TokenLifeHelper.Tokens);
                 return;
             }
 

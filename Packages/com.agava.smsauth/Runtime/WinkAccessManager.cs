@@ -77,10 +77,13 @@ namespace Agava.Wink
 
             yield return null;
 
+            StartCoroutine(DelayedSendStatistic());
+        }
+
+        public void TryQuickAccess()
+        {
             if (UnityEngine.PlayerPrefs.HasKey(TokenLifeHelper.Tokens))
                 QuickAccess();
-
-            StartCoroutine(DelayedSendStatistic());
         }
 
         public void SendOtpCode(string enteredOtpCode)
