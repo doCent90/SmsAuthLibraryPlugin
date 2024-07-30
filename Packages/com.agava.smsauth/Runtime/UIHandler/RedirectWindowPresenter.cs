@@ -31,7 +31,7 @@ namespace Agava.Wink
         {
             if (_signInButton != null)
             {
-                bool authenticated = WinkAccessManager.Instance.Authenficated;
+                bool authenticated = WinkAccessManager.Instance == null ? false : WinkAccessManager.Instance.Authenficated;
                 _signInButton.gameObject.SetActive(authenticated == false);
                 _yesButton.gameObject.SetActive(authenticated);
             }
