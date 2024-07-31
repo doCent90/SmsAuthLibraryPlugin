@@ -103,7 +103,7 @@ namespace Agava.Wink
                 StartTimespentAnalytics();
         }
 
-        public void Unlink(string deviceId) => _requestHandler.Unlink(new UnlinkData() { device_id = deviceId, app_id = AppId }, ResetLogin);
+        public void Unlink(string deviceId, Action onUnlinkDevice) => _requestHandler.Unlink(new UnlinkData() { device_id = deviceId, app_id = AppId }, onUnlinkDevice);
 
 #if UNITY_EDITOR || TEST
         public void TestEnableSubsription()
@@ -128,13 +128,13 @@ namespace Agava.Wink
                 _timespentService = null;
             }
 
-            _requestHandler.UnlinkDevices(AppId, _uniqueId, () =>
+            _requestHandler.UnlinkDevices(AppId, _uniqueId, () => _requestHandler.DeleteAccount(() =>
             {
                 HasAccess = false;
                 Authenficated = false;
-                UnityEngine.PlayerPrefs.DeleteKey(TokenLifeHelper.Tokens);
+                TokenLifeHelper.ClearTokens();
                 AccountDeleted?.Invoke();
-            });
+            }));
         }
 
         private void OnSignInSuccessfully(bool hasAccess)

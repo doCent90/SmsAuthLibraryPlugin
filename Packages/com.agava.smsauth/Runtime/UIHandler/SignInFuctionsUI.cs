@@ -48,10 +48,12 @@ namespace Agava.Wink
 
         internal void OnUnlinkClicked(string device)
         {
-            _winkAccessManager.Unlink(device);
-            _notifyWindowHandler.CloseWindow(WindowType.Redirect);
-            _notifyWindowHandler.CloseWindow(WindowType.Unlink);
-            _winkAccessManager.QuickAccess();
+            _winkAccessManager.Unlink(device, () =>
+            {
+                _notifyWindowHandler.CloseWindow(WindowType.Redirect);
+                _notifyWindowHandler.CloseWindow(WindowType.Unlink);
+                _winkAccessManager.QuickAccess();
+            });
         }
 
         internal async void SetRemoteConfig()
