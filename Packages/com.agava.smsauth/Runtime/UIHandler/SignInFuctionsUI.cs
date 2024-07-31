@@ -48,11 +48,13 @@ namespace Agava.Wink
 
         internal void OnUnlinkClicked(string device)
         {
+            _notifyWindowHandler.OpenWindow(WindowType.ProccessOn);
+
             _winkAccessManager.Unlink(device, () =>
             {
                 _notifyWindowHandler.CloseWindow(WindowType.Redirect);
                 _notifyWindowHandler.CloseWindow(WindowType.Unlink);
-                _winkAccessManager.QuickAccess();
+                _winkAccessManager.Login();
             });
         }
 

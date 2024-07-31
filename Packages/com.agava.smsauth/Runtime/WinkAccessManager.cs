@@ -105,6 +105,17 @@ namespace Agava.Wink
 
         public void Unlink(string deviceId, Action onUnlinkDevice) => _requestHandler.Unlink(new UnlinkData() { device_id = deviceId, app_id = AppId }, onUnlinkDevice);
 
+        public void Login()
+        {
+            if (LoginData == null)
+            {
+                Debug.Log("[WinkAccessManager] Login data is null");
+                return;
+            }
+
+            Login(LoginData);
+        }
+
 #if UNITY_EDITOR || TEST
         public void TestEnableSubsription()
         {
@@ -144,7 +155,7 @@ namespace Agava.Wink
             SearchSubscription(LoginData.phone);
 
 #if UNITY_EDITOR || TEST
-            Debug.Log("Authenfication succesfully");
+            Debug.Log("Authentication succesfully");
 #endif
 
             if (hasAccess)
@@ -163,7 +174,7 @@ namespace Agava.Wink
                 AnalyticsWinkService.SendHasActiveAccountUser(hasActiveAcc: true);
 
 #if UNITY_EDITOR || TEST
-            Debug.Log("Wink access succesfully");
+            Debug.Log("Wink access successfully");
 #endif
         }
 

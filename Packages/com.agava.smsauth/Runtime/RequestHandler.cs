@@ -53,7 +53,10 @@ namespace Agava.Wink
             var response = await SmsAuthApi.Unlink(tokens.access, unlinkData);
 
             if (response.statusCode != UnityWebRequest.Result.Success)
+            {
                 Debug.LogError("Unlink fail: " + response.statusCode);
+                onUnlinkDevice?.Invoke();
+            }
             else
             {
                 UnityEngine.PlayerPrefs.DeleteKey(UnlinkProcess);
@@ -104,7 +107,7 @@ namespace Agava.Wink
         {
             if (UnityEngine.PlayerPrefs.HasKey(UnlinkProcess))
             {
-                Debug.LogError("Unlinking process wasn't completed. Quick access is unavailable");
+                Debug.Log("Unlinking process wasn't completed. Quick access is unavailable");
                 SkipQuickAccess();
                 UnityEngine.PlayerPrefs.DeleteKey(UnlinkProcess);
                 return;
