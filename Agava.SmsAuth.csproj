@@ -67,7 +67,6 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\EnterCodeShaking.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\DeleteAccountWindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\IWinkAccessManager.cs" />
-    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WinkButtons.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\SubscriptionSearchSystem.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WindowPresenter.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\DemoTimer.cs" />
@@ -76,6 +75,7 @@
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\BoxOutline.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\TimespentService.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\HelloWindowPresenter.cs" />
+    <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\WinkButton.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\UIHandler\SubmitInputButton.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\RequestHandler.cs" />
     <Compile Include="Packages\com.agava.smsauth\Runtime\Services\StartLogoPresenter.cs" />
