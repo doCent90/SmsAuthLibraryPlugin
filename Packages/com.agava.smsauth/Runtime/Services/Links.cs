@@ -11,10 +11,10 @@ public class Links : MonoBehaviour
     private const string PrivacyRmtKey = "privacy";
     private const string SubscriptionRmtKey = "subscription";
 
-    public string Support { get; private set; } = "https://t.me/MT_support_bot";
-    public string Agreement { get; private set; } = "https://mt.media/agreement/";
-    public string Privacy { get; private set; } = "https://mt.media/privacy/";
-    public string Subscription { get; private set; } = "https://wink.ru/services/winkkids";
+    public static string Support { get; private set; } = "https://t.me/MTgames_support_bot";
+    public static string Agreement { get; private set; } = "https://mt.media/agreement/";
+    public static string Privacy { get; private set; } = "https://mt.media/privacy/";
+    public static string Subscription { get; private set; } = "https://wink.ru/services/winkkids";
 
     private IEnumerator Start()
     {

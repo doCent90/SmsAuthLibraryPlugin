@@ -49,7 +49,7 @@ namespace Agava.Wink
         {
             Debug.Log($"deviceId: {unlinkData.device_id}, appId: {unlinkData.app_id}");
 
-            var tokens = SaveLoadLocalDataService.Load<Tokens>(TokenLifeHelper.Tokens);
+            Tokens tokens = TokenLifeHelper.GetTokens();
             var response = await SmsAuthApi.Unlink(tokens.access, unlinkData);
 
             if (response.statusCode != UnityWebRequest.Result.Success)
@@ -113,7 +113,7 @@ namespace Agava.Wink
                 return;
             }
 
-            var tokens = SaveLoadLocalDataService.Load<Tokens>(TokenLifeHelper.Tokens);
+            Tokens tokens = TokenLifeHelper.GetTokens();
 
             if (tokens == null)
             {
@@ -166,8 +166,8 @@ namespace Agava.Wink
 
         internal async void DeleteAccount(Action onDeleteAccount)
         {
-            var tokens = SaveLoadLocalDataService.Load<Tokens>(TokenLifeHelper.Tokens);
-            var response = await SmsAuthApi.DeleteAccount(tokens.access);
+            Tokens tokens = TokenLifeHelper.GetTokens();
+            Response response = await SmsAuthApi.DeleteAccount(tokens.access);
 
             if (response.statusCode != UnityWebRequest.Result.Success)
                 Debug.LogError("Account deletion fail: " + response.statusCode);
@@ -178,7 +178,7 @@ namespace Agava.Wink
         internal async void OnLimitDevicesReached(Action<IReadOnlyList<string>> onLimitReached, string app_id)
         {
             Tokens tokens = TokenLifeHelper.GetTokens();
-            var response = await SmsAuthApi.GetDevices(tokens.access, app_id);
+            Response response = await SmsAuthApi.GetDevices(tokens.access, app_id);
 
             if (response.statusCode != UnityWebRequest.Result.Success)
             {

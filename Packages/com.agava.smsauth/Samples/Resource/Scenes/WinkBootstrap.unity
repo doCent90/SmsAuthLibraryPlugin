@@ -588,6 +588,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 901343221781040448, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
+      propertyPath: _ip
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1251944724267522855, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1178,6 +1182,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4360768071709969241, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4452141981887147868, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
+      propertyPath: m_Alpha
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4657317906494039334, guid: 9c403f81a96e0614aa478405fd9d1560, type: 3}
@@ -2182,18 +2190,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3357559736251278273, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4653795427995862268, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
       propertyPath: _sceneLoader
       value: 
       objectReference: {fileID: 608073471}
-    - target: {fileID: 4653795427995862268, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
-      propertyPath: _restartAfterAuth
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4653795427995862268, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
       propertyPath: _winkAccessManager
       value: 
@@ -2206,14 +2206,6 @@ PrefabInstance:
       propertyPath: _winkSignInHandlerUI
       value: 
       objectReference: {fileID: 255946703}
-    - target: {fileID: 5945799446160068056, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7188848849107407979, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8574913841638285888, guid: 280c640260c192445a69d7a6fe1d6930, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3626,14 +3618,15 @@ MonoBehaviour:
   data: 0
   entries:
   - Language: English
-    Text: <color=#4D4D3D>I accept the terms</color> of the user agreement and privacy
-      policy of the service
+    Text: I accept the terms of the <color=#4D4D3D><link="agreement">user agreement</link></color>
+      and <color=#4D4D3D><link="policy">privacy policy</link></color> of the service
     Object: {fileID: 0}
   - Language: Russian
-    Text: "<color=#4D4D3D>\u042F \u043F\u0440\u0438\u043D\u0438\u043C\u0430\u044E
-      \u0443\u0441\u043B\u043E\u0432\u0438\u044F</color> \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u043E\u0433\u043E
-      \u0441\u043E\u0433\u043B\u0430\u0448\u0435\u043D\u0438\u044F \u0438 \u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438
-      \u043A\u043E\u043D\u0444\u0438\u0434\u0435\u043D\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438
+    Text: "\u042F \u043F\u0440\u0438\u043D\u0438\u043C\u0430\u044E \u0443\u0441\u043B\u043E\u0432\u0438\u044F
+      <color=#4D4D3D><link=\"agreement\">\u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u0441\u043A\u043E\u0433\u043E
+      \u0441\u043E\u0433\u043B\u0430\u0448\u0435\u043D\u0438\u044F</link></color>
+      \u0438 <color=#4D4D3D><link=\"policy\">\u043F\u043E\u043B\u0438\u0442\u0438\u043A\u0438
+      \u043A\u043E\u043D\u0444\u0438\u0434\u0435\u043D\u0446\u0438\u0430\u043B\u044C\u043D\u043E\u0441\u0442\u0438</link></color>
       \u0441\u0435\u0440\u0432\u0438\u0441\u0430"
     Object: {fileID: 0}
 --- !u!1 &4322898366684280092
