@@ -170,9 +170,13 @@ namespace Agava.Wink
             Response response = await SmsAuthApi.DeleteAccount(tokens.access);
 
             if (response.statusCode != UnityWebRequest.Result.Success)
+            {
                 Debug.LogError("Account deletion fail: " + response.statusCode);
+            }
             else
+            {
                 onDeleteAccount?.Invoke();
+            }
         }
 
         internal async void OnLimitDevicesReached(Action<IReadOnlyList<string>> onLimitReached, string app_id)
@@ -182,7 +186,7 @@ namespace Agava.Wink
 
             if (response.statusCode != UnityWebRequest.Result.Success)
             {
-                Debug.Log("Error");
+                Debug.Log("Fail get devices: " + response.statusCode);
             }
             else
             {
@@ -191,14 +195,21 @@ namespace Agava.Wink
             }
         }
 
-        internal async void UnlinkDevices(string app_id, string device_id, Action onUnlink = null)
+        internal async void UnlinkDevices(string app_id, string device_id, Action onUnlink = null, Action onFail = null)
         {
             Tokens tokens = TokenLifeHelper.GetTokens();
-            var response = await SmsAuthApi.GetDevices(tokens.access, Application.identifier);
+
+            if (tokens == null)
+            {
+                Debug.LogError("Unlinking fail: tokens do not exist");
+                onFail?.Invoke();
+            }
+
+            Response response = await SmsAuthApi.GetDevices(tokens.access, Application.identifier);
 
             if (response.statusCode != UnityWebRequest.Result.Success)
             {
-                Debug.Log("Fail get devices: " + response.statusCode);
+                Debug.LogError("Fail get devices: " + response.statusCode);
             }
             else
             {
@@ -206,30 +217,28 @@ namespace Agava.Wink
 
                 foreach (string device in devices)
                 {
+                    Debug.Log($"Unlinking device: {device}");
+
                     response = await SmsAuthApi.Unlink(tokens.access, new UnlinkData { device_id = device, app_id = app_id });
+
+                    if (device == device_id)
+                        onUnlink?.Invoke();
 
                     if (response.statusCode != UnityWebRequest.Result.Success)
                     {
                         Debug.LogError($"Unlink fail for device {device}: {response.statusCode}");
                     }
-                    else
-                    {
-                        if (device == device_id)
-                        {
-                            onUnlink?.Invoke();
-                        }
-                    }
                 }
             }
+
         }
 
         private async Task<bool> RequestWinkDataBase(string phoneNumber, Action<bool> onWinkSubscriptionAccessRequest)
         {
-            var response = await SmsAuthApi.HasActiveAccount(phoneNumber);
+            Response response = await SmsAuthApi.HasActiveAccount(phoneNumber);
 
-#if UNITY_EDITOR || TEST
             Debug.Log("Account subscription: " + response.statusCode);
-#endif
+
             if (response.statusCode == UnityWebRequest.Result.Success)
             {
                 onWinkSubscriptionAccessRequest?.Invoke(true);
