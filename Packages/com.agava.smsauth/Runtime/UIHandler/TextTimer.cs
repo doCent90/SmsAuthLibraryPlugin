@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using SmsAuthAPI.DTO;
 using SmsAuthAPI.Program;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -11,7 +12,9 @@ namespace Agava.Wink
     internal class TextTimer : MonoBehaviour
     {
         private const string RemoteName = "sms-delay-seconds";
-        private const int DefaultTime = 300;
+        private const string SavedTime = nameof(SavedTime);
+        private const int DefaultTime = 190;
+        private const int AdditiveTime = 10;
 
         [SerializeField] private TextPlaceholder _timePlaceholder;
 
@@ -19,6 +22,7 @@ namespace Agava.Wink
         private Coroutine _coroutine;
 
         public event Action TimerExpired;
+        public bool Expired = true;
 
         private IEnumerator Start()
         {
@@ -32,22 +36,34 @@ namespace Agava.Wink
         internal void Enable()
         {
             _timePlaceholder.gameObject.SetActive(true);
-            _coroutine = StartCoroutine(Ticking());
+            _coroutine ??= StartCoroutine(Ticking());
 
             IEnumerator Ticking()
             {
+                int sec = _seconds;
+
+                if (UnityEngine.PlayerPrefs.HasKey(SavedTime))
+                    sec = UnityEngine.PlayerPrefs.GetInt(SavedTime);
+
+                Expired = false;
                 var tick = new WaitForSecondsRealtime(1);
 
-                while (_seconds > 0)
+                while (sec > 0)
                 {
-                    _seconds--;
-                    _timePlaceholder.ReplaceValue(_seconds.ToString());
+                    sec--;
+                    _timePlaceholder.ReplaceValue(sec.ToString());
+                    UnityEngine.PlayerPrefs.SetInt(SavedTime, sec);
 
                     yield return tick;
                 }
 
-                if (_seconds <= 0)
+                if (sec <= 0)
+                {
                     TimerExpired?.Invoke();
+                    Expired = true;
+                    UnityEngine.PlayerPrefs.DeleteKey(SavedTime);
+                    _timePlaceholder.gameObject.SetActive(false);
+                }
             }
         }
 
@@ -74,18 +90,23 @@ namespace Agava.Wink
                 }
                 else
                 {
-                    bool success = int.TryParse(response.body, out int time);
-
-                    if (success)
-                        _seconds = time;
-                    else
-                        _seconds = DefaultTime;
+                    SetTime(response.body);
                 }
             }
             else
             {
                 Debug.LogError($"Fail to recieve remote config '{RemoteName}': BAD REQUEST");
             }
+        }
+
+        private void SetTime(string timeStr)
+        {
+            bool success = int.TryParse(timeStr, out int time);
+
+            if (success)
+                _seconds = time + AdditiveTime;
+            else
+                _seconds = DefaultTime;
         }
     }
 }
