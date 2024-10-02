@@ -35,6 +35,12 @@ namespace AdsAppView.Utility
             return await _webClient.GetRemote("Remoteconfig", remoteName);
         }
 
+        public async Task<Response> GetPluginSettings(string remoteName)
+        {
+            EnsureInitialize();
+            return await _webClient.GetPluginSettings("RemoteConfig", remoteName);
+        }
+
         public async Task<Response> GetRemoteConfig(string controllerName, string apiName)
         {
             EnsureInitialize();

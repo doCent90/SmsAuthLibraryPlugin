@@ -18,6 +18,8 @@ namespace AdsAppView.Utility
         private const string AppJson = "application/json";
         private const string ContentType = "Content-Type";
         private const int TimeOut = 59;
+        private const int Width = 1920;
+        private const int Heigth = 1080;
 
         private readonly string _serverPath;
 
@@ -29,11 +31,11 @@ namespace AdsAppView.Utility
         {
             string path = $"{GetHttpPath(apiName, key.ToLower())}";
 
-            using (UnityWebRequest webRequest = CreateHttpWebRequest(path, RequestType.GET))
+            using (UnityWebRequest webRequest = CreateWebRequest(path, RequestType.GET))
             {
                 webRequest.SendWebRequest();
 
-                await WaitHttpProccessing(webRequest);
+                await WaitProccessing(webRequest);
                 TryShowRequestInfo(webRequest, apiName);
 
                 var body = JsonConvert.DeserializeObject<string>(webRequest.downloadHandler.text);
@@ -45,14 +47,30 @@ namespace AdsAppView.Utility
         {
             string path = $"{GetHttpPath(request.api_name)}";
 
-            using (UnityWebRequest webRequest = CreateHttpWebRequest(path, RequestType.GET, uploadBody: request.body))
+            using (UnityWebRequest webRequest = CreateWebRequest(path, RequestType.GET, uploadBody: request.body))
             {
                 webRequest.SendWebRequest();
 
-                await WaitHttpProccessing(webRequest);
+                await WaitProccessing(webRequest);
                 TryShowRequestInfo(webRequest, request.api_name);
 
                 var body = webRequest.downloadHandler.text;
+                return new Response(webRequest.result, webRequest.result.ToString(), body, false, null);
+            }
+        }
+
+        public async Task<Response> GetPluginSettings(string apiName, string key)
+        {
+            string path = $"{GetHttpPath(apiName, key.ToLower())}";
+
+            using (UnityWebRequest webRequest = CreateWebRequest(path, RequestType.GET))
+            {
+                webRequest.SendWebRequest();
+
+                await WaitProccessing(webRequest);
+                TryShowRequestInfo(webRequest, apiName);
+
+                string body = webRequest.downloadHandler.text;
                 return new Response(webRequest.result, webRequest.result.ToString(), body, false, null);
             }
         }
@@ -132,7 +150,7 @@ namespace AdsAppView.Utility
                 fileStream.Close();
             }
 
-            Texture2D texture = new Texture2D(250, 250);
+            Texture2D texture = new Texture2D(Width, Heigth);
             texture.LoadImage(downloaded);
 
             UnityWebRequest.Result result = texture != null ? UnityWebRequest.Result.Success : UnityWebRequest.Result.DataProcessingError;
@@ -152,7 +170,7 @@ namespace AdsAppView.Utility
             return $"https://{path}";
         }
 
-        private UnityWebRequest CreateHttpWebRequest(string path, RequestType type, string accessToken = null, string uploadBody = null, bool timeOut = true)
+        private UnityWebRequest CreateWebRequest(string path, RequestType type, string accessToken = null, string uploadBody = null, bool timeOut = true)
         {
             var httpRequest = new UnityWebRequest(path, type.ToString());
             httpRequest.downloadHandler = new DownloadHandlerBuffer();
@@ -171,7 +189,7 @@ namespace AdsAppView.Utility
             return httpRequest;
         }
 
-        private async Task WaitHttpProccessing(UnityWebRequest webRequest, Action<float> progress = null)
+        private async Task WaitProccessing(UnityWebRequest webRequest, Action<float> progress = null)
         {
             while (webRequest.result == UnityWebRequest.Result.InProgress)
             {

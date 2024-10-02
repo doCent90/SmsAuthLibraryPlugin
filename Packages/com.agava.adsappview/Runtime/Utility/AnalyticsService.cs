@@ -26,4 +26,5 @@ namespace AdsAppView.Utility
             public string Value { get; set; }
         }
     }
+
 }

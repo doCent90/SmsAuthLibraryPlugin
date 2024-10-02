@@ -12,5 +12,6 @@ namespace AdsAppView.DTO
         public int first_timer {  get; set; }
         public int regular_timer {  get; set; }
         public bool carousel {  get; set; }
+        public int carousel_count {  get; set; }
     }
 }
