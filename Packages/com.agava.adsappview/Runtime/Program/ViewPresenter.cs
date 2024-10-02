@@ -14,6 +14,8 @@ namespace AdsAppView.Utility
         private Links _links;
         private string _link;
 
+        public bool Enabled { get; private set; } = false;
+
         public void Construct(Links links)
         {
             _links = links;
@@ -31,7 +33,9 @@ namespace AdsAppView.Utility
 
         private void OnLinkClicked()
         {
+#if UNITY_EDITOR
             Debug.LogFormat($"Open link {_link}");
+#endif
 
             if (string.IsNullOrEmpty(_link))
                 return;
@@ -46,6 +50,7 @@ namespace AdsAppView.Utility
             canvas.alpha = 1;
             canvas.interactable = true;
             canvas.blocksRaycasts = true;
+            Enabled = true;
         }
 
         private void DisableCanvasGroup(CanvasGroup canvas)
@@ -53,6 +58,7 @@ namespace AdsAppView.Utility
             canvas.alpha = 0;
             canvas.interactable = false;
             canvas.blocksRaycasts = false;
+            Enabled = false;
         }
     }
 }
