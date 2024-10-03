@@ -199,7 +199,7 @@ namespace AdsAppView.Utility
                     }
 
                     Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                    return new SpriteData() { sprite = sprite, link = _adsFilePathsData.app_link, name = _adsFilePathsData.file_path };
+                    return new SpriteData() { sprite = sprite, link = _adsFilePathsData.app_link, name = _adsFilePathsData.file_path, aspectRatio = (float)texture.width / texture.height };
                 }
                 else
                 {
@@ -274,6 +274,7 @@ namespace AdsAppView.Utility
     {
         #region TEST
 #if UNITY_EDITOR
+        [Header("Test"), Tooltip("Can be null")]
         [SerializeField] private Button _testGetTextureBtn;
 
         private void Awake()

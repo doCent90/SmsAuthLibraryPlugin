@@ -1,4 +1,5 @@
-﻿using AdsAppView.DTO;
+﻿using System;
+using AdsAppView.DTO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,6 +10,7 @@ namespace AdsAppView.Utility
         [SerializeField] private CanvasGroup _windowCanvasGrp;
         [SerializeField] private Image _image;
         [SerializeField] private Button _linkBtn;
+        [SerializeField] private AspectRatioFitter _aspectRatioFitter;
         [SerializeField] private Button _closeBtn;
 
         private Links _links;
@@ -27,6 +29,7 @@ namespace AdsAppView.Utility
         public void Show(SpriteData sprite)
         {
             _image.sprite = sprite.sprite;
+            _aspectRatioFitter.aspectRatio = sprite.aspectRatio;
             _link = sprite.link;
             EnableCanvasGroup(_windowCanvasGrp);
         }
