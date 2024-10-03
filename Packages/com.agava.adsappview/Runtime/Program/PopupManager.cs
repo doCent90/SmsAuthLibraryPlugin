@@ -282,10 +282,16 @@ namespace AdsAppView.Utility
         [Header("Test"), Tooltip("Can be null")]
         [SerializeField] private Button _testGetTextureBtn;
 
-        private void Awake()
+        private void OnEnable()
         {
             if (_testGetTextureBtn != null)
                 _testGetTextureBtn.onClick.AddListener(GetTexture);
+        }
+
+        private void OnDisable()
+        {
+            if (_testGetTextureBtn != null)
+                _testGetTextureBtn.onClick.RemoveListener(GetTexture);
         }
 
         private async void GetTexture()
