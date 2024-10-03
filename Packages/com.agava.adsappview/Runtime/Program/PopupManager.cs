@@ -52,6 +52,11 @@ namespace AdsAppView.Utility
 
         public string AppId => Application.identifier;
 
+        private void Awake()
+        {
+            DontDestroyOnLoad(gameObject);
+        }
+
         private IEnumerator Start()
         {
             if (Application.internetReachability == NetworkReachability.NotReachable)
