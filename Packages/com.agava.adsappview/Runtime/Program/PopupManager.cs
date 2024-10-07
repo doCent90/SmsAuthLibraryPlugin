@@ -142,7 +142,9 @@ namespace AdsAppView.Program
                 while (true)
                 {
                     yield return new WaitForSecondsRealtime(_regularTimerSec);
+
                     _viewPresenter.Show(_sprite);
+                    yield return new WaitWhile(() => _viewPresenter.Enable);
                 }
             }
         }
