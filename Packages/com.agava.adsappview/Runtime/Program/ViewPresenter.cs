@@ -16,6 +16,8 @@ namespace AdsAppView.Program
         [SerializeField] private AspectRatioFitter _aspectRatioFitter;
         [SerializeField] private Image _popupImage;
         [SerializeField] private Image _background;
+        [SerializeField] private Transform _enbleGroup1;
+        [SerializeField] private Transform _enbleGroup2;
 
         private Image _linkButtonImage;
 
@@ -97,6 +99,7 @@ namespace AdsAppView.Program
 
             StartCoroutine(FadeInImage(_background, _enablingTime));
             yield return new WaitForSecondsRealtime(Diff);
+            _enbleGroup1.gameObject.SetActive(true);
 
             StartCoroutine(FadeInImage(_popupImage, _enablingTime));
             yield return waitForFadeIn;
@@ -105,6 +108,7 @@ namespace AdsAppView.Program
 
             StartCoroutine(FadeInImage(_linkButtonImage, _enablingTime));
             yield return waitForFadeIn;
+            _enbleGroup2.gameObject.SetActive(true);
 
             yield return new WaitForSecondsRealtime(_closingDelay);
             _closeButton.gameObject.SetActive(true);
@@ -117,6 +121,8 @@ namespace AdsAppView.Program
             canvas.blocksRaycasts = false;
             Enable = false;
             Disabled?.Invoke();
+            _enbleGroup1.gameObject.SetActive(false);
+            _enbleGroup2.gameObject.SetActive(false);
             Stop(_enablingCoroutine);
         }
 

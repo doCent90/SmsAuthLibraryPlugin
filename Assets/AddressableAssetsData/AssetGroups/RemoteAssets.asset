@@ -22,6 +22,11 @@ MonoBehaviour:
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d065104b9c30ca64f9cc034a8552bfc2
+    m_Address: Packages/com.agava.adsappview/Samples/Art/FXs/Toon FX/Prefabs/Confetti/Directional/ConfettiDirectionalRainbow_UI.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: e9a2fcb6ef0617f49857581c95072f90, type: 2}
   m_SchemaSet:
