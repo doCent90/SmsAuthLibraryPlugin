@@ -60,7 +60,9 @@ namespace AdsAppView.Program
                     return null;
                 }
 
-                string pathFile = DownloadConfigFile($"{_catalogPath}/{Platform}/catalog_{Application.version}.json", creds.login, creds.password);
+                string cataloPath = $"{_catalogPath}/{Platform}/catalog_{Application.version}.json";
+                Debug.Log("#AssetsBundlesLoader# Try download catalog: " + cataloPath);
+                string pathFile = DownloadConfigFile(cataloPath, creds.login, creds.password);
 
                 AssetPath path = JsonConvert.DeserializeObject<AssetPath>(pathFile);
                 List<string> list = path.m_InternalIds.ToList();
