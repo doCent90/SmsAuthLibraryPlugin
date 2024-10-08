@@ -44,7 +44,7 @@ namespace AdsAppView.Program
             _api = new(_serverPath, _appId);
             _appData = new() { app_id = _appId, store_id = _storeName, platform = Platform };
             _preloadService = new(AdsAppAPI.Instance, _bundlIdVersion);
-            Debug.Log(JsonConvert.SerializeObject(_appData));
+            Debug.Log("#Boot# " + JsonConvert.SerializeObject(_appData));
 
             yield return _preloadService.Preparing();
             yield return _links.Initialize(AdsAppAPI.Instance);
@@ -52,7 +52,7 @@ namespace AdsAppView.Program
             if (_preloadService.IsPluginAwailable)
                 yield return Initialize();
             else
-                Debug.Log("Plugin disabled");
+                Debug.Log("#Boot# Plugin disabled");
         }
 
         private IEnumerator Initialize()
@@ -67,15 +67,16 @@ namespace AdsAppView.Program
             {
                 created = Instantiate(bundlePopupPrefab);
                 created.name = "AssetBundle-PopupManager";
-                _assetsBundlesLoader.Unload();
+                Debug.Log("#Boot# Creeated popup: " + created.name);
             }
             else
             {
                 created = Instantiate(_defaultAsset);
                 created.name = "Default-PopupManager";
-                Debug.LogError("Default-PopupManager Instantiated");
+                Debug.LogError("#Boot# Default-PopupManager Instantiated");
             }
 
+            _assetsBundlesLoader.Unload();
             yield return created.GetComponent<PopupManager>().Construct(_appData);
         }
     }
