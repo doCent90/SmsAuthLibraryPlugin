@@ -1,6 +1,7 @@
 {
     "author": "github.com/doCent90",
     "dependencies": {
+	"com.unity.addressables": "1.21.21",
         "com.google.external-dependency-manager": "1.2.177",
         "com.unity.nuget.newtonsoft-json": "3.0.2",
         "com.unity.textmeshpro": "3.0.9",
