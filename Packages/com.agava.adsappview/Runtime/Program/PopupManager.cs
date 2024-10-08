@@ -233,6 +233,25 @@ namespace AdsAppView.Program
             }
         }
 
+        private async Task SetEnablingTimeConfig()
+        {
+            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(EnablingTime);
+
+            if (cachingResponse.statusCode == UnityWebRequest.Result.Success)
+            {
+                string body = cachingResponse.body;
+
+                if (float.TryParse(body, out float enablingTime))
+                {
+                    _enablingTime = enablingTime;
+
+#if UNITY_EDITOR
+                    Debug.Log("Enabling time set to: " + _enablingTime);
+#endif
+                }
+            }
+        }
+
         private string ConstructCacheTexturePath(AdsFilePathsData adsFilePathsData)
         {
             string extension = Path.GetExtension(adsFilePathsData.file_path);
