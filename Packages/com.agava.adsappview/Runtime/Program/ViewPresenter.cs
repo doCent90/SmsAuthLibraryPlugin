@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
+using System.Net;
 using AdsAppView.DTO;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,8 +32,75 @@ namespace AdsAppView.Program
         public Action Enabled;
         public Action Disabled;
 
+        [SerializeField]
+        private UniGifImage _uniGifImage;
+
+        public IEnumerator ViewGifCoroutine()
+        {
+            string ftpUrl = "ftp://ftp-p.ctcmedia.ru/mediartk/ubarf.gif";
+
+            if (Uri.TryCreate(ftpUrl, UriKind.Absolute, out Uri uri) == false)
+                throw new NullReferenceException("Cant create uri: " + ftpUrl);
+
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(uri);
+
+            request.UsePassive = true;
+            request.UseBinary = true;
+            request.KeepAlive = true;
+
+            request.Credentials = new NetworkCredential("Statistics_rw", "WQpAax1Q");
+            request.Method = WebRequestMethods.Ftp.DownloadFile;
+
+            Debug.Log("#View# name to load: " + ftpUrl);
+
+            WebResponse responce = request.GetResponse();
+
+            yield return new WaitForSecondsRealtime(2f);
+
+            string savePath = Application.persistentDataPath;
+
+            if (Directory.Exists(savePath) == false)
+            {
+                Directory.CreateDirectory(savePath);
+                Debug.Log($"#View# Created folder: " + savePath);
+            }
+            else
+            {
+                Debug.Log($"#View# Folder exist: " + savePath);
+            }
+
+            savePath = Application.persistentDataPath + "/ubarf.gif";
+
+            Debug.Log("#View# Start stream: " + ftpUrl);
+            using (Stream reader = responce.GetResponseStream())
+            {
+                using (FileStream fileStream = new(savePath, FileMode.Create))
+                {
+                    int bytesRead = 0;
+                    byte[] buffer = new byte[2048];
+
+                    while (true)
+                    {
+                        bytesRead = reader.Read(buffer, 0, buffer.Length);
+
+                        if (bytesRead == 0)
+                            break;
+
+                        fileStream.Write(buffer, 0, bytesRead);
+                    }
+
+                    fileStream.Close();
+                }
+            }
+            Debug.Log("#View# Stream Finish: " + ftpUrl);
+
+            yield return StartCoroutine(_uniGifImage.SetGifFromUrlCoroutine(Application.persistentDataPath + "/ubarf.gif"));
+        }
+
         private void Awake()
         {
+            StartCoroutine(ViewGifCoroutine());
+
             DisableCanvasGroup(_windowCanvasGrp);
             _linkButtonImage = _linkButton.GetComponent<Image>();
         }
