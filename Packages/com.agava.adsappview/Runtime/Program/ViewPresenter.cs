@@ -5,6 +5,7 @@ using System.Net;
 using AdsAppView.DTO;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 namespace AdsAppView.Program
 {
@@ -32,12 +33,11 @@ namespace AdsAppView.Program
         public Action Enabled;
         public Action Disabled;
 
-        [SerializeField]
-        private UniGifImage _uniGifImage;
+        [SerializeField] private VideoPlayer _player;
 
         public IEnumerator ViewGifCoroutine()
         {
-            string ftpUrl = "ftp://ftp-p.ctcmedia.ru/mediartk/ubarf.gif";
+            string ftpUrl = "ftp://ftp-p.ctcmedia.ru/mediartk/ubarf.mp4";
 
             if (Uri.TryCreate(ftpUrl, UriKind.Absolute, out Uri uri) == false)
                 throw new NullReferenceException("Cant create uri: " + ftpUrl);
@@ -69,7 +69,7 @@ namespace AdsAppView.Program
                 Debug.Log($"#View# Folder exist: " + savePath);
             }
 
-            savePath = Application.persistentDataPath + "/ubarf.gif";
+            savePath = Application.persistentDataPath + "/ubarf.mp4";
 
             Debug.Log("#View# Start stream: " + ftpUrl);
             using (Stream reader = responce.GetResponseStream())
@@ -92,9 +92,10 @@ namespace AdsAppView.Program
                     fileStream.Close();
                 }
             }
-            Debug.Log("#View# Stream Finish: " + ftpUrl);
 
-            yield return StartCoroutine(_uniGifImage.SetGifFromUrlCoroutine(Application.persistentDataPath + "/ubarf.gif"));
+            _player.url = savePath;
+            _player.Play();
+            Debug.Log("#View# Stream Finish: " + ftpUrl);
         }
 
         private void Awake()
