@@ -1,5 +1,6 @@
 ﻿using Io.AppMetrica;
 using Newtonsoft.Json;
+using UnityEngine;
 using UnityEngine.Scripting;
 
 namespace AdsAppView.Utility
@@ -10,7 +11,11 @@ namespace AdsAppView.Utility
         public static void SendStartApp(string appId) => AppMetrica.ReportEvent("App run", GetDataJson("App run", appId));
         public static void SendPopupView(string popupId) => AppMetrica.ReportEvent("Popup view", GetDataJson("Popup view", popupId));
         public static void SendPopupClosed() => AppMetrica.ReportEvent("Popup closed", GetDataJson($"Popup closed", "Close"));
-        public static void SendPopupRedirectClick(string popupId, int count) => AppMetrica.ReportEvent("Popup redirect click", GetCountedDataJson("Popup redirect click", popupId, count));
+        public static void SendPopupRedirectClick(string popupId, int count)
+        {
+            AppMetrica.ReportEvent("Popup redirect click", GetCountedDataJson("Popup redirect click", popupId, count));
+            Debug.Log("#Analytics# Send Popup Redirect event");
+        }
 
         private static string GetDataJson(string name, string value)
         {
