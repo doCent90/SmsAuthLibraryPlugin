@@ -11,8 +11,11 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/AdsApp View.unity
     guid: 8d468151f81982f46953ade923699e8e
+  - enabled: 1
+    path: Assets/Scenes/HealthCheckServer.unity
+    guid: 9a31fe90213de98428de642542d32267
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: 3f5de03f3cea27a4a925a9033b3ddcaa, type: 2}
