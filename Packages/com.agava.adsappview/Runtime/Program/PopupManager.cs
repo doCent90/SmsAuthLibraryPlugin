@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -175,9 +174,9 @@ namespace AdsAppView.Program
                         return null;
                     }
 
-                    string cacheTexturePath = ConstructCacheTexturePath(_adsFilePathsData);
+                    string cacheTexturePath = TextureUtils.ConstructCacheTexturePath(_adsFilePathsData.file_path, _adsFilePathsData.ads_app_id);
 
-                    if ((_caching && TryLoadCacheTexture(cacheTexturePath, out Texture2D texture)) == false)
+                    if ((_caching && TextureUtils.TryLoadTexture(cacheTexturePath, out Texture2D texture)) == false)
                     {
                         Response textureResponse = AdsAppAPI.Instance.GetTextureData(creds.host, _adsFilePathsData.file_path, creds.login, creds.password);
 
@@ -186,7 +185,7 @@ namespace AdsAppView.Program
                             texture = textureResponse.texture;
 
                             if (_caching)
-                                TrySaveCacheTexture(cacheTexturePath, texture);
+                                TextureUtils.TrySaveTexture(cacheTexturePath, texture);
                         }
                         else
                         {
@@ -230,45 +229,6 @@ namespace AdsAppView.Program
             else
             {
                 Debug.LogError("#PopupManager# Fail to Set Caching Config whith error: " + cachingResponse.statusCode);
-            }
-        }
-
-        private string ConstructCacheTexturePath(AdsFilePathsData adsFilePathsData)
-        {
-            string extension = Path.GetExtension(adsFilePathsData.file_path);
-            return Path.Combine(Application.persistentDataPath, adsFilePathsData.ads_app_id + extension);
-        }
-
-        private bool TryLoadCacheTexture(string cacheFilePath, out Texture2D texture)
-        {
-            texture = null;
-
-            if (File.Exists(cacheFilePath))
-            {
-                byte[] rawData = File.ReadAllBytes(cacheFilePath);
-                texture = new Texture2D(2, 2);
-                texture.LoadImage(rawData);
-
-#if UNITY_EDITOR
-                Debug.Log($"#PopupManager# Cache texture loaded from path: {cacheFilePath}");
-#endif
-            }
-
-            return texture != null;
-        }
-
-        private void TrySaveCacheTexture(string cacheFilePath, Texture2D texture)
-        {
-            try
-            {
-                File.WriteAllBytes(cacheFilePath, texture.EncodeToPNG());
-#if UNITY_EDITOR
-                Debug.Log($"#PopupManager# Cache texture saved to path: {cacheFilePath}");
-#endif
-            }
-            catch (IOException exception)
-            {
-                Debug.LogError("#PopupManager# Fail to save cache texture: " + exception.Message);
             }
         }
     }

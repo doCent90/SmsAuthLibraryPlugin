@@ -19,6 +19,7 @@ namespace AdsAppView.Utility
 #elif UNITY_IOS
         private const string Platform = "ios";
 #endif
+
         private AdsAppAPI _api;
         private int _bundlIdVersion;
         private bool _isEndPrepare = false;
