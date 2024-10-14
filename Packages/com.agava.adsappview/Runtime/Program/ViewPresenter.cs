@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using System.Net;
 using AdsAppView.DTO;
+using AdsAppView.Utility;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -25,6 +26,8 @@ namespace AdsAppView.Program
         private float _closingDelay = 0;
         private float _enablingTime = 10;
         private string _link;
+        private string _lastSpriteName;
+        private int _count = 0;
 
         private Coroutine _enablingCoroutine;
 
@@ -126,9 +129,11 @@ namespace AdsAppView.Program
 
         public void Show(SpriteData sprite)
         {
+            _count++;
             _popupImage.sprite = sprite.sprite;
             _aspectRatioFitter.aspectRatio = sprite.aspectRatio;
             _link = sprite.link;
+            _lastSpriteName = sprite.name;
 
             Stop(_enablingCoroutine);
             _enablingCoroutine = StartCoroutine(EnableCanvasGroup(_windowCanvasGrp));
@@ -137,16 +142,21 @@ namespace AdsAppView.Program
         private void OnLinkClicked()
         {
 #if UNITY_EDITOR
-            Debug.LogFormat($"Open link {_link}");
+            Debug.LogFormat($"#ViewPresenter# Open link {_link}");
 #endif
 
             if (string.IsNullOrEmpty(_link))
                 return;
 
+            AnalyticsService.SendPopupRedirectClick(_lastSpriteName, _count);
             Application.OpenURL(_link);
         }
 
-        private void OnCloseClicked() => DisableCanvasGroup(_windowCanvasGrp);
+        private void OnCloseClicked()
+        {
+            AnalyticsService.SendPopupClosed();
+            DisableCanvasGroup(_windowCanvasGrp);
+        }
 
         private IEnumerator EnableCanvasGroup(CanvasGroup canvas)
         {
