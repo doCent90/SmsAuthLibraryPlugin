@@ -178,11 +178,14 @@ namespace AdsAppView.Program
 
                     if ((_caching && TextureUtils.TryLoadTexture(cacheTexturePath, out Texture2D texture)) == false)
                     {
-                        Response textureResponse = AdsAppAPI.Instance.GetTextureData(creds.host, _adsFilePathsData.file_path, creds.login, creds.password);
+                        Response textureResponse = AdsAppAPI.Instance.GetBytesData(creds.host, _adsFilePathsData.file_path, creds.login, creds.password);
 
                         if (textureResponse.statusCode == UnityWebRequest.Result.Success)
                         {
-                            texture = textureResponse.texture;
+                            byte[] bytes = textureResponse.bytes;
+
+                            texture = new Texture2D(2, 2);
+                            texture.LoadImage(bytes);
 
                             if (_caching)
                                 TextureUtils.TrySaveTexture(cacheTexturePath, texture);
