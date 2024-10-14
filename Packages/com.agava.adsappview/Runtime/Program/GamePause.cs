@@ -5,12 +5,23 @@ namespace AdsAppView.Program
 {
     public class GamePause : MonoBehaviour
     {
-        [SerializeField] private ViewPresenter _viewPresenter;
+        [SerializeField] private MonoBehaviour _viewPresenterMonoBehaviour;
 
         private static GamePause s_instance;
 
+        private IViewPresenter _viewPresenter => _viewPresenterMonoBehaviour as IViewPresenter;
+
         public static Action GamePaused;
         public static Action GameUnpaused;
+
+        private void OnValidate()
+        {
+            if (_viewPresenterMonoBehaviour && !(_viewPresenterMonoBehaviour is IViewPresenter))
+            {
+                Debug.LogError(nameof(_viewPresenterMonoBehaviour) + " needs to implement " + nameof(IViewPresenter));
+                _viewPresenterMonoBehaviour = null;
+            }
+        }
 
         private void Awake()
         {

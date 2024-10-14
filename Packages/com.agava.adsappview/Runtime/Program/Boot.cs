@@ -18,6 +18,7 @@ namespace AdsAppView.Program
 #endif
 
         [SerializeField] private Links _links;
+        [SerializeField] private ViewPresenterConfigs _viewPresenterConfigs;
         [Header("Web settings")]
         [Tooltip("Bund for plugin settings")]
         [SerializeField] private int _bundlIdVersion = 1;
@@ -43,11 +44,12 @@ namespace AdsAppView.Program
 
             _api = new(_serverPath, _appId);
             _appData = new() { app_id = _appId, store_id = _storeName, platform = Platform };
-            _preloadService = new(AdsAppAPI.Instance, _bundlIdVersion);
+            _preloadService = new(_api, _bundlIdVersion);
             Debug.Log("#Boot# " + JsonConvert.SerializeObject(_appData));
 
             yield return _preloadService.Preparing();
-            yield return _links.Initialize(AdsAppAPI.Instance);
+            yield return _links.Initialize(_api);
+            yield return _viewPresenterConfigs.Initialize(_api);
 
             if (_preloadService.IsPluginAwailable)
                 yield return Initialize();

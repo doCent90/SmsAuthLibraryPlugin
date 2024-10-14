@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace AdsAppView.Program
 {
-    public class ViewPresenter : MonoBehaviour
+    public class ImageViewPresenter : MonoBehaviour, IViewPresenter
     {
         private const float Diff = 0.5f;
 
@@ -20,8 +20,6 @@ namespace AdsAppView.Program
 
         private Image _linkButtonImage;
 
-        private float _closingDelay = 0;
-        private float _enablingTime = 10;
         private string _link;
         private string _lastSpriteName;
         private int _count = 0;
@@ -30,8 +28,8 @@ namespace AdsAppView.Program
 
         public bool Enable { get; private set; } = false;
 
-        public Action Enabled;
-        public Action Disabled;
+        public event Action Enabled;
+        public event Action Disabled;
 
         private void Awake()
         {
@@ -49,12 +47,6 @@ namespace AdsAppView.Program
         {
             _linkButton.onClick.RemoveListener(OnLinkClicked);
             _closeButton.onClick.RemoveListener(OnCloseClicked);
-        }
-
-        public void Initialize(float enablingTime, float closingDelay)
-        {
-            _enablingTime = enablingTime;
-            _closingDelay = closingDelay;
         }
 
         public void Show(SpriteData sprite)
@@ -103,20 +95,23 @@ namespace AdsAppView.Program
             Enable = true;
             Enabled?.Invoke();
 
-            WaitForSecondsRealtime waitForFadeIn = new WaitForSecondsRealtime(_enablingTime);
+            float enablingTime = ViewPresenterConfigs.EnablingTime;
+            float closingDelay = ViewPresenterConfigs.ClosingDelay;
 
-            StartCoroutine(FadeInImage(_background, _enablingTime));
+            WaitForSecondsRealtime waitForFadeIn = new WaitForSecondsRealtime(enablingTime);
+
+            StartCoroutine(FadeInImage(_background, enablingTime));
             yield return new WaitForSecondsRealtime(Diff);
 
-            StartCoroutine(FadeInImage(_popupImage, _enablingTime));
+            StartCoroutine(FadeInImage(_popupImage, enablingTime));
             yield return waitForFadeIn;
 
             _linkButton.gameObject.SetActive(true);
 
-            StartCoroutine(FadeInImage(_linkButtonImage, _enablingTime));
+            StartCoroutine(FadeInImage(_linkButtonImage, enablingTime));
             yield return waitForFadeIn;
 
-            yield return new WaitForSecondsRealtime(_closingDelay);
+            yield return new WaitForSecondsRealtime(closingDelay);
             _closeButton.gameObject.SetActive(true);
         }
 
@@ -142,9 +137,9 @@ namespace AdsAppView.Program
                 color.a = 0;
                 float elapsedTime = 0;
 
-                while (elapsedTime < _enablingTime)
+                while (elapsedTime < time)
                 {
-                    color.a = Mathf.Lerp(0, 1, elapsedTime / _enablingTime);
+                    color.a = Mathf.Lerp(0, 1, elapsedTime / time);
                     image.color = color;
                     elapsedTime += Time.unscaledDeltaTime;
                     yield return new WaitForEndOfFrame();

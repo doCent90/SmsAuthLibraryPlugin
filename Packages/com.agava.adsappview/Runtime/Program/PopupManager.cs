@@ -18,12 +18,12 @@ namespace AdsAppView.Program
         private const string FtpCredsRCName = "ftp-creds";
         private const string CarouselPicture = "picrure";
         private const string Caching = "caching";
-        private const string ClosingDelay = "closing-delay";
-        private const string EnablingTime = "enabling-time";
         private const int RetryCount = 3;
         private const int RetryDelayMlsec = 30000;
 
-        [SerializeField] private ViewPresenter _viewPresenter;
+        [SerializeField] private MonoBehaviour _viewPresenterMonoBehaviour;
+
+        private IViewPresenter _viewPresenter => _viewPresenterMonoBehaviour as IViewPresenter;
 
         private AppData _appData;
         private AppSettingsData _settingsData;
@@ -34,9 +34,16 @@ namespace AdsAppView.Program
 
         private float _firstTimerSec = 60f;
         private float _regularTimerSec = 180f;
-        private float _closingDelay = 2;
-        private float _enablingTime = 2;
         private bool _caching = false;
+
+        private void OnValidate()
+        {
+            if (_viewPresenterMonoBehaviour && !(_viewPresenterMonoBehaviour is IViewPresenter))
+            {
+                Debug.LogError(nameof(_viewPresenterMonoBehaviour) + " needs to implement " + nameof(IViewPresenter));
+                _viewPresenterMonoBehaviour = null;
+            }
+        }
 
         public IEnumerator Construct(AppData appData)
         {
@@ -59,11 +66,7 @@ namespace AdsAppView.Program
 
                 if (data != null)
                 {
-                    await SetEnablingTimeConfig();
-                    await SetClosingDelayConfig();
                     await SetCachingConfig();
-
-                    _viewPresenter.Initialize(_enablingTime, _closingDelay);
 
                     _settingsData = data;
                     _firstTimerSec = data.first_timer;
@@ -149,7 +152,7 @@ namespace AdsAppView.Program
         private async Task<SpriteData> GetSprite(int index = -1)
         {
             string appId = index == -1 ? _settingsData.ads_app_id : CarouselPicture + index;
-            AppData newData = new AppData() { app_id = appId, store_id = _appData.store_id, platform = _appData.platform};
+            AppData newData = new AppData() { app_id = appId, store_id = _appData.store_id, platform = _appData.platform };
 
             Response filePathResponse = await AdsAppAPI.Instance.GetFilePath(ControllerName, FilePathRCName, newData);
 
@@ -227,50 +230,6 @@ namespace AdsAppView.Program
             else
             {
                 Debug.LogError("#PopupManager# Fail to Set Caching Config whith error: " + cachingResponse.statusCode);
-            }
-        }
-
-        private async Task SetClosingDelayConfig()
-        {
-            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(ClosingDelay);
-
-            if (cachingResponse.statusCode == UnityWebRequest.Result.Success)
-            {
-                string body = cachingResponse.body;
-
-                if (float.TryParse(body, out float closingDelay))
-                {
-                    _closingDelay = closingDelay;
-#if UNITY_EDITOR
-                    Debug.Log("#PopupManager# Closing delay set to: " + _closingDelay);
-#endif
-                }
-            }
-            else
-            {
-                Debug.LogError("#PopupManager# Fail to Set Closing Delay Config whith error: " + cachingResponse.statusCode);
-            }
-        }
-
-        private async Task SetEnablingTimeConfig()
-        {
-            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(EnablingTime);
-
-            if (cachingResponse.statusCode == UnityWebRequest.Result.Success)
-            {
-                string body = cachingResponse.body;
-
-                if (float.TryParse(body, out float enablingTime))
-                {
-                    _enablingTime = enablingTime;
-#if UNITY_EDITOR
-                    Debug.Log("#PopupManager# Enabling time set to: " + _enablingTime);
-#endif
-                }
-            }
-            else
-            {
-                Debug.LogError("#PopupManager# Fail to Set Enabling Time Config whith error: " + cachingResponse.statusCode);
             }
         }
 
