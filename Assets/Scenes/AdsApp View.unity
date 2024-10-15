@@ -331,6 +331,7 @@ MonoBehaviour:
   _bundlIdVersion: 1
   _storeName: test
   _serverPath: gamesrtkbd.tech
+  _useAssetBundles: 0
   _assetsBundlesLoader:
     _catalogPath: ftp://ftp-p.ctcmedia.ru/mediartk/AssetsBundles
     _assetName: Packages/com.agava.adsappview/Samples/Prefabs/PopupManager.prefab

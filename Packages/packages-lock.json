@@ -5,11 +5,12 @@
       "depth": 0,
       "source": "embedded",
       "dependencies": {
-        "com.unity.addressables": "1.21.21",
         "com.google.external-dependency-manager": "1.2.177",
+        "com.unity.addressables": "1.21.21",
         "com.unity.nuget.newtonsoft-json": "3.0.2",
         "com.unity.textmeshpro": "3.0.9",
-        "io.appmetrica.analytics": "6.1.0"
+        "io.appmetrica.analytics": "6.1.0",
+        "net.gree.unity-webview": "1.0.0"
       }
     },
     "com.agava.smsauthvps": {
@@ -302,6 +303,13 @@
         "com.google.external-dependency-manager": "1.2.177"
       },
       "hash": "5897ff63840968413f90db943df32a212a6dd0e5"
+    },
+    "net.gree.unity-webview": {
+      "version": "https://github.com/gree/unity-webview.git?path=/dist/package-nofragment",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "f62703dba2ffbce3a812f9b9cf51d70993644d3a"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
