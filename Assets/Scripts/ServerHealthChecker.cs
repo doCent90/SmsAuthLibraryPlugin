@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -10,22 +11,37 @@ using static UnityEngine.Networking.UnityWebRequest;
 
 namespace Agava.ServerCheck
 {
+    [Serializable]
+    public class ServersData
+    {
+        public string serverName;
+        public string methodName;
+    }
+
     public class ServerHealthChecker : MonoBehaviour
     {
-        private const string RootApi = "/api";
         private const string AppJson = "application/json";
         private const string ContentType = "Content-Type";
         protected const int TimeOut = 59;
         protected enum RequestType { POST, GET, PUT }
 
-        [SerializeField] private string _serverName;
-        [SerializeField] private string _methodName = "accounttest/wink/healthcheck";
-        [SerializeField] private Image _back;
+        [SerializeField] private ServersData[] _serverDatas;
+        [SerializeField] private ServerView _template;
+        [SerializeField] private RectTransform _viewContainer;
         [SerializeField] private Text _text;
+
+        private List<ServerView> _serverViewes = new();
 
         private IEnumerator Start()
         {
             var cooldown = new WaitForSecondsRealtime(TimeOut);
+            var waitSec = new WaitForSecondsRealtime(1f);
+
+            for (int i = 0; i < _serverDatas.Length; i++)
+            {
+                var view = Instantiate(_template, _viewContainer);
+                _serverViewes.Add(view);
+            }
 
             while (true)
             {
@@ -36,30 +52,44 @@ namespace Agava.ServerCheck
                 }
 
                 _text.text = "Connection...";
+                yield return waitSec;
+                bool hasError = false;
 
-                Task<Response> task = GetHealthData(_methodName);
-                yield return new WaitUntil(() => task.IsCompleted);
-
-                Result status = task.Result.statusCode;
-
-                if (status == Result.Success)
+                for (int i = 0; i < _serverDatas.Length; i++)
                 {
-                    _back.color = Color.green;
-                    _text.text = $"{task.Result.reasonPhrase} || {task.Result.body}";
-                }
-                else
-                {
-                    _back.color = Color.red;
-                    _text.text = $"ERROR {task.Result.reasonPhrase} || {task.Result.body}";
+                    ServersData data = _serverDatas[i];
+                    Task<Response> task = GetHealthData(data.serverName, data.methodName);
+                    yield return new WaitUntil(() => task.IsCompleted);
+
+                    Result status = task.Result.statusCode;
+
+                    if (status == Result.Success)
+                    {
+                        var text = $"{task.Result.reasonPhrase} || {task.Result.body}";
+                        _serverViewes[i].SetData(data.serverName, text, Color.green);
+                    }
+                    else
+                    {
+                        hasError = true;
+                        var text = $"ERROR {task.Result.reasonPhrase} || {task.Result.body}";
+                        _serverViewes[i].SetData(data.serverName, text, Color.red);
+                    }
+
+                    if (hasError)
+                        _text.text = "ERROR";
+                    else
+                        _text.text = "SUCCESS";
+
+                    yield return waitSec;
                 }
 
                 yield return cooldown;
             }
         }
 
-        private async Task<Response> GetHealthData(string apiName)
+        private async Task<Response> GetHealthData(string serverName, string apiName)
         {
-            string path = $"{GetHttpPath(apiName)}";
+            string path = $"{GetHttpPath(serverName, apiName)}";
 
             using (UnityWebRequest webRequest = CreateWebRequest(path, RequestType.GET))
             {
@@ -73,12 +103,11 @@ namespace Agava.ServerCheck
             }
         }
 
-        private string GetHttpPath(string apiMethodName)
+        private string GetHttpPath(string serverName, string apiMethodName)
         {
-            string path = $"{_serverName}/{apiMethodName.ToLower()}";
-            string httpRequets = $"https://{path}";
-            Debug.Log(httpRequets);
-            return httpRequets;
+            string path = $"{serverName}/{apiMethodName.ToLower()}";
+            Debug.Log(path);
+            return path;
         }
 
         private UnityWebRequest CreateWebRequest(string path, RequestType type)
