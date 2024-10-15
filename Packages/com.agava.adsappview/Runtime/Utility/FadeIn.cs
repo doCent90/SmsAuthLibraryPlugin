@@ -2,30 +2,33 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
-public static class FadeIn
+namespace AdsAppView.Utility
 {
-    public static IEnumerator FadeInGraphic(Graphic graphicObject, float time)
+    public static class FadeIn
     {
-        graphicObject.enabled = true;
-
-        graphicObject.gameObject.SetActive(true);
-        Color color = graphicObject.color;
-
-        if (time > 0)
+        public static IEnumerator FadeInGraphic(Graphic graphicObject, float time)
         {
-            color.a = 0;
-            float elapsedTime = 0;
+            graphicObject.enabled = true;
 
-            while (elapsedTime < time)
+            graphicObject.gameObject.SetActive(true);
+            Color color = graphicObject.color;
+
+            if (time > 0)
             {
-                color.a = Mathf.Lerp(0, 1, elapsedTime / time);
-                graphicObject.color = color;
-                elapsedTime += Time.unscaledDeltaTime;
-                yield return new WaitForEndOfFrame();
-            }
-        }
+                color.a = 0;
+                float elapsedTime = 0;
 
-        color.a = 1;
-        graphicObject.color = color;
+                while (elapsedTime < time)
+                {
+                    color.a = Mathf.Lerp(0, 1, elapsedTime / time);
+                    graphicObject.color = color;
+                    elapsedTime += Time.unscaledDeltaTime;
+                    yield return new WaitForEndOfFrame();
+                }
+            }
+
+            color.a = 1;
+            graphicObject.color = color;
+        }
     }
 }

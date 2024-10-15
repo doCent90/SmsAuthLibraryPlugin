@@ -1,16 +1,39 @@
-using AdsAppView.Program;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class ViewPresenterFactory : MonoBehaviour
+namespace AdsAppView.Program
 {
-    [SerializeField] private ImageViewPresenter _imageViewPresenter;
-    [SerializeField] private VideoViewPresenter _videoViewPresenter;
-    [SerializeField] private WebViewPresenter _webViewPresenter;
-
-    public IViewPresenter InstantiateViewPresenter()
+    public class ViewPresenterFactory : MonoBehaviour
     {
-        var viewPresenter = Instantiate(_imageViewPresenter, transform);
-        viewPresenter.gameObject.SetActive(true);
-        return viewPresenter;
+        [SerializeField] private ImageViewPresenter _imageViewPresenter;
+        [SerializeField] private VideoViewPresenter _videoViewPresenter;
+        [SerializeField] private WebViewPresenter _webViewPresenter;
+
+        private Dictionary<string, GameObject> _mapping;
+
+        public IViewPresenter InstantiateViewPresenter()
+        {
+            _mapping ??= new Dictionary<string, GameObject>()
+            {
+                { "image", _imageViewPresenter.gameObject},
+                { "video", _videoViewPresenter.gameObject},
+                { "web", _webViewPresenter.gameObject},
+            };
+
+            GameObject viewPresenter;
+
+            string type = ViewPresenterConfigs.ViewPresenterType;
+
+            if (_mapping.TryGetValue(type, out viewPresenter))
+            {
+                viewPresenter = Instantiate(viewPresenter, transform);
+            }
+            else
+            {
+                viewPresenter = Instantiate(_imageViewPresenter.gameObject, transform);
+            }
+
+            return viewPresenter.GetComponent<IViewPresenter>();
+        }
     }
 }

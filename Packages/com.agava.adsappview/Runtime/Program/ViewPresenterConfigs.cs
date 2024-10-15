@@ -5,79 +5,107 @@ using AdsAppView.Utility;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class ViewPresenterConfigs : MonoBehaviour
+namespace AdsAppView.Program
 {
-    private const string ClosingDelayConfig = "closing-delay";
-    private const string EnablingTimeConfig = "enabling-time";
-
-    private AdsAppAPI _api;
-
-    public static float ClosingDelay { get; private set; } = 2;
-    public static float EnablingTime { get; private set; } = 2;
-
-    public IEnumerator Initialize(AdsAppAPI api)
+    public class ViewPresenterConfigs : MonoBehaviour
     {
-        _api = api;
+        private const string ClosingDelayConfig = "closing-delay";
+        private const string EnablingTimeConfig = "enabling-time";
+        private const string ViewPresenterTypeConfig = "view-presenter-type";
 
-        var waitWeb = new WaitUntil(() => Application.internetReachability == NetworkReachability.NotReachable);
-        var waitInit = new WaitUntil(() => _api.Initialized);
+        private AdsAppAPI _api;
 
-        if (Application.internetReachability == NetworkReachability.NotReachable)
-            yield return waitWeb;
+        public static string ViewPresenterType { get; private set; } = string.Empty;
+        public static float ClosingDelay { get; private set; } = 2;
+        public static float EnablingTime { get; private set; } = 2;
 
-        yield return waitInit;
-        yield return new WaitForSecondsRealtime(3f);
-
-        SetConfigs();
-    }
-
-    private async void SetConfigs()
-    {
-        await SetEnablingTimeConfig();
-        await SetClosingDelayConfig();
-    }
-
-    private async Task SetClosingDelayConfig()
-    {
-        Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(ClosingDelayConfig);
-
-        if (cachingResponse.statusCode == UnityWebRequest.Result.Success)
+        public IEnumerator Initialize(AdsAppAPI api)
         {
-            string body = cachingResponse.body;
+            _api = api;
 
-            if (float.TryParse(body, out float closingDelay))
+            var waitWeb = new WaitUntil(() => Application.internetReachability == NetworkReachability.NotReachable);
+            var waitInit = new WaitUntil(() => _api.Initialized);
+
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+                yield return waitWeb;
+
+            yield return waitInit;
+            yield return new WaitForSecondsRealtime(3f);
+
+            SetConfigs();
+        }
+
+        private async void SetConfigs()
+        {
+            await SetEnablingTimeConfig();
+            await SetClosingDelayConfig();
+            await SetViewPresenterTypeConfig();
+        }
+
+        private async Task SetClosingDelayConfig()
+        {
+            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(ClosingDelayConfig);
+
+            if (cachingResponse.statusCode == UnityWebRequest.Result.Success)
             {
-                ClosingDelay = closingDelay;
+                string body = cachingResponse.body;
+
+                if (float.TryParse(body, out float closingDelay))
+                {
+                    ClosingDelay = closingDelay;
 #if UNITY_EDITOR
-                Debug.Log("#PopupManager# Closing delay set to: " + ClosingDelay);
+                    Debug.Log("#ViewPresenterConfigs# Closing delay set to: " + ClosingDelay);
 #endif
+                }
+            }
+            else
+            {
+                Debug.LogError("#ViewPresenterConfigs# Fail to Set Closing Delay Config with error: " + cachingResponse.statusCode);
             }
         }
-        else
+
+        private async Task SetEnablingTimeConfig()
         {
-            Debug.LogError("#PopupManager# Fail to Set Closing Delay Config whith error: " + cachingResponse.statusCode);
-        }
-    }
+            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(EnablingTimeConfig);
 
-    private async Task SetEnablingTimeConfig()
-    {
-        Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(EnablingTimeConfig);
-
-        if (cachingResponse.statusCode == UnityWebRequest.Result.Success)
-        {
-            string body = cachingResponse.body;
-
-            if (float.TryParse(body, out float enablingTime))
+            if (cachingResponse.statusCode == UnityWebRequest.Result.Success)
             {
-                EnablingTime = enablingTime;
+                string body = cachingResponse.body;
+
+                if (float.TryParse(body, out float enablingTime))
+                {
+                    EnablingTime = enablingTime;
 #if UNITY_EDITOR
-                Debug.Log("#PopupManager# Enabling time set to: " + EnablingTime);
+                    Debug.Log("#ViewPresenterConfigs# Enabling time set to: " + EnablingTime);
 #endif
+                }
+            }
+            else
+            {
+                Debug.LogError("#ViewPresenterConfigs# Fail to Set Enabling Time Config with error: " + cachingResponse.statusCode);
             }
         }
-        else
+
+        private async Task SetViewPresenterTypeConfig()
         {
-            Debug.LogError("#PopupManager# Fail to Set Enabling Time Config whith error: " + cachingResponse.statusCode);
+            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(ViewPresenterTypeConfig);
+
+            if (cachingResponse.statusCode == UnityWebRequest.Result.Success)
+            {
+                string type = cachingResponse.body;
+
+                if (string.IsNullOrEmpty(type) == false)
+                {
+                    ViewPresenterType = type;
+#if UNITY_EDITOR
+                    Debug.Log("#ViewPresenterConfigs# View presenter type set to: " + ViewPresenterType);
+#endif
+                }
+            }
+            else
+            {
+                Debug.LogError("#ViewPresenterConfigs# Fail to Set view presenter type with error: " + cachingResponse.statusCode);
+            }
         }
     }
 }

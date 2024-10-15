@@ -1,12 +1,15 @@
 using System;
 using AdsAppView.DTO;
 
-public interface IViewPresenter
+namespace AdsAppView.Program
 {
-    bool Enable { get; }
+    public interface IViewPresenter
+    {
+        bool Enable { get; }
 
-    event Action Enabled;
-    event Action Disabled;
+        event Action Enabled;
+        event Action Disabled;
 
-    void Show(PopupData spriteData);
+        void Show(PopupData spriteData);
+    }
 }
