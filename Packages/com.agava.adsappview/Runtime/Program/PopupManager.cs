@@ -22,7 +22,7 @@ namespace AdsAppView.Program
 
         [SerializeField] private MonoBehaviour _viewPresenterMonoBehaviour;
 
-        private IViewPresenter _viewPresenter => _viewPresenterMonoBehaviour as IViewPresenter;
+        public IViewPresenter ViewPresenter => _viewPresenterMonoBehaviour as IViewPresenter;
 
         private AppData _appData;
         private AppSettingsData _settingsData;
@@ -31,7 +31,7 @@ namespace AdsAppView.Program
         private readonly List<SpriteData> _sprites = new();
         private SpriteData _sprite;
 
-        private float _firstTimerSec = 60f;
+        private float _firstTimerSec = 60f; 
         private float _regularTimerSec = 180f;
         private bool _caching = false;
 
@@ -94,9 +94,9 @@ namespace AdsAppView.Program
         {
             yield return new WaitForSecondsRealtime(_firstTimerSec);
 
-            _viewPresenter.Show(_sprite);
+            ViewPresenter.Show(_sprite);
             AnalyticsService.SendPopupView(_sprite.name);
-            yield return new WaitWhile(() => _viewPresenter.Enable);
+            yield return new WaitWhile(() => ViewPresenter.Enable);
 
             if (_settingsData.carousel)
             {
@@ -106,8 +106,8 @@ namespace AdsAppView.Program
                 {
                     yield return new WaitForSecondsRealtime(_regularTimerSec);
 
-                    _viewPresenter.Show(_sprites[index]);
-                    yield return new WaitWhile(() => _viewPresenter.Enable);
+                    ViewPresenter.Show(_sprites[index]);
+                    yield return new WaitWhile(() => ViewPresenter.Enable);
 
                     index++;
 
@@ -121,8 +121,8 @@ namespace AdsAppView.Program
                 {
                     yield return new WaitForSecondsRealtime(_regularTimerSec);
 
-                    _viewPresenter.Show(_sprite);
-                    yield return new WaitWhile(() => _viewPresenter.Enable);
+                    ViewPresenter.Show(_sprite);
+                    yield return new WaitWhile(() => ViewPresenter.Enable);
                 }
             }
         }
@@ -174,9 +174,9 @@ namespace AdsAppView.Program
                         return null;
                     }
 
-                    string cacheTexturePath = TextureUtils.ConstructCacheTexturePath(_adsFilePathsData.file_path, _adsFilePathsData.ads_app_id);
+                    string cacheTexturePath = FileUtils.ConstructFilePath(_adsFilePathsData.file_path, _adsFilePathsData.ads_app_id);
 
-                    if ((_caching && TextureUtils.TryLoadTexture(cacheTexturePath, out Texture2D texture)) == false)
+                    if ((_caching && FileUtils.TryLoadTexture(cacheTexturePath, out Texture2D texture)) == false)
                     {
                         Response textureResponse = AdsAppAPI.Instance.GetBytesData(creds.host, _adsFilePathsData.file_path, creds.login, creds.password);
 
@@ -188,7 +188,7 @@ namespace AdsAppView.Program
                             texture.LoadImage(bytes);
 
                             if (_caching)
-                                TextureUtils.TrySaveTexture(cacheTexturePath, texture);
+                                FileUtils.TrySaveTexture(cacheTexturePath, texture);
                         }
                         else
                         {

@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace AdsAppView.Utility
 {
-    public static class TextureUtils
+    public static class FileUtils
     {
-        public static string ConstructCacheTexturePath(string filePath, string name)
+        public static string ConstructFilePath(string filePath, string name)
         {
             string extension = Path.GetExtension(filePath);
             return Path.Combine(Application.persistentDataPath, name + extension);
@@ -22,7 +22,13 @@ namespace AdsAppView.Utility
                 texture.LoadImage(rawData);
 
 #if UNITY_EDITOR
-                Debug.Log($"#TextureUtils# Cache texture loaded from path: {cacheFilePath}");
+                Debug.Log($"#FileUtils# Cache texture loaded from path: {cacheFilePath}");
+#endif
+            }
+            else
+            {
+#if UNITY_EDITOR
+                Debug.Log($"#FileUtils# Path {cacheFilePath} doesn't exist");
 #endif
             }
 
@@ -35,12 +41,12 @@ namespace AdsAppView.Utility
             {
                 File.WriteAllBytes(cacheFilePath, texture.EncodeToPNG());
 #if UNITY_EDITOR
-                Debug.Log($"#TextureUtils# Cache texture saved to path: {cacheFilePath}");
+                Debug.Log($"#FileUtils# Cache texture saved to path: {cacheFilePath}");
 #endif
             }
             catch (IOException exception)
             {
-                Debug.LogError("#TextureUtils# Fail to save cache texture: " + exception.Message);
+                Debug.LogError("#FileUtils# Fail to save cache texture: " + exception.Message);
             }
         }
     }
