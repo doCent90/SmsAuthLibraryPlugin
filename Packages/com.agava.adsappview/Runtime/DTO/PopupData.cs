@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 using UnityEngine.Scripting;
 
 namespace AdsAppView.DTO
@@ -10,5 +9,6 @@ namespace AdsAppView.DTO
         public byte[] bytes;
         public string link;
         public string name;
+        public string cacheFilePath;
     }
 }

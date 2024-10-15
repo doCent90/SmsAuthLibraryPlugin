@@ -49,18 +49,18 @@ namespace AdsAppView.Program
             _closeButton.onClick.RemoveListener(OnCloseClicked);
         }
 
-        public void Show(PopupData spriteData)
+        public void Show(PopupData popupData)
         {
             Texture2D texture = new Texture2D(2, 2);
-            texture.LoadImage(spriteData.bytes);
+            texture.LoadImage(popupData.bytes);
 
             Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
 
             _count++;
             _popupImage.sprite = sprite;
             _aspectRatioFitter.aspectRatio = (float)texture.width / texture.height;
-            _link = spriteData.link;
-            _lastSpriteName = spriteData.name;
+            _link = popupData.link;
+            _lastSpriteName = popupData.name;
 
             Stop(_enablingCoroutine);
             _enablingCoroutine = StartCoroutine(EnableCanvasGroup(_windowCanvasGrp));
@@ -105,15 +105,15 @@ namespace AdsAppView.Program
 
             WaitForSecondsRealtime waitForFadeIn = new WaitForSecondsRealtime(enablingTime);
 
-            StartCoroutine(FadeInImage(_background, enablingTime));
+            StartCoroutine(FadeIn.FadeInGraphic(_background, enablingTime));
             yield return new WaitForSecondsRealtime(Diff);
 
-            StartCoroutine(FadeInImage(_popupImage, enablingTime));
+            StartCoroutine(FadeIn.FadeInGraphic(_popupImage, enablingTime));
             yield return waitForFadeIn;
 
             _linkButton.gameObject.SetActive(true);
 
-            StartCoroutine(FadeInImage(_linkButtonImage, enablingTime));
+            StartCoroutine(FadeIn.FadeInGraphic(_linkButtonImage, enablingTime));
             yield return waitForFadeIn;
 
             yield return new WaitForSecondsRealtime(closingDelay);
@@ -128,31 +128,6 @@ namespace AdsAppView.Program
             Enable = false;
             Disabled?.Invoke();
             Stop(_enablingCoroutine);
-        }
-
-        private IEnumerator FadeInImage(Image image, float time)
-        {
-            image.enabled = true;
-
-            image.gameObject.SetActive(true);
-            Color color = image.color;
-
-            if (time > 0)
-            {
-                color.a = 0;
-                float elapsedTime = 0;
-
-                while (elapsedTime < time)
-                {
-                    color.a = Mathf.Lerp(0, 1, elapsedTime / time);
-                    image.color = color;
-                    elapsedTime += Time.unscaledDeltaTime;
-                    yield return new WaitForEndOfFrame();
-                }
-            }
-
-            color.a = 1;
-            image.color = color;
         }
 
         private void Stop(Coroutine coroutine)

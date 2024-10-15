@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 using AdsAppView.DTO;
 using AdsAppView.Utility;
 using Newtonsoft.Json;
+using System;
 
 namespace AdsAppView.Program
 {
@@ -92,11 +93,15 @@ namespace AdsAppView.Program
 
         private IEnumerator ShowingAds()
         {
-            yield return new WaitForSecondsRealtime(_firstTimerSec);
+            IEnumerator ShowingPopup(float time, PopupData popupData)
+            {
+                yield return new WaitForSecondsRealtime(time);
+                ViewPresenter.Show(popupData);
+                AnalyticsService.SendPopupView(popupData.name);
+                yield return new WaitWhile(() => ViewPresenter.Enable);
+            }
 
-            ViewPresenter.Show(_popupData);
-            AnalyticsService.SendPopupView(_popupData.name);
-            yield return new WaitWhile(() => ViewPresenter.Enable);
+            yield return ShowingPopup(_firstTimerSec, _popupData);
 
             if (_settingsData.carousel)
             {
@@ -104,10 +109,7 @@ namespace AdsAppView.Program
 
                 while (true)
                 {
-                    yield return new WaitForSecondsRealtime(_regularTimerSec);
-
-                    ViewPresenter.Show(_popupDataList[index]);
-                    yield return new WaitWhile(() => ViewPresenter.Enable);
+                    yield return ShowingPopup(_regularTimerSec, _popupDataList[index]);
 
                     index++;
 
@@ -119,10 +121,7 @@ namespace AdsAppView.Program
             {
                 while (true)
                 {
-                    yield return new WaitForSecondsRealtime(_regularTimerSec);
-
-                    ViewPresenter.Show(_popupData);
-                    yield return new WaitWhile(() => ViewPresenter.Enable);
+                    yield return ShowingPopup(_regularTimerSec, _popupData);
                 }
             }
         }
@@ -174,18 +173,16 @@ namespace AdsAppView.Program
                         return null;
                     }
 
-                    string cacheTexturePath = FileUtils.ConstructFilePath(_adsFilePathsData.file_path, _adsFilePathsData.ads_app_id);
+                    string cacheFilePath = FileUtils.ConstructFilePath(_adsFilePathsData.file_path, _adsFilePathsData.ads_app_id);
 
-                    if ((_caching && FileUtils.TryLoadFile(cacheTexturePath, out byte[] bytes)) == false)
+                    if ((_caching && FileUtils.TryLoadFile(cacheFilePath, out byte[] bytes)) == false)
                     {
                         Response textureResponse = AdsAppAPI.Instance.GetBytesData(creds.host, _adsFilePathsData.file_path, creds.login, creds.password);
 
                         if (textureResponse.statusCode == UnityWebRequest.Result.Success)
                         {
                             bytes = textureResponse.bytes;
-
-                            if (_caching)
-                                FileUtils.TrySaveFile(cacheTexturePath, bytes);
+                            FileUtils.TrySaveFile(cacheFilePath, bytes);
                         }
                         else
                         {
@@ -194,7 +191,7 @@ namespace AdsAppView.Program
                         }
                     }
 
-                    return new PopupData() { bytes = bytes, link = _adsFilePathsData.app_link, name = _adsFilePathsData.file_path };
+                    return new PopupData() { bytes = bytes, link = _adsFilePathsData.app_link, name = _adsFilePathsData.file_path, cacheFilePath = cacheFilePath };
                 }
                 else
                 {
