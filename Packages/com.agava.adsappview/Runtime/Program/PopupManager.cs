@@ -28,10 +28,10 @@ namespace AdsAppView.Program
         private AppSettingsData _settingsData;
         private AdsFilePathsData _adsFilePathsData;
 
-        private readonly List<SpriteData> _sprites = new();
-        private SpriteData _sprite;
+        private readonly List<PopupData> _popupDataList = new();
+        private PopupData _popupData;
 
-        private float _firstTimerSec = 60f; 
+        private float _firstTimerSec = 60f;
         private float _regularTimerSec = 180f;
         private bool _caching = false;
 
@@ -71,13 +71,13 @@ namespace AdsAppView.Program
                     _firstTimerSec = data.first_timer;
                     _regularTimerSec = data.regular_timer;
 
-                    _sprite = await GetSprite();
+                    _popupData = await GetPopupData();
 
-                    if (_sprite != null)
+                    if (_popupData != null)
                         StartCoroutine(ShowingAds());
 
                     if (_settingsData.carousel)
-                        await GetSprites();
+                        await FillPopupDataList();
                 }
                 else
                 {
@@ -94,8 +94,8 @@ namespace AdsAppView.Program
         {
             yield return new WaitForSecondsRealtime(_firstTimerSec);
 
-            ViewPresenter.Show(_sprite);
-            AnalyticsService.SendPopupView(_sprite.name);
+            ViewPresenter.Show(_popupData);
+            AnalyticsService.SendPopupView(_popupData.name);
             yield return new WaitWhile(() => ViewPresenter.Enable);
 
             if (_settingsData.carousel)
@@ -106,12 +106,12 @@ namespace AdsAppView.Program
                 {
                     yield return new WaitForSecondsRealtime(_regularTimerSec);
 
-                    ViewPresenter.Show(_sprites[index]);
+                    ViewPresenter.Show(_popupDataList[index]);
                     yield return new WaitWhile(() => ViewPresenter.Enable);
 
                     index++;
 
-                    if (index >= _sprites.Count)
+                    if (index >= _popupDataList.Count)
                         index = 0;
                 }
             }
@@ -121,21 +121,21 @@ namespace AdsAppView.Program
                 {
                     yield return new WaitForSecondsRealtime(_regularTimerSec);
 
-                    ViewPresenter.Show(_sprite);
+                    ViewPresenter.Show(_popupData);
                     yield return new WaitWhile(() => ViewPresenter.Enable);
                 }
             }
         }
 
-        private async Task GetSprites()
+        private async Task FillPopupDataList()
         {
             for (int i = 0; i < _settingsData.carousel_count; i++)
             {
-                SpriteData newSprite = null;
+                PopupData newSprite = null;
 
                 for (int s = 0; s < RetryCount; s++)
                 {
-                    newSprite = await GetSprite(index: i);
+                    newSprite = await GetPopupData(index: i);
 
                     if (newSprite != null)
                         break;
@@ -143,12 +143,12 @@ namespace AdsAppView.Program
                     await Task.Delay(RetryDelayMlsec);
                 }
 
-                newSprite ??= _sprite;
-                _sprites.Add(newSprite);
+                newSprite ??= _popupData;
+                _popupDataList.Add(newSprite);
             }
         }
 
-        private async Task<SpriteData> GetSprite(int index = -1)
+        private async Task<PopupData> GetPopupData(int index = -1)
         {
             string appId = index == -1 ? _settingsData.ads_app_id : CarouselPicture + index;
             AppData newData = new AppData() { app_id = appId, store_id = _appData.store_id, platform = _appData.platform };
@@ -176,19 +176,16 @@ namespace AdsAppView.Program
 
                     string cacheTexturePath = FileUtils.ConstructFilePath(_adsFilePathsData.file_path, _adsFilePathsData.ads_app_id);
 
-                    if ((_caching && FileUtils.TryLoadTexture(cacheTexturePath, out Texture2D texture)) == false)
+                    if ((_caching && FileUtils.TryLoadFile(cacheTexturePath, out byte[] bytes)) == false)
                     {
                         Response textureResponse = AdsAppAPI.Instance.GetBytesData(creds.host, _adsFilePathsData.file_path, creds.login, creds.password);
 
                         if (textureResponse.statusCode == UnityWebRequest.Result.Success)
                         {
-                            byte[] bytes = textureResponse.bytes;
-
-                            texture = new Texture2D(2, 2);
-                            texture.LoadImage(bytes);
+                            bytes = textureResponse.bytes;
 
                             if (_caching)
-                                FileUtils.TrySaveTexture(cacheTexturePath, texture);
+                                FileUtils.TrySaveFile(cacheTexturePath, bytes);
                         }
                         else
                         {
@@ -197,8 +194,7 @@ namespace AdsAppView.Program
                         }
                     }
 
-                    Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
-                    return new SpriteData() { sprite = sprite, link = _adsFilePathsData.app_link, name = _adsFilePathsData.file_path, aspectRatio = (float)texture.width / texture.height };
+                    return new PopupData() { bytes = bytes, link = _adsFilePathsData.app_link, name = _adsFilePathsData.file_path };
                 }
                 else
                 {

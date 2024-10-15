@@ -11,43 +11,60 @@ namespace AdsAppView.Utility
             return Path.Combine(Application.persistentDataPath, name + extension);
         }
 
-        public static bool TryLoadTexture(string cacheFilePath, out Texture2D texture)
+        public static bool TryLoadFile(string filePath, out byte[] bytes)
         {
-            texture = null;
+            bytes = null;
 
-            if (File.Exists(cacheFilePath))
+            if (File.Exists(filePath))
             {
-                byte[] rawData = File.ReadAllBytes(cacheFilePath);
-                texture = new Texture2D(2, 2);
-                texture.LoadImage(rawData);
+                bytes = File.ReadAllBytes(filePath);
+
 
 #if UNITY_EDITOR
-                Debug.Log($"#FileUtils# Cache texture loaded from path: {cacheFilePath}");
+                Debug.Log($"#FileUtils# Cache texture loaded from path: {filePath}");
 #endif
             }
             else
             {
 #if UNITY_EDITOR
-                Debug.Log($"#FileUtils# Path {cacheFilePath} doesn't exist");
+                Debug.Log($"#FileUtils# Path {filePath} doesn't exist");
 #endif
+            }
+
+            return bytes != null;
+        }
+
+        public static void TrySaveFile(string filePath, byte[] bytes)
+        {
+            try
+            {
+                File.WriteAllBytes(filePath, bytes);
+#if UNITY_EDITOR
+                Debug.Log($"#FileUtils# File saved to path: {filePath}");
+#endif
+            }
+            catch (IOException exception)
+            {
+                Debug.LogError("#FileUtils# Fail to save file: " + exception.Message);
+            }
+        }
+
+        public static bool TryLoadTexture(string filePath, out Texture2D texture)
+        {
+            texture = null;
+
+            if (TryLoadFile(filePath, out byte[] bytes))
+            {
+                texture = new Texture2D(2, 2);
+                texture.LoadImage(bytes);
             }
 
             return texture != null;
         }
 
-        public static void TrySaveTexture(string cacheFilePath, Texture2D texture)
+        public static void TrySaveTexture(string filePath, Texture2D texture)
         {
-            try
-            {
-                File.WriteAllBytes(cacheFilePath, texture.EncodeToPNG());
-#if UNITY_EDITOR
-                Debug.Log($"#FileUtils# Cache texture saved to path: {cacheFilePath}");
-#endif
-            }
-            catch (IOException exception)
-            {
-                Debug.LogError("#FileUtils# Fail to save cache texture: " + exception.Message);
-            }
+            TrySaveFile(filePath, texture.EncodeToPNG());
         }
     }
 }

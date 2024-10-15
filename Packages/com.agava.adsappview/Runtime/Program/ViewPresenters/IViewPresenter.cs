@@ -8,5 +8,5 @@ public interface IViewPresenter
     event Action Enabled;
     event Action Disabled;
 
-    void Show(SpriteData spriteData);
+    void Show(PopupData spriteData);
 }

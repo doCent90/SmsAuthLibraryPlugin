@@ -5,11 +5,10 @@ using UnityEngine.Scripting;
 namespace AdsAppView.DTO
 {
     [Preserve, Serializable]
-    public class SpriteData
+    public class PopupData
     {
-        public Sprite sprite;
+        public byte[] bytes;
         public string link;
         public string name;
-        public float aspectRatio;
     }
 }

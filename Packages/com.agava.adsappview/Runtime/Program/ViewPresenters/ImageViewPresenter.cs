@@ -49,13 +49,18 @@ namespace AdsAppView.Program
             _closeButton.onClick.RemoveListener(OnCloseClicked);
         }
 
-        public void Show(SpriteData sprite)
+        public void Show(PopupData spriteData)
         {
+            Texture2D texture = new Texture2D(2, 2);
+            texture.LoadImage(spriteData.bytes);
+
+            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+
             _count++;
-            _popupImage.sprite = sprite.sprite;
-            _aspectRatioFitter.aspectRatio = sprite.aspectRatio;
-            _link = sprite.link;
-            _lastSpriteName = sprite.name;
+            _popupImage.sprite = sprite;
+            _aspectRatioFitter.aspectRatio = (float)texture.width / texture.height;
+            _link = spriteData.link;
+            _lastSpriteName = spriteData.name;
 
             Stop(_enablingCoroutine);
             _enablingCoroutine = StartCoroutine(EnableCanvasGroup(_windowCanvasGrp));
