@@ -27,6 +27,7 @@ namespace AdsAppView.Program
         [Tooltip("Server name remote data")]
         [SerializeField] private string _serverPath;
         [Tooltip("Assets settings")]
+        [SerializeField] private bool _useAssetBundles = true;
         [SerializeField] private AssetsBundlesLoader _assetsBundlesLoader;
         [SerializeField] private GameObject _defaultAsset;
 
@@ -51,7 +52,7 @@ namespace AdsAppView.Program
             yield return _links.Initialize(_api);
             yield return _viewPresenterConfigs.Initialize(_api);
 
-            if (_preloadService.IsPluginAwailable)
+            if (_preloadService.IsPluginAvailable)
                 yield return Initialize();
             else
                 Debug.Log("#Boot# Plugin disabled");
@@ -60,26 +61,32 @@ namespace AdsAppView.Program
         private IEnumerator Initialize()
         {
             AnalyticsService.SendStartApp(_appId);
-            Task<GameObject> task = _assetsBundlesLoader.GetPopupObject();
+            GameObject created = null;
 
-            yield return new WaitUntil(() => task.IsCompleted);
-            GameObject bundlePopupPrefab = task.Result;
-            GameObject created;
-
-            if (bundlePopupPrefab != null)
+            if (_useAssetBundles)
             {
-                created = Instantiate(bundlePopupPrefab);
-                created.name = "AssetBundle-PopupManager";
-                Debug.Log("#Boot# Creeated popup: " + created.name);
+                Task<GameObject> task = _assetsBundlesLoader.GetPopupObject();
+
+                yield return new WaitUntil(() => task.IsCompleted);
+                GameObject bundlePopupPrefab = task.Result;
+
+                if (bundlePopupPrefab != null)
+                {
+                    created = Instantiate(bundlePopupPrefab);
+                    created.name = "AssetBundle-PopupManager";
+                    Debug.Log("#Boot# Created popup: " + created.name);
+                }
+
+                _assetsBundlesLoader.Unload();
             }
-            else
+
+            if (created == null)
             {
                 created = Instantiate(_defaultAsset);
                 created.name = "Default-PopupManager";
-                Debug.LogError("#Boot# Default-PopupManager Instantiated");
+                Debug.Log("#Boot# Default-PopupManager Instantiated");
             }
 
-            _assetsBundlesLoader.Unload();
             yield return created.GetComponent<PopupManager>().Construct(_appData);
         }
     }

@@ -6,7 +6,6 @@ using UnityEngine.Networking;
 using AdsAppView.DTO;
 using AdsAppView.Utility;
 using Newtonsoft.Json;
-using System;
 
 namespace AdsAppView.Program
 {
@@ -21,9 +20,9 @@ namespace AdsAppView.Program
         private const int RetryCount = 3;
         private const int RetryDelayMlsec = 30000;
 
-        [SerializeField] private MonoBehaviour _viewPresenterMonoBehaviour;
+        [SerializeField] private ViewPresenterFactory _viewPresenterFactory;
 
-        public IViewPresenter ViewPresenter => _viewPresenterMonoBehaviour as IViewPresenter;
+        public IViewPresenter ViewPresenter { get; private set; } = null;
 
         private AppData _appData;
         private AppSettingsData _settingsData;
@@ -36,13 +35,9 @@ namespace AdsAppView.Program
         private float _regularTimerSec = 180f;
         private bool _caching = false;
 
-        private void OnValidate()
+        private void Awake()
         {
-            if (_viewPresenterMonoBehaviour && !(_viewPresenterMonoBehaviour is IViewPresenter))
-            {
-                Debug.LogError(nameof(_viewPresenterMonoBehaviour) + " needs to implement " + nameof(IViewPresenter));
-                _viewPresenterMonoBehaviour = null;
-            }
+            ViewPresenter = _viewPresenterFactory.InstantiateViewPresenter();
         }
 
         public IEnumerator Construct(AppData appData)

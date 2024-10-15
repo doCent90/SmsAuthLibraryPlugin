@@ -66,25 +66,6 @@ namespace AdsAppView.Program
             _enablingCoroutine = StartCoroutine(EnableCanvasGroup(_windowCanvasGrp));
         }
 
-        private void OnLinkClicked()
-        {
-#if UNITY_EDITOR
-            Debug.LogFormat($"#ViewPresenter# Open link {_link}");
-#endif
-
-            if (string.IsNullOrEmpty(_link))
-                return;
-
-            AnalyticsService.SendPopupRedirectClick(_lastSpriteName, _count);
-            Application.OpenURL(_link);
-        }
-
-        private void OnCloseClicked()
-        {
-            AnalyticsService.SendPopupClosed();
-            DisableCanvasGroup(_windowCanvasGrp);
-        }
-
         private IEnumerator EnableCanvasGroup(CanvasGroup canvas)
         {
             _closeButton.gameObject.SetActive(false);
@@ -128,6 +109,25 @@ namespace AdsAppView.Program
             Enable = false;
             Disabled?.Invoke();
             Stop(_enablingCoroutine);
+        }
+
+        private void OnLinkClicked()
+        {
+#if UNITY_EDITOR
+            Debug.LogFormat($"#ViewPresenter# Open link {_link}");
+#endif
+
+            if (string.IsNullOrEmpty(_link))
+                return;
+
+            AnalyticsService.SendPopupRedirectClick(_lastSpriteName, _count);
+            Application.OpenURL(_link);
+        }
+
+        private void OnCloseClicked()
+        {
+            AnalyticsService.SendPopupClosed();
+            DisableCanvasGroup(_windowCanvasGrp);
         }
 
         private void Stop(Coroutine coroutine)

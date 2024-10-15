@@ -30,7 +30,7 @@ namespace AdsAppView.Utility
             _bundlIdVersion = bundlIdVersion;
         }
 
-        public bool IsPluginAwailable { get; private set; } = false;
+        public bool IsPluginAvailable { get; private set; } = false;
 
         public IEnumerator Preparing()
         {
@@ -40,7 +40,7 @@ namespace AdsAppView.Utility
             SetPluginAwailable();
             yield return new WaitUntil(() => _isEndPrepare);
 
-            Debug.Log("#PreloadService# Prepare is done. Start plugin " + IsPluginAwailable);
+            Debug.Log("#PreloadService# Prepare is done. Start plugin " + IsPluginAvailable);
         }
 
         private async void SetPluginAwailable()
@@ -52,7 +52,7 @@ namespace AdsAppView.Utility
             {
                 if (string.IsNullOrEmpty(response.body))
                 {
-                    IsPluginAwailable = false;
+                    IsPluginAvailable = false;
                     Debug.LogError($"#PreloadService# Fail to recieve remote config '{remoteName}': NULL");
                 }
                 else
@@ -63,20 +63,20 @@ namespace AdsAppView.Utility
                         $"---->Test state - {remotePluginSettings.test_review},  review - {remotePluginSettings.review_version}");
 
                     if (remotePluginSettings.test_review == True && _bundlIdVersion == remotePluginSettings.review_version)
-                        IsPluginAwailable = true;
+                        IsPluginAvailable = true;
                     else if (remotePluginSettings.test_review != True && _bundlIdVersion == remotePluginSettings.review_version)
-                        IsPluginAwailable = false;
+                        IsPluginAvailable = false;
                     else if (remotePluginSettings.plugin_state == On && _bundlIdVersion <= remotePluginSettings.released_version)
-                        IsPluginAwailable = true;
+                        IsPluginAvailable = true;
                     else if (remotePluginSettings.plugin_state != On && _bundlIdVersion <= remotePluginSettings.released_version)
-                        IsPluginAwailable = false;
+                        IsPluginAvailable = false;
                     else
-                        IsPluginAwailable = false;
+                        IsPluginAvailable = false;
                 }
             }
             else
             {
-                IsPluginAwailable = false;
+                IsPluginAvailable = false;
                 Debug.LogError($"#PreloadService# Fail to recieve remote config '{remoteName}': " + response.statusCode);
             }
 
