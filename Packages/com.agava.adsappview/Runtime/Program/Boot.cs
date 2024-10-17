@@ -7,7 +7,6 @@ using Newtonsoft.Json;
 
 namespace AdsAppView.Program
 {
-
     public class Boot : MonoBehaviour
     {
 #if UNITY_STANDALONE
