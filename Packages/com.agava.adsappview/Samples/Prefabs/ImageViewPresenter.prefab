@@ -415,11 +415,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _windowCanvasGrp: {fileID: 7921750191448647660}
-  _linkButton: {fileID: 5898950947032171063}
-  _closeButton: {fileID: 4214664704636686152}
+  linkButton: {fileID: 5898950947032171063}
+  closeButton: {fileID: 4214664704636686152}
+  background: {fileID: 2755733275536816460}
   _aspectRatioFitter: {fileID: 1027340174097282170}
   _popupImage: {fileID: 8162551819092775253}
-  _background: {fileID: 2755733275536816460}
 --- !u!1 &8447768008746970488
 GameObject:
   m_ObjectHideFlags: 0
@@ -433,7 +433,7 @@ GameObject:
   - component: {fileID: 8162551819092775253}
   - component: {fileID: 1027340174097282170}
   m_Layer: 5
-  m_Name: PopupImage
+  m_Name: PopupCenter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

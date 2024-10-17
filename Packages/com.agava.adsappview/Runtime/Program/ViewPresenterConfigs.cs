@@ -9,15 +9,20 @@ namespace AdsAppView.Program
 {
     public class ViewPresenterConfigs : MonoBehaviour
     {
-        private const string ClosingDelayConfig = "closing-delay";
-        private const string EnablingTimeConfig = "enabling-time";
-        private const string ViewPresenterTypeConfig = "view-presenter-type";
+        public const string DefaultViewPresenterType = null;
+        public const float DefaultClosingDelay = 2;
+        public const float DefaultEnablingTime = 2;
+
+        private const string ConfigViewPresenterType = "view-presenter-type";
+        private const string ConfigClosingDelay = "closing-delay";
+        private const string ConfigEnablingTime = "enabling-time";
 
         private AdsAppAPI _api;
+        private bool _initialized;
 
-        public static string ViewPresenterType { get; private set; } = string.Empty;
-        public static float ClosingDelay { get; private set; } = 2;
-        public static float EnablingTime { get; private set; } = 2;
+        public static string ViewPresenterType { get; private set; } = DefaultViewPresenterType;
+        public static float ClosingDelay { get; private set; } = DefaultClosingDelay;
+        public static float EnablingTime { get; private set; } = DefaultEnablingTime;
 
         public IEnumerator Initialize(AdsAppAPI api)
         {
@@ -32,19 +37,24 @@ namespace AdsAppView.Program
             yield return waitInit;
             yield return new WaitForSecondsRealtime(3f);
 
+            _initialized = false;
             SetConfigs();
+
+            yield return new WaitUntil(() => _initialized);
         }
 
         private async void SetConfigs()
         {
-            await SetEnablingTimeConfig();
-            await SetClosingDelayConfig();
             await SetViewPresenterTypeConfig();
+            await SetClosingDelayConfig();
+            await SetEnablingTimeConfig();
+
+            _initialized = true;
         }
 
         private async Task SetClosingDelayConfig()
         {
-            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(ClosingDelayConfig);
+            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(ConfigClosingDelay);
 
             if (cachingResponse.statusCode == UnityWebRequest.Result.Success)
             {
@@ -66,7 +76,7 @@ namespace AdsAppView.Program
 
         private async Task SetEnablingTimeConfig()
         {
-            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(EnablingTimeConfig);
+            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(ConfigEnablingTime);
 
             if (cachingResponse.statusCode == UnityWebRequest.Result.Success)
             {
@@ -88,7 +98,7 @@ namespace AdsAppView.Program
 
         private async Task SetViewPresenterTypeConfig()
         {
-            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(ViewPresenterTypeConfig);
+            Response cachingResponse = await AdsAppAPI.Instance.GetRemoteConfig(ConfigViewPresenterType);
 
             if (cachingResponse.statusCode == UnityWebRequest.Result.Success)
             {
