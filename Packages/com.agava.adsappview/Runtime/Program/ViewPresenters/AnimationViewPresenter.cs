@@ -15,7 +15,6 @@ namespace AdsAppView.Program
         [SerializeField] private Button _linkButton;
         [SerializeField] private Button _closeButton;
         [SerializeField] private Image _background;
-        [SerializeField] private PopupAnimation _popupAnimation;
 
         private Image _linkButtonImage;
 
