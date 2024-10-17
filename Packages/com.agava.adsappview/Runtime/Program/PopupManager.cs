@@ -38,7 +38,7 @@ namespace AdsAppView.Program
 
         public IEnumerator Construct(AppData appData)
         {
-            _viewPresenter = _viewPresenterFactory.InstantiateViewPresenter();
+            _viewPresenter = _viewPresenterFactory.InstantiateViewPresenter(ViewPresenterConfigs.ViewPresenterType);
 
             _gamePause.Initialize(_viewPresenter);
 

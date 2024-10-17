@@ -8,32 +8,27 @@ namespace AdsAppView.Program
         [SerializeField] private ImageViewPresenter _imageViewPresenter;
         [SerializeField] private VideoViewPresenter _videoViewPresenter;
         [SerializeField] private WebViewPresenter _webViewPresenter;
+        [SerializeField] private AnimationViewPresenter _animationViewPresenter;
 
         private Dictionary<string, GameObject> _mapping;
 
-        public IViewPresenter InstantiateViewPresenter()
+        public IViewPresenter InstantiateViewPresenter(string type)
         {
             _mapping ??= new Dictionary<string, GameObject>()
             {
-                { "image", _imageViewPresenter.gameObject},
-                { "video", _videoViewPresenter.gameObject},
-                { "web", _webViewPresenter.gameObject},
+                { "image", _imageViewPresenter ?.gameObject},
+                { "video", _videoViewPresenter?.gameObject},
+                { "web", _webViewPresenter?.gameObject},
+                { "animation", _animationViewPresenter?.gameObject },
+                {"default", _imageViewPresenter?.gameObject},
             };
 
-            GameObject viewPresenter;
-
-            string type = ViewPresenterConfigs.ViewPresenterType;
-
-            if (_mapping.TryGetValue(type, out viewPresenter))
+            if (_mapping.TryGetValue(type, out GameObject viewPresenter) == false)
             {
-                viewPresenter = Instantiate(viewPresenter, transform);
-            }
-            else
-            {
-                viewPresenter = Instantiate(_webViewPresenter.gameObject, transform);
+                viewPresenter = _mapping["default"].gameObject;
             }
 
-            return viewPresenter.GetComponent<IViewPresenter>();
+            return Instantiate(viewPresenter, transform).GetComponent<IViewPresenter>();
         }
     }
 }
