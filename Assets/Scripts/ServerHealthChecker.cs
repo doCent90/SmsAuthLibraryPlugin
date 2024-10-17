@@ -65,13 +65,15 @@ namespace Agava.ServerCheck
 
                     if (status == Result.Success)
                     {
-                        var text = $"{task.Result.reasonPhrase} || {task.Result.body}";
+                        var textStatusInfo = string.IsNullOrEmpty(task.Result.body) ? "Ok" : task.Result.body;
+                        var text = $"{task.Result.reasonPhrase} || {textStatusInfo}";
                         _serverViewes[i].SetData(data.serverName, text, Color.green);
                     }
                     else
                     {
                         hasError = true;
-                        var text = $"ERROR {task.Result.reasonPhrase} || {task.Result.body}";
+                        var textStatusInfo = string.IsNullOrEmpty(task.Result.body) ? "Server dead" : task.Result.body;
+                        var text = $"ERROR {task.Result.reasonPhrase} || {textStatusInfo}";
                         _serverViewes[i].SetData(data.serverName, text, Color.red);
                     }
 
@@ -98,7 +100,7 @@ namespace Agava.ServerCheck
                 await WaitProccessing(webRequest);
                 TryShowRequestInfo(webRequest, apiName);
 
-                var body = JsonConvert.DeserializeObject<string>(webRequest.downloadHandler.text);
+                var body = webRequest.downloadHandler.text;
                 return new Response(webRequest.result, webRequest.result.ToString(), body, false);
             }
         }
