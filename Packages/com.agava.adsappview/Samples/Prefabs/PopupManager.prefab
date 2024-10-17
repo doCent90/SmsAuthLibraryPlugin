@@ -133,6 +133,7 @@ MonoBehaviour:
   _imageViewPresenter: {fileID: 5591759609326838360, guid: 43a9792908e1cd049be22a637d8113b9, type: 3}
   _videoViewPresenter: {fileID: 7927782894595507639, guid: 3d0ec52cba4a9c3468b755f73cba96de, type: 3}
   _webViewPresenter: {fileID: 1919504391031931266, guid: e2c0e3ec2fdc43049b76741b45d8bc55, type: 3}
+  _animationViewPresenter: {fileID: 6093313139217218858, guid: 1a97c7d50b9978a40ac75ffd8588752e, type: 3}
 --- !u!114 &6061897524619701845
 MonoBehaviour:
   m_ObjectHideFlags: 0

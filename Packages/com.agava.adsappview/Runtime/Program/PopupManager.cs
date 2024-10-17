@@ -186,7 +186,7 @@ namespace AdsAppView.Program
                         }
                     }
 
-                    return new PopupData() { bytes = bytes, link = _adsFilePathsData.app_link, name = _adsFilePathsData.file_path, cacheFilePath = cacheFilePath };
+                    return new PopupData() { bytes = bytes, link = _adsFilePathsData.app_link, name = _adsFilePathsData.file_path, path = cacheFilePath };
                 }
                 else
                 {

@@ -18,7 +18,7 @@ namespace AdsAppView.Program
             _videoPlayerImage = _player.GetComponent<RawImage>();
             link = popupData.link;
             lastSpriteName = popupData.name;
-            _player.url = popupData.cacheFilePath;
+            _player.url = popupData.path;
             EnableCanvasGroup();
         }
 

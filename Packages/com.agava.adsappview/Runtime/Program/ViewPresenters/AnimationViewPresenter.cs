@@ -1,129 +1,45 @@
-using System;
 using System.Collections;
 using AdsAppView.DTO;
 using AdsAppView.Utility;
+using Spine.Unity;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AdsAppView.Program
 {
-    public class AnimationViewPresenter : MonoBehaviour, IViewPresenter
+    public class AnimationViewPresenter : BaseViewPresenter
     {
-        private const float Diff = 0.5f;
+        [SerializeField] private SkeletonGraphic _skeletonGraphic;
 
-        [SerializeField] private CanvasGroup _windowCanvasGrp;
-        [SerializeField] private Button _linkButton;
-        [SerializeField] private Button _closeButton;
-        [SerializeField] private Image _background;
-
-        private Image _linkButtonImage;
-
-        private string _link;
-        private string _lastSpriteName;
-        private int _count = 0;
-
-        private Coroutine _enablingCoroutine;
-
-        public bool Enable { get; private set; } = false;
-
-        public event Action Enabled;
-        public event Action Disabled;
-
-        private void Awake()
+        public override void Show(PopupData popupData)
         {
-            DisableCanvasGroup(_windowCanvasGrp);
-            _linkButtonImage = _linkButton.GetComponent<Image>();
+            link = popupData.link;
+            lastSpriteName = popupData.name;
+
+            EnableCanvasGroup();
         }
 
-        private void OnEnable()
+        protected override IEnumerator Enabling(CanvasGroup canvas)
         {
-            _linkButton.onClick.AddListener(OnLinkClicked);
-            _closeButton.onClick.AddListener(OnCloseClicked);
-        }
-
-        private void OnDisable()
-        {
-            _linkButton.onClick.RemoveListener(OnLinkClicked);
-            _closeButton.onClick.RemoveListener(OnCloseClicked);
-        }
-
-        public void Show(PopupData popupData)
-        {
-            _count++;
-            _link = popupData.link;
-            _lastSpriteName = popupData.name;
-            Stop(_enablingCoroutine);
-            _enablingCoroutine = StartCoroutine(EnableCanvasGroup(_windowCanvasGrp));
-        }
-
-        private IEnumerator EnableCanvasGroup(CanvasGroup canvas)
-        {
-            _closeButton.gameObject.SetActive(false);
-            _linkButton.gameObject.SetActive(false);
-
-            //_popupImage.enabled = false;
-            _background.enabled = false;
-            _linkButtonImage.enabled = false;
-
-            canvas.interactable = true;
-            canvas.blocksRaycasts = true;
-            canvas.alpha = 1;
-            Enable = true;
-            Enabled?.Invoke();
+            _skeletonGraphic.enabled = false;
 
             float enablingTime = ViewPresenterConfigs.EnablingTime;
             float closingDelay = ViewPresenterConfigs.ClosingDelay;
 
             WaitForSecondsRealtime waitForFadeIn = new WaitForSecondsRealtime(enablingTime);
 
-            StartCoroutine(FadeIn.FadeInGraphic(_background, enablingTime));
+            StartCoroutine(FadeIn.FadeInGraphic(background, enablingTime));
             yield return new WaitForSecondsRealtime(Diff);
 
-            //StartCoroutine(FadeIn.FadeInGraphic(_popupImage, enablingTime));
-            //yield return waitForFadeIn;
+            StartCoroutine(FadeIn.FadeInGraphic(_skeletonGraphic, enablingTime));
+            yield return waitForFadeIn;
 
-            _linkButton.gameObject.SetActive(true);
+            linkButton.gameObject.SetActive(true);
 
-            StartCoroutine(FadeIn.FadeInGraphic(_linkButtonImage, enablingTime));
+            StartCoroutine(FadeIn.FadeInGraphic(linkButtonImage, enablingTime));
             yield return waitForFadeIn;
 
             yield return new WaitForSecondsRealtime(closingDelay);
-            _closeButton.gameObject.SetActive(true);
-        }
-
-        private void DisableCanvasGroup(CanvasGroup canvas)
-        {
-            canvas.alpha = 0;
-            canvas.interactable = false;
-            canvas.blocksRaycasts = false;
-            Enable = false;
-            Disabled?.Invoke();
-            Stop(_enablingCoroutine);
-        }
-
-        private void OnLinkClicked()
-        {
-#if UNITY_EDITOR
-            Debug.LogFormat($"#AnimationViewPresenter# Open link {_link}");
-#endif
-
-            if (string.IsNullOrEmpty(_link))
-                return;
-
-            AnalyticsService.SendPopupRedirectClick(_lastSpriteName, _count);
-            Application.OpenURL(_link);
-        }
-
-        private void OnCloseClicked()
-        {
-            AnalyticsService.SendPopupClosed();
-            DisableCanvasGroup(_windowCanvasGrp);
-        }
-
-        private void Stop(Coroutine coroutine)
-        {
-            if (coroutine != null)
-                StopCoroutine(coroutine);
+            closeButton.gameObject.SetActive(true);
         }
     }
 }

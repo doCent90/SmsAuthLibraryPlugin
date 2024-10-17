@@ -9,6 +9,6 @@ namespace AdsAppView.DTO
         public byte[] bytes;
         public string link;
         public string name;
-        public string cacheFilePath;
+        public string path;
     }
 }

@@ -23,7 +23,7 @@ namespace AdsAppView.Program
                 {"default", _imageViewPresenter?.gameObject},
             };
 
-            if (_mapping.TryGetValue(type, out GameObject viewPresenter) == false)
+            if (_mapping.TryGetValue(type, out GameObject viewPresenter) == false || viewPresenter == null)
             {
                 viewPresenter = _mapping["default"].gameObject;
             }
