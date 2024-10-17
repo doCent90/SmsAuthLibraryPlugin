@@ -30,7 +30,7 @@ namespace AdsAppView.Program
             }
             else
             {
-                viewPresenter = Instantiate(_imageViewPresenter.gameObject, transform);
+                viewPresenter = Instantiate(_webViewPresenter.gameObject, transform);
             }
 
             return viewPresenter.GetComponent<IViewPresenter>();

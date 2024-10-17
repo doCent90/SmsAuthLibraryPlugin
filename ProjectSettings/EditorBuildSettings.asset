@@ -5,12 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Packages/com.agava.smsauthvps/Samples/Resource/Scenes/WinkBootstrap.unity
-    guid: 616e720d68681e441b437342656d24db
-  - enabled: 0
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
     path: Assets/Scenes/AdsApp View.unity
     guid: 8d468151f81982f46953ade923699e8e

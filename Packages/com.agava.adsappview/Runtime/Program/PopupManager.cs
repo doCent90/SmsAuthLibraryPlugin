@@ -21,8 +21,9 @@ namespace AdsAppView.Program
         private const int RetryDelayMlsec = 30000;
 
         [SerializeField] private ViewPresenterFactory _viewPresenterFactory;
+        [SerializeField] private GamePause _gamePause;
 
-        public IViewPresenter ViewPresenter { get; private set; } = null;
+        private IViewPresenter _viewPresenter;
 
         private AppData _appData;
         private AppSettingsData _settingsData;
@@ -35,13 +36,12 @@ namespace AdsAppView.Program
         private float _regularTimerSec = 180f;
         private bool _caching = false;
 
-        private void Awake()
-        {
-            ViewPresenter = _viewPresenterFactory.InstantiateViewPresenter();
-        }
-
         public IEnumerator Construct(AppData appData)
         {
+            _viewPresenter = _viewPresenterFactory.InstantiateViewPresenter();
+
+            _gamePause.Initialize(_viewPresenter);
+
             DontDestroyOnLoad(gameObject);
             _appData = appData;
 
@@ -91,9 +91,9 @@ namespace AdsAppView.Program
             IEnumerator ShowingPopup(float time, PopupData popupData)
             {
                 yield return new WaitForSecondsRealtime(time);
-                ViewPresenter.Show(popupData);
+                _viewPresenter.Show(popupData);
                 AnalyticsService.SendPopupView(popupData.name);
-                yield return new WaitWhile(() => ViewPresenter.Enable);
+                yield return new WaitWhile(() => _viewPresenter.Enable);
             }
 
             yield return ShowingPopup(_firstTimerSec, _popupData);

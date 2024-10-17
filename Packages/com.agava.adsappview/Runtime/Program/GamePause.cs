@@ -5,10 +5,9 @@ namespace AdsAppView.Program
 {
     public class GamePause : MonoBehaviour
     {
-        [SerializeField] private PopupManager _popupManager;
-
         private static GamePause s_instance;
-        private IViewPresenter _viewPresenter => _popupManager.ViewPresenter;
+
+        private IViewPresenter _viewPresenter;
 
         public static Action GamePaused;
         public static Action GameUnpaused;
@@ -25,13 +24,14 @@ namespace AdsAppView.Program
             }
         }
 
-        private void OnEnable()
+        public void Initialize(IViewPresenter viewPresenter)
         {
+            _viewPresenter = viewPresenter;
             s_instance._viewPresenter.Enabled += OnAdsEnabled;
             s_instance._viewPresenter.Disabled += OnAdsDisabled;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             s_instance._viewPresenter.Enabled -= OnAdsEnabled;
             s_instance._viewPresenter.Disabled -= OnAdsDisabled;

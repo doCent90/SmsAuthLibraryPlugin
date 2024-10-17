@@ -15,7 +15,7 @@ namespace AdsAppView.Program
         [SerializeField] private Button _linkButton;
         [SerializeField] private Button _closeButton;
         [SerializeField] private Image _background;
-        [SerializeField] private WebViewObject _webViewObject;
+        [SerializeField] private WebView _webView;
 
         private Image _linkButtonImage;
 
@@ -53,7 +53,6 @@ namespace AdsAppView.Program
             _count++;
             _link = popupData.link;
             _lastSpriteName = popupData.name;
-            _webViewObject.LoadURL(@"http://localhost:62632/");
             Stop(_enablingCoroutine);
             _enablingCoroutine = StartCoroutine(EnableCanvasGroup(_windowCanvasGrp));
         }
@@ -80,8 +79,7 @@ namespace AdsAppView.Program
             StartCoroutine(FadeIn.FadeInGraphic(_background, enablingTime));
             yield return new WaitForSecondsRealtime(Diff);
 
-            //StartCoroutine(FadeIn.FadeInGraphic(_popupImage, enablingTime));
-            //yield return waitForFadeIn;
+            StartCoroutine(_webView.ShowUrl("https://www.google.com/"));
 
             _linkButton.gameObject.SetActive(true);
 
