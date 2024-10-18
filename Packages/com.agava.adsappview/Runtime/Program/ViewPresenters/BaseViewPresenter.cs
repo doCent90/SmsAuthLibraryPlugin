@@ -48,7 +48,7 @@ public abstract class BaseViewPresenter : MonoBehaviour, IViewPresenter
 
     public abstract void Show(PopupData popupData);
 
-    protected abstract IEnumerator Enabling(CanvasGroup canvas);
+    protected abstract IEnumerator Enabling();
 
     protected void EnableCanvasGroup()
     {
@@ -67,7 +67,7 @@ public abstract class BaseViewPresenter : MonoBehaviour, IViewPresenter
         Enabled?.Invoke();
 
         Stop(_enablingCoroutine);
-        _enablingCoroutine = StartCoroutine(Enabling(_windowCanvasGrp));
+        _enablingCoroutine = StartCoroutine(Enabling());
     }
 
     private void DisableCanvasGroup(CanvasGroup canvas)

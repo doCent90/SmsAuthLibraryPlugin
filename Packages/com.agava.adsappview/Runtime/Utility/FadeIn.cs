@@ -9,7 +9,6 @@ namespace AdsAppView.Utility
         public static IEnumerator FadeInGraphic(Graphic graphicObject, float time)
         {
             graphicObject.enabled = true;
-
             graphicObject.gameObject.SetActive(true);
             Color color = graphicObject.color;
 
@@ -29,6 +28,26 @@ namespace AdsAppView.Utility
 
             color.a = 1;
             graphicObject.color = color;
+        }
+
+        public static IEnumerator FadeInCanvasGroup(CanvasGroup canvasGroup, float time)
+        {
+            canvasGroup.gameObject.SetActive(true);
+
+            if (time > 0)
+            {
+                canvasGroup.alpha = 0.0f;
+                float elapsedTime = 0.0f;
+
+                while (elapsedTime < time)
+                {
+                    canvasGroup.alpha = Mathf.Lerp(0.0f, 1.0f, elapsedTime / time);
+                    elapsedTime += Time.unscaledDeltaTime;
+                    yield return new WaitForEndOfFrame();
+                }
+            }
+
+            canvasGroup.alpha = 1.0f;
         }
     }
 }

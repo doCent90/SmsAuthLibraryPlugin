@@ -26,7 +26,7 @@ namespace AdsAppView.Program
             EnableCanvasGroup();
         }
 
-        protected override IEnumerator Enabling(CanvasGroup canvas)
+        protected override IEnumerator Enabling()
         {
             _popupImage.enabled = false;
 

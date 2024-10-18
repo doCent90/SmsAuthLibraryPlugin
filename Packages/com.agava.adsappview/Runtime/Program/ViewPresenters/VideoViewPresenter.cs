@@ -10,6 +10,7 @@ namespace AdsAppView.Program
     public class VideoViewPresenter : BaseViewPresenter
     {
         [SerializeField] private VideoPlayer _player;
+        [SerializeField] private CanvasGroup _particlesGroup;
 
         private RawImage _videoPlayerImage;
 
@@ -22,8 +23,11 @@ namespace AdsAppView.Program
             EnableCanvasGroup();
         }
 
-        protected override IEnumerator Enabling(CanvasGroup canvas)
+        protected override IEnumerator Enabling()
         {
+            _particlesGroup.enabled = false;
+            _particlesGroup.gameObject.SetActive(false);
+            _particlesGroup.alpha = 0.0f;
             _videoPlayerImage.enabled = false;
 
             float enablingTime = ViewPresenterConfigs.EnablingTime;
@@ -32,11 +36,14 @@ namespace AdsAppView.Program
             StartCoroutine(FadeIn.FadeInGraphic(background, enablingTime));
             yield return new WaitForSecondsRealtime(Diff);
 
-            StartCoroutine(FadeIn.FadeInGraphic(_videoPlayerImage, enablingTime));
-            yield return new WaitForSecondsRealtime(enablingTime);
-
             _player.Play();
             _player.loopPointReached += OnLoopPointReached;
+
+            StartCoroutine(FadeIn.FadeInGraphic(_videoPlayerImage, enablingTime));
+            yield return new WaitForSecondsRealtime(Diff);
+
+            StartCoroutine(FadeIn.FadeInCanvasGroup(_particlesGroup, enablingTime));
+            yield return new WaitForSecondsRealtime(enablingTime);
 
             void OnLoopPointReached(VideoPlayer _)
             {
